@@ -15,7 +15,11 @@
 <script src="assets/crystal.js" defer></script>
 <style>
 html,body{height:100%}
-body{display:grid;place-items:center;padding:24px 16px;overflow:hidden}
+/* svh = the visible screen on phones/tablets (excludes Safari's toolbars), so the circle centres on what you actually see */
+body{height:100svh;display:grid;place-items:center;padding:24px 16px;overflow:hidden}
+/* lift the circle so the crystal sits at the optical centre, a little above the middle */
+main{translate:0 -3svh}
+@media (orientation:portrait){main{translate:0 -7svh}}
 main{position:relative;max-width:100%;text-align:center;width:min(100%,560px);aspect-ratio:1;display:grid;place-content:center;justify-items:center}
 .rune{position:absolute;inset:0;width:100%;height:100%}
 .name{font-size:clamp(24px,6vw,38px);position:relative}
