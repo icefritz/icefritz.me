@@ -22,7 +22,8 @@ body{overflow-x:hidden}
 header{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:34px}
 h1{font-weight:300;font-size:clamp(34px,7vw,52px);letter-spacing:.01em;line-height:1.05}
 .sub{margin-top:10px;color:var(--muted);font-size:14px}
-.sub time{color:var(--frost)}
+.sub time,.sub b{color:var(--frost);font-weight:400}
+.sub{line-height:1.6}
 
 h2{display:flex;align-items:center;gap:10px;font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);margin:0 0 14px}
 h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--edge),transparent)}
@@ -110,7 +111,7 @@ section{margin-bottom:38px}
     <ol class="list" id="list"></ol>
   </section>
 
-  <p class="note">Dates come from the <a href="https://www.artix.com/calendar/" target="_blank" rel="noopener">Artix calendar</a> and refresh every few hours. The calendar only lists start days, so end days are estimates: server doubles run 2 days (3 from a Friday), resource boosts 1 day.</p>
+  <p class="note">Dates come from the <a href="https://www.artix.com/calendar/" target="_blank" rel="noopener">Artix calendar</a> and refresh every few hours. Days roll over at midnight server time (US Eastern). The calendar only lists start days, so end days are estimates: server doubles run 2 days (3 from a Friday), resource boosts 1 day.</p>
 </div>
 
 <script>
@@ -128,7 +129,24 @@ section{margin-bottom:38px}
   var filter = "all", data = null;
 
   function d(s) { var p = s.split("-"); return new Date(+p[0], p[1] - 1, +p[2]); }
-  function today() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  // Everything runs on AQW server time (US Eastern), whatever the visitor's own time zone is.
+  var TZ = "America/New_York";
+  var SERVER = new Intl.DateTimeFormat("en-US", { timeZone: TZ, year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric", hourCycle: "h23" });
+  function server(at) {
+    var o = {};
+    SERVER.formatToParts(at || new Date()).forEach(function (p) { o[p.type] = +p.value; });
+    return o;
+  }
+  function today() { var n = server(); return new Date(n.year, n.month - 1, n.day); }
+  function msToServerMidnight(endDate, t) {
+    var n = server();
+    return days(t, endDate) * DAY - ((n.hour * 60 + n.minute) * 60 + n.second) * 1000;
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function serverClock(at) {
+    var n = server(at), dt = new Date(n.year, n.month - 1, n.day);
+    return fmt(dt) + ", " + pad(n.hour) + ":" + pad(n.minute);
+  }
   function fmt(dt, o) { return dt.toLocaleDateString("en-GB", o || { weekday: "short", day: "numeric", month: "short" }); }
   function days(a, b) { return Math.round((b - a) / DAY); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -139,8 +157,11 @@ section{margin-bottom:38px}
   }
   function inWords(n) { return n <= 0 ? "today" : n === 1 ? "tomorrow" : "in " + n + " days"; }
   function endsWords(end, t) {
-    var n = days(t, end);
-    return n <= 1 ? "Ends tonight" : n === 2 ? "Ends tomorrow night" : n + " days left";
+    var ms = msToServerMidnight(end, t);
+    if (ms <= 0) return "Ending now";
+    var h = Math.floor(ms / 36e5), m = Math.floor(ms % 36e5 / 6e4);
+    if (h < 24) return "Ends in " + h + "h " + pad(m) + "m";
+    return "Ends in " + Math.floor(h / 24) + "d " + (h % 24) + "h";
   }
 
   function card(group, label, t) {
@@ -177,6 +198,8 @@ section{margin-bottom:38px}
 
   function render() {
     var t = today();
+    var clock = document.getElementById("clock");
+    if (clock) clock.textContent = serverClock();
     document.getElementById("now").innerHTML = card("core", "Server boost", t) + card("resource", "Resource boost", t);
     var rows = data.filter(function (b) {
       return d(b.end) > t && (filter === "all" || b.group === filter);
@@ -210,13 +233,12 @@ section{margin-bottom:38px}
     .then(function (j) {
       data = j.boosts.slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
       var up = new Date(j.updated);
-      document.getElementById("sub").innerHTML = "Ongoing and upcoming boosts · schedule last changed <time datetime='" + j.updated + "'>" +
-        up.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + ", " +
-        up.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + "</time>";
+      document.getElementById("sub").innerHTML = "All times are AQW server time (ET) · Server time <b id='clock'></b>" +
+        "<br>Schedule last changed <time datetime='" + j.updated + "'>" + serverClock(up) + " ET</time>";
       render();
-      // roll over at midnight without a reload
-      var n = new Date(), mid = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n;
-      setTimeout(function tick() { render(); setTimeout(tick, DAY); }, mid + 1000);
+      
+      // keep the clock, countdowns and server-day rollover live
+      setInterval(render, 15000);
     })
     .catch(function () {
       document.getElementById("sub").innerHTML = '<span class="err">Couldn’t load the boost calendar. Try again in a moment.</span>';
