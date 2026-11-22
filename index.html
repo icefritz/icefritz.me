@@ -5,31 +5,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IceFritz · Coming soon</title>
 <meta name="description" content="IceFritz.me is coming soon.">
-<meta name="theme-color" content="#0f1521">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231b2537'/%3E%3Crect x='18' y='16' width='28' height='32' fill='none' stroke='%23eef1f6' stroke-width='7'/%3E%3Crect x='28' y='29' width='12' height='6' fill='%23e6a94a'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#36393f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2336393f'/%3E%3Cpath d='M32 6 42 30 32 58 22 30Z' fill='%2351c5d9'/%3E%3Cpath d='M32 6 42 30H22Z' fill='%23b6f0fb'/%3E%3Cpath d='M32 58 42 30H32Z' fill='%23284e68'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f1521;--fg:#eef1f6;--muted:#8a95a8;--accent:#e6a94a;color-scheme:dark}
+:root{
+  --bg:#36393f;        /* backdrop */
+  --abyss:#0d1520;     /* deepest navy */
+  --navy:#1e2d3f;
+  --steel:#284e68;
+  --slate:#517e8f;
+  --frost:#d7d8cd;     /* pale scarf/fur */
+  --ice:#51c5d9;       /* crystal glow */
+  --ice-hi:#b6f0fb;
+  --plate:#9fd6ee;     /* nameplate blue */
+  color-scheme:dark;
+}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
-body{background:var(--bg);color:var(--fg);font-family:"Inter Tight",system-ui,sans-serif;display:grid;place-items:center;padding:24px 16px}
-main{text-align:center}
-.mark{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:17px;color:var(--fg);margin-bottom:28px}
-.mark i{width:10px;height:10px;background:var(--accent);display:block}
-h1{font-weight:700;font-size:clamp(40px,9vw,76px);letter-spacing:-.02em;line-height:1}
-p{margin-top:18px;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.dot{display:inline-block;width:7px;height:7px;background:var(--accent);margin-left:10px;vertical-align:1px;animation:blink 1.2s steps(2) infinite}
-@keyframes blink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+body{
+  background:
+    radial-gradient(60% 55% at 50% 58%, rgba(40,78,104,.55), transparent 70%),
+    radial-gradient(120% 90% at 50% 120%, var(--abyss), transparent 60%),
+    var(--bg);
+  color:var(--frost);
+  font-family:"Outfit",system-ui,sans-serif;
+  display:grid;place-items:center;padding:24px 16px;overflow:hidden;
+}
+main{position:relative;max-width:100%;text-align:center;width:min(100%,560px);aspect-ratio:1;display:grid;place-content:center;justify-items:center}
+.rune{position:absolute;inset:0;width:100%;height:100%;color:var(--ice);opacity:.38;filter:drop-shadow(0 0 6px rgba(81,197,217,.6));animation:turn 90s linear infinite}
+@keyframes turn{to{transform:rotate(360deg)}}
+.plate{font-family:"Silkscreen",monospace;color:var(--plate);letter-spacing:.12em;
+  text-shadow:-2px 0 #000,2px 0 #000,0 -2px #000,0 2px #000,-2px -2px #000,2px 2px #000,-2px 2px #000,2px -2px #000}
+.name{font-size:clamp(24px,6vw,38px);position:relative;text-transform:uppercase}
+.tag{text-transform:uppercase;font-size:clamp(12px,3vw,15px);color:#fff;margin-top:6px;position:relative}
+.crystal{position:relative;width:46px;height:auto;margin:26px 0 18px;filter:drop-shadow(0 0 14px rgba(81,197,217,.75));animation:bob 4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+h1{position:relative;font-weight:300;font-size:clamp(26px,6.4vw,42px);max-width:78%;line-height:1.15;letter-spacing:.02em;color:var(--frost)}
+h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
+@media (prefers-reduced-motion:reduce){.rune,.crystal{animation:none}}
 </style>
 </head>
 <body>
 <main>
-  <div class="mark"><i></i>IceFritz</div>
-  <h1>Coming soon</h1>
-  <p>Something new is on the way<span class="dot"></span></p>
+  <svg class="rune" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor">
+    <circle cx="100" cy="100" r="96" stroke-width="1.2"/>
+    <circle cx="100" cy="100" r="84" stroke-width=".6" stroke-dasharray="2 5"/>
+    <circle cx="100" cy="100" r="72" stroke-width="1"/>
+    <path d="M100 28 168 128H32Z M100 172 32 72H168Z" stroke-width=".7" opacity=".7"/>
+    <g stroke-width="1.4" stroke-linecap="round">
+      <path d="M100 4v8M100 188v8M4 100h8M188 100h8M32 32l6 6M162 162l6 6M32 168l6-6M162 38l6-6"/>
+    </g>
+  </svg>
+  <div class="plate name">IceFritz</div>
+  <div class="plate tag">&lsaquo; Coming soon &rsaquo;</div>
+  <svg class="crystal" viewBox="0 0 40 80" aria-hidden="true">
+    <path d="M20 0 34 34 20 80 6 34Z" fill="#51c5d9"/>
+    <path d="M20 0 34 34H20Z" fill="#b6f0fb"/>
+    <path d="M20 0 6 34H20Z" fill="#7fdcef"/>
+    <path d="M20 80 34 34H20Z" fill="#284e68"/>
+  </svg>
+  <h1>Something <b>new</b> is forming</h1>
 </main>
 </body>
 </html>
