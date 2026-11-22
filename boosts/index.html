@@ -11,13 +11,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/ice.css">
+<link rel="stylesheet" href="../assets/crystal.css">
+<script src="../assets/crystal.js" defer></script>
 <style>
 :root{
   --k-xp:#51c5d9; --k-class:#a99bff; --k-rep:#62d6a8; --k-gold:#e8c45a; --k-all:#d7d8cd; --k-resource:#7fb2cc;
 }
 body{overflow-x:hidden}
 .bg-rune{position:fixed;width:min(110vw,760px);aspect-ratio:1;right:max(-30vw,-240px);top:-200px;opacity:.16;pointer-events:none;z-index:0}
-.wrap{position:relative;z-index:1;width:min(100% - 32px,760px);margin:0 auto;padding:44px 0 56px}
+.wrap{position:relative;z-index:1;width:min(100% - 32px,760px);margin:0 auto;padding:104px 0 56px}
+/* crystal sits in the top corner and scrolls away with the page, so it never covers the content */
+.crystal-nav.corner{position:absolute;top:18px;right:max(10px,calc((100% - 760px) / 2 - 14px))}
 
 header{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:34px}
 h1{font-weight:300;font-size:clamp(34px,7vw,52px);letter-spacing:.01em;line-height:1.05}
@@ -89,6 +93,8 @@ section{margin-bottom:38px}
   <path d="M100 28 168 128H32Z M100 172 32 72H168Z" stroke-width=".7" opacity=".7"/>
   <path stroke-width="1.4" stroke-linecap="round" d="M100 4v8M100 188v8M4 100h8M188 100h8M32 32l6 6M162 162l6 6M32 168l6-6M162 38l6-6"/>
 </svg>
+
+<div class="crystal-nav corner" data-crystal-nav></div>
 
 <div class="wrap">
   <header>
