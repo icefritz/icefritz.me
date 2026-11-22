@@ -18,11 +18,30 @@ main{position:relative;max-width:100%;text-align:center;width:min(100%,560px);as
 .rune{position:absolute;inset:0;width:100%;height:100%}
 .name{font-size:clamp(24px,6vw,38px);position:relative}
 .tag{font-size:clamp(12px,3vw,15px);margin-top:6px;position:relative}
-.crystal{position:relative;width:46px;height:auto;margin:26px 0 18px;filter:drop-shadow(0 0 14px rgba(81,197,217,.75));animation:bob 4s ease-in-out infinite}
+.crystal-nav{position:relative;z-index:2;display:grid;justify-items:center;margin:26px 0 18px}
+.crystal-btn{display:grid;place-items:center;padding:6px 14px;background:none;border:0;border-radius:14px;cursor:pointer;color:inherit;-webkit-tap-highlight-color:transparent}
+.crystal-btn:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
+.crystal{display:block;width:46px;height:auto;filter:drop-shadow(0 0 14px rgba(81,197,217,.75));animation:bob 4s ease-in-out infinite;transition:filter .25s,transform .25s}
+.crystal-btn:hover .crystal,.is-open .crystal{filter:drop-shadow(0 0 22px rgba(182,240,251,.95)) brightness(1.12)}
+.site-nav{position:absolute;top:100%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:16px;pointer-events:none}
+.site-nav::before{content:"";width:1px;height:0;margin-bottom:-4px;background:linear-gradient(var(--ice),transparent);box-shadow:0 0 8px var(--ice);transition:height .3s ease}
+.site-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:170px;padding:11px 20px;text-decoration:none;background:var(--panel);border:1px solid var(--edge);border-radius:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .25s ease,transform .3s ease,border-color .15s,box-shadow .15s}
+.site-nav a b{font-family:"Silkscreen",monospace;font-weight:400;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--plate)}
+.site-nav a span{font-size:12px;color:var(--muted);white-space:nowrap}
+.site-nav a:hover,.site-nav a:focus-visible{outline:none;border-color:var(--ice);box-shadow:0 0 18px -4px var(--ice)}
+.site-nav a:hover b,.site-nav a:focus-visible b{color:var(--ice-hi)}
+.is-open .site-nav{pointer-events:auto}
+.is-open .site-nav::before{height:22px}
+.is-open .site-nav a{opacity:1;transform:none}
+.is-open .site-nav a:nth-of-type(2){transition-delay:.05s}
+.is-open .site-nav a:nth-of-type(3){transition-delay:.1s}
+h1{transition:opacity .25s ease,transform .3s ease}
+main:has(.is-open) h1{opacity:0;transform:translateY(10px)}
 @keyframes bob{50%{transform:translateY(-6px)}}
 h1{position:relative;font-weight:300;font-size:clamp(26px,6.4vw,42px);max-width:78%;line-height:1.15;letter-spacing:.02em;color:var(--frost)}
 h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
-@media (prefers-reduced-motion:reduce){.crystal{animation:none}}
+@media (prefers-reduced-motion:reduce){.crystal{animation:none}.site-nav a,.site-nav::before,h1{transition:none}}
 </style>
 </head>
 <body>
@@ -38,13 +57,42 @@ h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.5
   </svg>
   <a class="plate name" href="https://account.aq.com/CharPage?id=IceFritz" target="_blank" rel="noopener" title="IceFritz on AdventureQuest Worlds">IceFritz</a>
   <a class="plate tag" href="https://discord.gg/aqwcruel" target="_blank" rel="noopener" title="Cruel guild Discord">&lsaquo; Cruel &rsaquo;</a>
-  <svg class="crystal" viewBox="0 0 40 80" aria-hidden="true">
-    <path d="M20 0 34 34 20 80 6 34Z" fill="#51c5d9"/>
-    <path d="M20 0 34 34H20Z" fill="#b6f0fb"/>
-    <path d="M20 0 6 34H20Z" fill="#7fdcef"/>
-    <path d="M20 80 34 34H20Z" fill="#284e68"/>
-  </svg>
+  <div class="crystal-nav" id="crystal-nav">
+    <button class="crystal-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu" title="Menu">
+      <svg class="crystal" viewBox="0 0 40 80" aria-hidden="true">
+        <path d="M20 0 34 34 20 80 6 34Z" fill="#51c5d9"/>
+        <path d="M20 0 34 34H20Z" fill="#b6f0fb"/>
+        <path d="M20 0 6 34H20Z" fill="#7fdcef"/>
+        <path d="M20 80 34 34H20Z" fill="#284e68"/>
+      </svg>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="boosts/"><b>Boosts</b><span>Server &amp; resource boosts</span></a>
+    </nav>
+  </div>
   <h1>Something <b>new</b> is forming</h1>
 </main>
+<script>
+(function () {
+  var wrap = document.getElementById("crystal-nav");
+  var btn = wrap.querySelector(".crystal-btn");
+  var links = wrap.querySelectorAll(".site-nav a");
+  var hover = window.matchMedia("(hover: hover)");
+  var timer;
+  function set(open) {
+    wrap.classList.toggle("is-open", open);
+    btn.setAttribute("aria-expanded", String(open));
+    btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    links.forEach(function (a) { a.tabIndex = open ? 0 : -1; });
+  }
+  set(false);
+  btn.addEventListener("click", function () { set(!wrap.classList.contains("is-open")); });
+  wrap.addEventListener("mouseenter", function () { if (hover.matches) { clearTimeout(timer); set(true); } });
+  wrap.addEventListener("mouseleave", function () { if (hover.matches) timer = setTimeout(function () { set(false); }, 250); });
+  document.addEventListener("click", function (e) { if (!wrap.contains(e.target)) set(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { set(false); btn.focus(); } });
+  wrap.addEventListener("focusout", function (e) { if (!wrap.contains(e.relatedTarget)) set(false); });
+})();
+</script>
 </body>
 </html>

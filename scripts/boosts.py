@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch AQW server boosts from the Artix calendar and write tests/boosts.json.
+"""Fetch AQW server boosts from the Artix calendar and write boosts/boosts.json.
 
 Same source and parsing as aqw-lodestar and aqw-wiki-enhanced: the calendar page
 embeds FullCalendar events as JS objects ({title: '...', start: 'YYYY-MM-DD', end: ...}).
@@ -11,7 +11,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 URL = "https://www.artix.com/calendar/"
-OUT = Path(__file__).resolve().parent.parent / "tests" / "boosts.json"
+OUT = Path(__file__).resolve().parent.parent / "boosts" / "boosts.json"
 KEEP_DAYS_BACK = 7
 
 CORE = [  # (kind, keywords)
@@ -77,7 +77,7 @@ def parse(html):
 
 
 def main():
-    req = urllib.request.Request(URL, headers={"User-Agent": "icefritz.me boost tracker (+https://icefritz.me/tests/)"})
+    req = urllib.request.Request(URL, headers={"User-Agent": "icefritz.me boost tracker (+https://icefritz.me/boosts/)"})
     html = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "replace")
     events = parse(html)
     if not events:
