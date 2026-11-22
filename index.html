@@ -25,11 +25,13 @@ main{position:relative;max-width:100%;text-align:center;width:min(100%,560px);as
 .name{font-size:clamp(24px,6vw,38px);position:relative}
 .tag{font-size:clamp(12px,3vw,15px);margin-top:6px;position:relative}
 .crystal-nav{margin:26px 0 18px}
-h1{transition:opacity .25s ease,transform .3s ease}
-.menu-open main h1{opacity:0;transform:translateY(10px)}
+.tagline{position:relative;display:grid;justify-items:center;width:max-content;transition:opacity .25s ease,transform .3s ease}
+.menu-open main .tagline{opacity:0;transform:translateY(10px)}
 h1{position:relative;font-weight:300;font-size:clamp(26px,6.4vw,42px);white-space:nowrap;line-height:1.15;letter-spacing:.02em;color:var(--frost)}
 h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
-@media (prefers-reduced-motion:reduce){h1{transition:none}}
+/* hint: one line, never wider than the tagline (width:0 + min-width:100% keeps it from widening the box) */
+.hint{width:0;min-width:100%;margin-top:8px;font-size:clamp(10px,2.25vw,14.5px);font-weight:300;letter-spacing:.03em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center}
+@media (prefers-reduced-motion:reduce){.tagline{transition:none}}
 
 </style>
 </head>
@@ -47,7 +49,10 @@ h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.5
   <a class="plate name" href="https://x.com/IceFritz_AE" target="_blank" rel="noopener" title="IceFritz on X">IceFritz</a>
   <a class="plate tag" href="https://discord.gg/aqwcruel" target="_blank" rel="noopener" title="Cruel guild Discord">&lsaquo; Cruel &rsaquo;</a>
   <div class="crystal-nav" data-crystal-nav></div>
-  <h1>Break the <b>ice</b></h1>
+  <div class="tagline">
+    <h1>Break the <b>ice</b></h1>
+    <p class="hint">(no, really. click the crystal)</p>
+  </div>
 </main>
 
 </body>
