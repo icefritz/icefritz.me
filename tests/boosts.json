@@ -1,0 +1,209 @@
+{
+ "source": "https://www.artix.com/calendar/",
+ "updated": "2026-11-22T23:05:00Z",
+ "boosts": [
+  {
+   "name": "Double Rep Boost",
+   "group": "core",
+   "kind": "rep",
+   "start": "2026-11-13",
+   "end": "2026-11-16"
+  },
+  {
+   "name": "Double Class Points Boost",
+   "group": "core",
+   "kind": "class",
+   "start": "2026-11-16",
+   "end": "2026-11-18"
+  },
+  {
+   "name": "Double EXP Boost",
+   "group": "core",
+   "kind": "xp",
+   "start": "2026-11-18",
+   "end": "2026-11-20"
+  },
+  {
+   "name": "Void Aura Boost",
+   "group": "resource",
+   "kind": "resource",
+   "start": "2026-11-19",
+   "end": "2026-11-20"
+  },
+  {
+   "name": "Double Gold Boost",
+   "group": "core",
+   "kind": "gold",
+   "start": "2026-11-20",
+   "end": "2026-11-23"
+  },
+  {
+   "name": "Double Rep Boost",
+   "group": "core",
+   "kind": "rep",
+   "start": "2026-11-23",
+   "end": "2026-11-25"
+  },
+  {
+   "name": "Double ALL Boost",
+   "group": "core",
+   "kind": "all",
+   "start": "2026-11-25",
+   "end": "2026-11-27"
+  },
+  {
+   "name": "Unidentified 34 & 35 Boost",
+   "group": "resource",
+   "kind": "resource",
+   "start": "2026-11-26",
+   "end": "2026-11-27"
+  },
+  {
+   "name": "Double ALL Boost",
+   "group": "core",
+   "kind": "all",
+   "start": "2026-11-27",
+   "end": "2026-11-30"
+  },
+  {
+   "name": "Double Class Points Boost",
+   "group": "core",
+   "kind": "class",
+   "start": "2026-11-30",
+   "end": "2026-12-02"
+  },
+  {
+   "name": "Double EXP Boost",
+   "group": "core",
+   "kind": "xp",
+   "start": "2026-12-02",
+   "end": "2026-12-04"
+  },
+  {
+   "name": "Legion Token + Rib Boost",
+   "group": "resource",
+   "kind": "resource",
+   "start": "2026-12-03",
+   "end": "2026-12-04"
+  },
+  {
+   "name": "Double Gold Boost",
+   "group": "core",
+   "kind": "gold",
+   "start": "2026-12-04",
+   "end": "2026-12-07"
+  },
+  {
+   "name": "Double Rep Boost",
+   "group": "core",
+   "kind": "rep",
+   "start": "2026-12-07",
+   "end": "2026-12-09"
+  },
+  {
+   "name": "Double Class Points Boost",
+   "group": "core",
+   "kind": "class",
+   "start": "2026-12-09",
+   "end": "2026-12-11"
+  },
+  {
+   "name": "Celestial Dungeon Boost",
+   "group": "resource",
+   "kind": "resource",
+   "start": "2026-12-10",
+   "end": "2026-12-11"
+  },
+  {
+   "name": "Double EXP Boost",
+   "group": "core",
+   "kind": "xp",
+   "start": "2026-12-11",
+   "end": "2026-12-14"
+  },
+  {
+   "name": "Double Gold Boost",
+   "group": "core",
+   "kind": "gold",
+   "start": "2026-12-14",
+   "end": "2026-12-16"
+  },
+  {
+   "name": "Double Rep Boost",
+   "group": "core",
+   "kind": "rep",
+   "start": "2026-12-16",
+   "end": "2026-12-18"
+  },
+  {
+   "name": "Essences + Totems Boost",
+   "group": "resource",
+   "kind": "resource",
+   "start": "2026-12-17",
+   "end": "2026-12-18"
+  },
+  {
+   "name": "Double Class Points Boost",
+   "group": "core",
+   "kind": "class",
+   "start": "2026-12-18",
+   "end": "2026-12-21"
+  },
+  {
+   "name": "Double EXP Boost",
+   "group": "core",
+   "kind": "xp",
+   "start": "2026-12-21",
+   "end": "2026-12-23"
+  },
+  {
+   "name": "Double Gold Boost",
+   "group": "core",
+   "kind": "gold",
+   "start": "2026-12-23",
+   "end": "2026-12-25"
+  },
+  {
+   "name": "Blood Gems Boost",
+   "group": "resource",
+   "kind": "resource",
+   "start": "2026-12-24",
+   "end": "2026-12-25"
+  },
+  {
+   "name": "Double ALL Boost",
+   "group": "core",
+   "kind": "all",
+   "start": "2026-12-25",
+   "end": "2026-12-28"
+  },
+  {
+   "name": "Double ALL Boost",
+   "group": "core",
+   "kind": "all",
+   "start": "2026-12-28",
+   "end": "2026-12-30"
+  },
+  {
+   "name": "Double ALL Boost",
+   "group": "core",
+   "kind": "all",
+   "start": "2026-12-30",
+   "end": "2027-01-01"
+  },
+  {
+   "name": "Spirit Orbs + Metals Boost",
+   "group": "resource",
+   "kind": "resource",
+   "start": "2026-12-31",
+   "end": "2027-01-01"
+  },
+  {
+   "name": "Double ALL Boost",
+   "group": "core",
+   "kind": "all",
+   "start": "2027-01-01",
+   "end": "2027-01-04"
+  }
+ ]
+}

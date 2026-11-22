@@ -1,0 +1,36 @@
+/* IceFritz shared look: palette from the IceFritz character art */
+:root{
+  --bg:#36393f;        /* backdrop */
+  --abyss:#0d1520;     /* deepest navy */
+  --navy:#1e2d3f;
+  --steel:#284e68;
+  --slate:#517e8f;
+  --frost:#d7d8cd;     /* pale scarf/fur */
+  --muted:#9aa7b0;
+  --ice:#51c5d9;       /* crystal glow */
+  --ice-hi:#b6f0fb;
+  --plate:#9fd6ee;     /* nameplate blue */
+  --panel:rgba(13,21,32,.55);
+  --edge:rgba(81,197,217,.18);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(60% 55% at 50% 58%, rgba(40,78,104,.55), transparent 70%),
+    radial-gradient(120% 90% at 50% 120%, var(--abyss), transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--frost);
+  font-family:"Outfit",system-ui,sans-serif;
+}
+.rune{color:var(--ice);opacity:.38;filter:drop-shadow(0 0 6px rgba(81,197,217,.6));animation:turn 90s linear infinite}
+@keyframes turn{to{transform:rotate(360deg)}}
+.plate{display:block;text-decoration:none;transition:color .15s,filter .15s;font-family:"Silkscreen",monospace;color:var(--plate);letter-spacing:.12em;text-transform:uppercase;
+  text-shadow:-2px 0 #000,2px 0 #000,0 -2px #000,0 2px #000,-2px -2px #000,2px 2px #000,-2px 2px #000,2px -2px #000}
+.plate.tag{color:#fff}
+a.plate:hover,a.plate:focus-visible{color:var(--ice-hi);filter:drop-shadow(0 0 8px rgba(81,197,217,.7));outline:none}
+.glow{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
+@media (prefers-reduced-motion:reduce){.rune{animation:none}}

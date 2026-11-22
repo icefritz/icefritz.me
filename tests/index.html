@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server Boosts · IceFritz</title>
+<meta name="description" content="Ongoing and upcoming AQW server and resource boosts, from the Artix calendar.">
+<meta name="theme-color" content="#36393f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2336393f'/%3E%3Cpath d='M32 6 42 30 32 58 22 30Z' fill='%2351c5d9'/%3E%3Cpath d='M32 6 42 30H22Z' fill='%23b6f0fb'/%3E%3Cpath d='M32 58 42 30H32Z' fill='%23284e68'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ice.css">
+<style>
+:root{
+  --k-xp:#51c5d9; --k-class:#a99bff; --k-rep:#62d6a8; --k-gold:#e8c45a; --k-all:#d7d8cd; --k-resource:#7fb2cc;
+}
+body{overflow-x:hidden}
+.bg-rune{position:fixed;width:min(110vw,760px);aspect-ratio:1;right:max(-30vw,-240px);top:-200px;opacity:.16;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;width:min(100% - 32px,760px);margin:0 auto;padding:44px 0 56px}
+
+header{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:34px}
+header .name{font-size:20px}
+header .tag{font-size:11px}
+h1{font-weight:300;font-size:clamp(34px,7vw,52px);letter-spacing:.01em;line-height:1.05;margin-top:22px}
+.sub{margin-top:10px;color:var(--muted);font-size:14px}
+.sub time{color:var(--frost)}
+
+h2{display:flex;align-items:center;gap:10px;font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);margin:0 0 14px}
+h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--edge),transparent)}
+section{margin-bottom:38px}
+
+.now{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.card{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px 18px 18px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.card.live{border-color:color-mix(in srgb,var(--k) 55%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--k) 18%,transparent),0 10px 40px -18px var(--k)}
+.card.live::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--k)}
+.card .group{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--k);box-shadow:0 0 0 0 var(--k);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.card .row{display:flex;align-items:center;gap:14px;margin-top:14px}
+.card .title{font-size:22px;font-weight:600;line-height:1.15;color:#fff}
+.card .when{margin-top:4px;color:var(--muted);font-size:14px}
+.card .when b{color:var(--frost);font-weight:400}
+.card .left{margin-top:14px;font-family:"Silkscreen",monospace;font-size:13px;letter-spacing:.08em;color:var(--k)}
+.card.idle .title{color:var(--frost);font-weight:400;font-size:18px}
+.card.idle .row{opacity:.85}
+
+.badge{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:color-mix(in srgb,var(--k) 16%,var(--abyss));border:1px solid color-mix(in srgb,var(--k) 55%,transparent);color:var(--k);font-family:"Silkscreen",monospace;font-size:12px;letter-spacing:.04em}
+.badge svg{width:18px;height:auto;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--k) 70%,transparent))}
+.badge.sm{width:36px;height:36px;border-radius:10px;font-size:10px}
+.badge.sm svg{width:14px}
+
+.filters{display:flex;gap:6px;margin:-2px 0 14px;flex-wrap:wrap}
+.filters button{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--edge);border-radius:999px;padding:6px 14px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.filters button:hover{color:var(--frost)}
+.filters button[aria-pressed="true"]{color:var(--abyss);background:var(--ice);border-color:var(--ice);font-weight:600}
+
+.list{list-style:none;padding:0;background:var(--panel);border:1px solid var(--edge);border-radius:16px;overflow:hidden}
+.week{padding:10px 18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:rgba(13,21,32,.45);border-top:1px solid var(--edge)}
+.week:first-child{border-top:0}
+.item{display:grid;grid-template-columns:52px 36px 1fr auto;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid rgba(81,197,217,.08)}
+.date{text-align:center;line-height:1}
+.date .dow{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.date .day{display:block;margin-top:4px;font-family:"Silkscreen",monospace;font-size:20px;color:#fff}
+.item .what{min-width:0}
+.item .what b{display:block;font-weight:600;color:#fff;overflow-wrap:anywhere}
+.item .what span{font-size:13px;color:var(--muted)}
+.item .len{font-size:13px;color:var(--muted);white-space:nowrap}
+.item.is-live{background:linear-gradient(90deg,color-mix(in srgb,var(--k) 12%,transparent),transparent 70%)}
+.item .what .chip{font-weight:400;display:inline-block;font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.08em;color:var(--abyss);background:var(--k);border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:2px}
+.empty{padding:22px 18px;color:var(--muted)}
+
+.note{color:var(--muted);font-size:13px;line-height:1.55;max-width:60ch}
+.note a{color:var(--plate)}
+.err{color:#f0a3a3}
+
+@media (max-width:520px){
+  .item{grid-template-columns:44px 32px 1fr;gap:12px;padding:12px 14px}
+  .item .len{grid-column:3;margin-top:-6px}
+  .badge.sm{width:32px;height:32px}
+}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+</style>
+</head>
+<body>
+<svg class="rune bg-rune" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor">
+  <circle cx="100" cy="100" r="96" stroke-width="1.2"/>
+  <circle cx="100" cy="100" r="84" stroke-width=".6" stroke-dasharray="2 5"/>
+  <circle cx="100" cy="100" r="72" stroke-width="1"/>
+  <path d="M100 28 168 128H32Z M100 172 32 72H168Z" stroke-width=".7" opacity=".7"/>
+  <path stroke-width="1.4" stroke-linecap="round" d="M100 4v8M100 188v8M4 100h8M188 100h8M32 32l6 6M162 162l6 6M32 168l6-6M162 38l6-6"/>
+</svg>
+
+<div class="wrap">
+  <header>
+    <a class="plate name" href="https://account.aq.com/CharPage?id=IceFritz" target="_blank" rel="noopener" title="IceFritz on AdventureQuest Worlds">IceFritz</a>
+    <a class="plate tag" href="https://discord.gg/aqwcruel" target="_blank" rel="noopener" title="Cruel guild Discord">&lsaquo; Cruel &rsaquo;</a>
+    <h1>Server <span class="glow">boosts</span></h1>
+    <p class="sub" id="sub">Loading the boost calendar&hellip;</p>
+  </header>
+
+  <section aria-labelledby="now-h">
+    <h2 id="now-h">Live now</h2>
+    <div class="now" id="now"></div>
+  </section>
+
+  <section aria-labelledby="next-h">
+    <h2 id="next-h">Coming up</h2>
+    <div class="filters" role="group" aria-label="Show">
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="core" aria-pressed="false">Server</button>
+      <button type="button" data-f="resource" aria-pressed="false">Resource</button>
+    </div>
+    <ol class="list" id="list"></ol>
+  </section>
+
+  <p class="note">Dates come from the <a href="https://www.artix.com/calendar/" target="_blank" rel="noopener">Artix calendar</a> and refresh every few hours. The calendar only lists start days, so end days are estimates: server doubles run 2 days (3 from a Friday), resource boosts 1 day.</p>
+</div>
+
+<script>
+(function () {
+  var DAY = 864e5;
+  var KINDS = {
+    xp:       { label: "Double XP",           glyph: "XP"  },
+    "class":  { label: "Double Class Points", glyph: "CP"  },
+    rep:      { label: "Double Rep",          glyph: "REP" },
+    gold:     { label: "Double Gold",         glyph: "G"   },
+    all:      { label: "Double All",          glyph: "ALL" },
+    resource: { label: null,                  glyph: null  }
+  };
+  var CRYSTAL = '<svg viewBox="0 0 40 80" aria-hidden="true"><path d="M20 0 34 34 20 80 6 34Z" fill="currentColor"/><path d="M20 0 34 34H20Z" fill="#fff" opacity=".55"/><path d="M20 80 34 34H20Z" fill="#000" opacity=".3"/></svg>';
+  var filter = "all", data = null;
+
+  function d(s) { var p = s.split("-"); return new Date(+p[0], p[1] - 1, +p[2]); }
+  function today() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function fmt(dt, o) { return dt.toLocaleDateString("en-GB", o || { weekday: "short", day: "numeric", month: "short" }); }
+  function days(a, b) { return Math.round((b - a) / DAY); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function title(b) { return KINDS[b.kind].label || b.name.replace(/\s*Boost$/i, ""); }
+  function badge(b, sm) {
+    var g = KINDS[b.kind].glyph;
+    return '<span class="badge' + (sm ? " sm" : "") + '" style="--k:var(--k-' + b.kind + ')">' + (g || CRYSTAL) + "</span>";
+  }
+  function inWords(n) { return n <= 0 ? "today" : n === 1 ? "tomorrow" : "in " + n + " days"; }
+  function endsWords(end, t) {
+    var n = days(t, end);
+    return n <= 1 ? "Ends tonight" : n === 2 ? "Ends tomorrow night" : n + " days left";
+  }
+
+  function card(group, label, t) {
+    var mine = data.filter(function (b) { return b.group === group; });
+    var live = mine.filter(function (b) { return d(b.start) <= t && t < d(b.end); }).pop();
+    var next = mine.filter(function (b) { return d(b.start) > t; })[0];
+    if (live) {
+      var last = new Date(d(live.end) - DAY);
+      return '<article class="card live" style="--k:var(--k-' + live.kind + ')">' +
+        '<div class="group"><span class="pulse"></span>' + label + "</div>" +
+        '<div class="row">' + badge(live) + "<div>" +
+        '<div class="title">' + esc(title(live)) + "</div>" +
+        '<div class="when">Through <b>' + fmt(last) + "</b></div></div></div>" +
+        '<div class="left">' + endsWords(d(live.end), t) + "</div>" +
+        (next ? '<div class="when" style="margin-top:6px">Next: ' + esc(title(next)) + ", " + fmt(d(next.start)) + "</div>" : "") +
+        "</article>";
+    }
+    return '<article class="card idle" style="--k:var(--k-' + (next ? next.kind : "resource") + ')">' +
+      '<div class="group">' + label + "</div>" +
+      '<div class="row">' + (next ? badge(next) : "") + "<div>" +
+      '<div class="title">' + (next ? "Next: <b style='color:#fff;font-weight:600'>" + esc(title(next)) + "</b>" : "Nothing scheduled") + "</div>" +
+      (next ? '<div class="when">Starts <b>' + fmt(d(next.start)) + "</b>, " + inWords(days(t, d(next.start))) + "</div>" : "") +
+      "</div></div></article>";
+  }
+
+  function weekLabel(start, t) {
+    var mon = new Date(start); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+    var thisMon = new Date(t); thisMon.setDate(thisMon.getDate() - ((thisMon.getDay() + 6) % 7));
+    var w = days(thisMon, mon) / 7;
+    if (w === 0) return "This week";
+    if (w === 1) return "Next week";
+    return "Week of " + fmt(mon, { day: "numeric", month: "short" });
+  }
+
+  function render() {
+    var t = today();
+    document.getElementById("now").innerHTML = card("core", "Server boost", t) + card("resource", "Resource boost", t);
+    var rows = data.filter(function (b) {
+      return d(b.end) > t && (filter === "all" || b.group === filter);
+    });
+    var html = "", lastWeek = "";
+    rows.forEach(function (b) {
+      var s = d(b.start), e = d(b.end), live = s <= t && t < e;
+      var wk = weekLabel(live ? t : s, t);
+      if (wk !== lastWeek) { html += '<li class="week">' + wk + "</li>"; lastWeek = wk; }
+      var len = days(s, e);
+      html += '<li class="item' + (live ? " is-live" : "") + '" style="--k:var(--k-' + b.kind + ')">' +
+        '<span class="date"><span class="dow">' + fmt(s, { weekday: "short" }) + '</span><span class="day">' + s.getDate() + "</span></span>" +
+        badge(b, true) +
+        '<span class="what"><b>' + esc(title(b)) + (live ? '<span class="chip">LIVE</span>' : "") + "</b>" +
+        "<span>" + (b.group === "core" ? "Server boost" : "Resource boost") + " · " + fmt(s, { day: "numeric", month: "short" }) + "</span></span>" +
+        '<span class="len">' + len + (len === 1 ? " day" : " days") + "</span></li>";
+    });
+    document.getElementById("list").innerHTML = html || '<li class="empty">Nothing on the calendar yet.</li>';
+  }
+
+  document.querySelectorAll(".filters button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      filter = btn.dataset.f;
+      document.querySelectorAll(".filters button").forEach(function (b) { b.setAttribute("aria-pressed", String(b === btn)); });
+      if (data) render();
+    });
+  });
+
+  fetch("boosts.json", { cache: "no-cache" })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) {
+      data = j.boosts.slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
+      var up = new Date(j.updated);
+      document.getElementById("sub").innerHTML = "Ongoing and upcoming boosts · updated <time datetime='" + j.updated + "'>" +
+        up.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + ", " +
+        up.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + "</time>";
+      render();
+      // roll over at midnight without a reload
+      var n = new Date(), mid = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1) - n;
+      setTimeout(function tick() { render(); setTimeout(tick, DAY); }, mid + 1000);
+    })
+    .catch(function () {
+      document.getElementById("sub").innerHTML = '<span class="err">Couldn’t load the boost calendar. Try again in a moment.</span>';
+    });
+})();
+</script>
+</body>
+</html>
