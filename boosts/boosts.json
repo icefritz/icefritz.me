@@ -28,7 +28,7 @@
    "group": "resource",
    "kind": "resource",
    "start": "2026-11-19",
-   "end": "2026-11-20"
+   "end": "2026-11-26"
   },
   {
    "name": "Double Gold Boost",
@@ -56,7 +56,7 @@
    "group": "resource",
    "kind": "resource",
    "start": "2026-11-26",
-   "end": "2026-11-27"
+   "end": "2026-12-03"
   },
   {
    "name": "Double ALL Boost",
@@ -84,7 +84,7 @@
    "group": "resource",
    "kind": "resource",
    "start": "2026-12-03",
-   "end": "2026-12-04"
+   "end": "2026-12-10"
   },
   {
    "name": "Double Gold Boost",
@@ -112,7 +112,7 @@
    "group": "resource",
    "kind": "resource",
    "start": "2026-12-10",
-   "end": "2026-12-11"
+   "end": "2026-12-17"
   },
   {
    "name": "Double EXP Boost",
@@ -140,7 +140,7 @@
    "group": "resource",
    "kind": "resource",
    "start": "2026-12-17",
-   "end": "2026-12-18"
+   "end": "2026-12-24"
   },
   {
    "name": "Double Class Points Boost",
@@ -168,7 +168,7 @@
    "group": "resource",
    "kind": "resource",
    "start": "2026-12-24",
-   "end": "2026-12-25"
+   "end": "2026-12-31"
   },
   {
    "name": "Double ALL Boost",
@@ -196,7 +196,7 @@
    "group": "resource",
    "kind": "resource",
    "start": "2026-12-31",
-   "end": "2027-01-01"
+   "end": "2027-01-07"
   },
   {
    "name": "Double ALL Boost",

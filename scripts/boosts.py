@@ -4,7 +4,7 @@
 Same source and parsing as aqw-lodestar and aqw-wiki-enhanced: the calendar page
 embeds FullCalendar events as JS objects ({title: '...', start: 'YYYY-MM-DD', end: ...}).
 The calendar only gives a start date, so end dates follow aqw-wiki-enhanced's convention:
-core doubles run 48 h (72 h from a Friday), resource boosts run one day.
+core doubles run 48 h (72 h from a Friday); resource boosts run a week.
 """
 import json, re, sys, urllib.request
 from datetime import date, datetime, timedelta, timezone
@@ -66,11 +66,11 @@ def parse(html):
     for i, ev in enumerate(unique):
         if ev["end"] and ev["end"] > ev["start"]:
             continue  # calendar gave a real (exclusive) end date
-        days = 1 if ev["group"] == "resource" else (3 if ev["start"].weekday() == 4 else 2)
+        days = 7 if ev["group"] == "resource" else (3 if ev["start"].weekday() == 4 else 2)
         end = ev["start"] + timedelta(days=days)
-        # a core boost stops when the next core boost starts
+        # a boost stops when the next boost of the same group starts
         nxt = next((o for o in unique[i + 1:] if o["group"] == ev["group"] and o["start"] > ev["start"]), None)
-        if nxt and ev["group"] == "core" and nxt["start"] < end:
+        if nxt and nxt["start"] < end:
             end = nxt["start"]
         ev["end"] = end
     return unique
