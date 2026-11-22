@@ -214,7 +214,7 @@ section{margin-bottom:38px}
     .then(function (j) {
       data = j.boosts.slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
       var up = new Date(j.updated);
-      document.getElementById("sub").innerHTML = "Ongoing and upcoming boosts · updated <time datetime='" + j.updated + "'>" +
+      document.getElementById("sub").innerHTML = "Ongoing and upcoming boosts · schedule last changed <time datetime='" + j.updated + "'>" +
         up.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + ", " +
         up.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + "</time>";
       render();
