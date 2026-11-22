@@ -1,0 +1,51 @@
+/* Crystal menu: click/tap the crystal to open the site navigation */
+.crystal-nav{position:relative;z-index:20;display:grid;justify-items:center}
+.crystal-btn{position:relative;display:grid;place-items:center;padding:6px 14px;background:none;border:0;border-radius:14px;cursor:pointer;color:inherit;-webkit-tap-highlight-color:transparent}
+.crystal-btn:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
+.crystal{display:block;width:46px;height:auto;filter:drop-shadow(0 0 14px rgba(81,197,217,.75));animation:bob 4s ease-in-out infinite;transition:filter .25s}
+.is-open .crystal{filter:drop-shadow(0 0 22px rgba(182,240,251,.95)) brightness(1.12)}
+@keyframes bob{50%{transform:translateY(-6px)}}
+
+.site-nav{position:absolute;top:100%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:16px;pointer-events:none}
+.site-nav::before{content:"";width:1px;height:0;margin-bottom:-4px;background:linear-gradient(var(--ice),transparent);box-shadow:0 0 8px var(--ice);transition:height .3s ease}
+.site-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:170px;padding:11px 20px;text-decoration:none;background:var(--panel);border:1px solid var(--edge);border-radius:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .25s ease,transform .3s ease,border-color .15s,box-shadow .15s}
+.site-nav a b{font-family:"Silkscreen",monospace;font-weight:400;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--plate)}
+.site-nav a span{font-size:12px;color:var(--muted);white-space:nowrap}
+.site-nav a:hover,.site-nav a:focus-visible{outline:none;border-color:var(--ice);box-shadow:0 0 18px -4px var(--ice)}
+.site-nav a:hover b,.site-nav a:focus-visible b{color:var(--ice-hi)}
+.is-open .site-nav{pointer-events:auto}
+.is-open .site-nav::before{height:22px}
+.is-open .site-nav a{opacity:1;transform:none}
+.is-open .site-nav a:nth-of-type(2){transition-delay:.05s}
+.is-open .site-nav a:nth-of-type(3){transition-delay:.1s}
+.is-open .site-nav a:nth-of-type(4){transition-delay:.15s}
+
+/* corner variant (sub-pages): small crystal pinned top right, menu drops down on the right */
+.crystal-nav.corner{position:fixed;top:max(10px, env(safe-area-inset-top, 0px));right:max(6px, env(safe-area-inset-right, 0px))}
+.corner .crystal{width:26px;filter:drop-shadow(0 0 10px rgba(81,197,217,.75))}
+.corner .crystal-btn{padding:8px 14px}
+.corner .site-nav{left:auto;right:0;transform:none;align-items:flex-end;padding-top:10px}
+.corner .site-nav::before{margin-right:27px}
+
+/* cracking ice, on click */
+.cracks path{stroke-dasharray:1;stroke-dashoffset:1;opacity:.95;filter:drop-shadow(0 0 1.5px #fff);transition:stroke-dashoffset .35s cubic-bezier(.3,.7,.2,1)}
+.cracks path:nth-child(2){transition-delay:.05s}.cracks path:nth-child(3){transition-delay:.1s}.cracks path:nth-child(4){transition-delay:.12s}.cracks path:nth-child(5){transition-delay:.18s}.cracks path:nth-child(6){transition-delay:.2s}
+.is-open .cracks path{stroke-dashoffset:0}
+.crystal-btn.shake .crystal{animation:crack .32s steps(2) 1,bob 4s ease-in-out .32s infinite}
+@keyframes crack{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(-1.5px,1px) rotate(-2deg)}50%{transform:translate(1.5px,-1px) rotate(2deg)}75%{transform:translate(-1px,0) rotate(-1deg)}100%{transform:none}}
+.shards{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
+.shards i{position:absolute;left:-3px;top:-4px;width:6px;height:9px;background:linear-gradient(#e9fbff,#51c5d9);clip-path:polygon(50% 0,100% 60%,40% 100%,0 45%);opacity:0;filter:drop-shadow(0 0 4px rgba(81,197,217,.9))}
+.burst .shards i{animation:shard .65s cubic-bezier(.15,.7,.3,1) forwards}
+.shards i:nth-child(1){--x:-34px;--y:-26px;--r:-140deg}
+.shards i:nth-child(2){--x:32px;--y:-30px;--r:160deg}
+.shards i:nth-child(3){--x:-40px;--y:8px;--r:-200deg;width:4px;height:6px}
+.shards i:nth-child(4){--x:38px;--y:12px;--r:210deg;width:5px;height:7px}
+.shards i:nth-child(5){--x:-18px;--y:34px;--r:-90deg;width:4px;height:6px}
+.shards i:nth-child(6){--x:20px;--y:36px;--r:120deg}
+.corner .shards i{--s:.6}
+.corner .shards i:nth-child(odd){--x:-22px}
+.corner .shards i:nth-child(even){--x:20px}
+@keyframes shard{0%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(.6)}}
+
+@media (prefers-reduced-motion:reduce){.crystal,.crystal-btn.shake .crystal{animation:none}.burst .shards i{animation:none}.cracks path,.site-nav a,.site-nav::before{transition:none}}

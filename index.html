@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/ice.css">
+<link rel="stylesheet" href="assets/crystal.css">
+<script src="assets/crystal.js" defer></script>
 <style>
 html,body{height:100%}
 body{display:grid;place-items:center;padding:24px 16px;overflow:hidden}
@@ -18,49 +20,13 @@ main{position:relative;max-width:100%;text-align:center;width:min(100%,560px);as
 .rune{position:absolute;inset:0;width:100%;height:100%}
 .name{font-size:clamp(24px,6vw,38px);position:relative}
 .tag{font-size:clamp(12px,3vw,15px);margin-top:6px;position:relative}
-.crystal-nav{position:relative;z-index:2;display:grid;justify-items:center;margin:26px 0 18px}
-.crystal-btn{display:grid;place-items:center;padding:6px 14px;background:none;border:0;border-radius:14px;cursor:pointer;color:inherit;-webkit-tap-highlight-color:transparent}
-.crystal-btn:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
-.crystal{display:block;width:46px;height:auto;filter:drop-shadow(0 0 14px rgba(81,197,217,.75));animation:bob 4s ease-in-out infinite;transition:filter .25s,transform .25s}
-.crystal-btn:hover .crystal,.is-open .crystal{filter:drop-shadow(0 0 22px rgba(182,240,251,.95)) brightness(1.12)}
-.site-nav{position:absolute;top:100%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:16px;pointer-events:none}
-.site-nav::before{content:"";width:1px;height:0;margin-bottom:-4px;background:linear-gradient(var(--ice),transparent);box-shadow:0 0 8px var(--ice);transition:height .3s ease}
-.site-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:170px;padding:11px 20px;text-decoration:none;background:var(--panel);border:1px solid var(--edge);border-radius:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .25s ease,transform .3s ease,border-color .15s,box-shadow .15s}
-.site-nav a b{font-family:"Silkscreen",monospace;font-weight:400;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--plate)}
-.site-nav a span{font-size:12px;color:var(--muted);white-space:nowrap}
-.site-nav a:hover,.site-nav a:focus-visible{outline:none;border-color:var(--ice);box-shadow:0 0 18px -4px var(--ice)}
-.site-nav a:hover b,.site-nav a:focus-visible b{color:var(--ice-hi)}
-.is-open .site-nav{pointer-events:auto}
-.is-open .site-nav::before{height:22px}
-.is-open .site-nav a{opacity:1;transform:none}
-.is-open .site-nav a:nth-of-type(2){transition-delay:.05s}
-.is-open .site-nav a:nth-of-type(3){transition-delay:.1s}
+.crystal-nav{margin:26px 0 18px}
 h1{transition:opacity .25s ease,transform .3s ease}
-main:has(.is-open) h1{opacity:0;transform:translateY(10px)}
-@keyframes bob{50%{transform:translateY(-6px)}}
+.menu-open main h1{opacity:0;transform:translateY(10px)}
 h1{position:relative;font-weight:300;font-size:clamp(26px,6.4vw,42px);white-space:nowrap;line-height:1.15;letter-spacing:.02em;color:var(--frost)}
 h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
-@media (prefers-reduced-motion:reduce){.crystal{animation:none}.site-nav a,.site-nav::before,h1{transition:none}}
+@media (prefers-reduced-motion:reduce){h1{transition:none}}
 
-/* cracking ice */
-.crystal-btn{position:relative}
-.cracks path{stroke-dasharray:1;stroke-dashoffset:1;opacity:.95;filter:drop-shadow(0 0 1.5px #fff);transition:stroke-dashoffset .35s cubic-bezier(.3,.7,.2,1)}
-.cracks path:nth-child(2){transition-delay:.05s}.cracks path:nth-child(3){transition-delay:.1s}.cracks path:nth-child(4){transition-delay:.12s}.cracks path:nth-child(5){transition-delay:.18s}.cracks path:nth-child(6){transition-delay:.2s}
-.crystal-btn:hover .cracks path,.is-open .cracks path{stroke-dashoffset:0}
-.crystal-btn:hover .crystal,.crystal-btn.shake .crystal{animation:crack .32s steps(2) 1,bob 4s ease-in-out .32s infinite}
-@keyframes crack{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(-1.5px,1px) rotate(-2deg)}50%{transform:translate(1.5px,-1px) rotate(2deg)}75%{transform:translate(-1px,0) rotate(-1deg)}100%{transform:none}}
-.shards{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
-.shards i{position:absolute;left:-3px;top:-4px;width:6px;height:9px;background:linear-gradient(#e9fbff,#51c5d9);clip-path:polygon(50% 0,100% 60%,40% 100%,0 45%);opacity:0;filter:drop-shadow(0 0 4px rgba(81,197,217,.9))}
-.burst .shards i{animation:shard .65s cubic-bezier(.15,.7,.3,1) forwards}
-.shards i:nth-child(1){--x:-34px;--y:-26px;--r:-140deg}
-.shards i:nth-child(2){--x:32px;--y:-30px;--r:160deg}
-.shards i:nth-child(3){--x:-40px;--y:8px;--r:-200deg;width:4px;height:6px}
-.shards i:nth-child(4){--x:38px;--y:12px;--r:210deg;width:5px;height:7px}
-.shards i:nth-child(5){--x:-18px;--y:34px;--r:-90deg;width:4px;height:6px}
-.shards i:nth-child(6){--x:20px;--y:36px;--r:120deg}
-@keyframes shard{0%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(.6)}}
-@media (prefers-reduced-motion:reduce){.crystal-btn:hover .crystal,.crystal-btn.shake .crystal{animation:none}.burst .shards i{animation:none}.cracks path{transition:none}}
 </style>
 </head>
 <body>
@@ -76,61 +42,9 @@ h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.5
   </svg>
   <a class="plate name" href="https://account.aq.com/CharPage?id=IceFritz" target="_blank" rel="noopener" title="IceFritz on AdventureQuest Worlds">IceFritz</a>
   <a class="plate tag" href="https://discord.gg/aqwcruel" target="_blank" rel="noopener" title="Cruel guild Discord">&lsaquo; Cruel &rsaquo;</a>
-  <div class="crystal-nav" id="crystal-nav">
-    <button class="crystal-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu" title="Menu">
-      <svg class="crystal" viewBox="0 0 40 80" aria-hidden="true">
-        <path d="M20 0 34 34 20 80 6 34Z" fill="#51c5d9"/>
-        <path d="M20 0 34 34H20Z" fill="#b6f0fb"/>
-        <path d="M20 0 6 34H20Z" fill="#7fdcef"/>
-        <path d="M20 80 34 34H20Z" fill="#284e68"/>
-        <defs><clipPath id="gem"><path d="M20 0 34 34 20 80 6 34Z"/></clipPath></defs>
-        <g class="cracks" clip-path="url(#gem)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-          <path pathLength="1" d="M20 31 16 24 18 17 15 8" stroke-width="1.2"/>
-          <path pathLength="1" d="M20 31 25 37 22 46 26 56" stroke-width="1.2"/>
-          <path pathLength="1" d="M20 31 13 37 10 34" stroke-width=".9"/>
-          <path pathLength="1" d="M20 31 28 26 31 31" stroke-width=".9"/>
-          <path pathLength="1" d="M22 46 17 51 18 60" stroke-width=".7"/>
-          <path pathLength="1" d="M16 24 11 27" stroke-width=".6"/>
-        </g>
-      </svg>
-      <span class="shards" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-    </button>
-    <nav class="site-nav" id="site-nav" aria-label="Site">
-      <a href="boosts/"><b>Boosts</b><span>Server &amp; resource boosts</span></a>
-    </nav>
-  </div>
+  <div class="crystal-nav" data-crystal-nav></div>
   <h1>Break the <b>ice</b></h1>
 </main>
-<script>
-(function () {
-  var wrap = document.getElementById("crystal-nav");
-  var btn = wrap.querySelector(".crystal-btn");
-  var links = wrap.querySelectorAll(".site-nav a");
-  var hover = window.matchMedia("(hover: hover)");
-  var timer;
-  var burstTimer;
-  function crack() {
-    btn.classList.remove("burst", "shake");
-    void btn.offsetWidth;            // restart the animation
-    btn.classList.add("burst", "shake");
-    clearTimeout(burstTimer);
-    burstTimer = setTimeout(function () { btn.classList.remove("burst", "shake"); }, 700);
-  }
-  function set(open) {
-    if (open && !wrap.classList.contains("is-open")) crack();
-    wrap.classList.toggle("is-open", open);
-    btn.setAttribute("aria-expanded", String(open));
-    btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    links.forEach(function (a) { a.tabIndex = open ? 0 : -1; });
-  }
-  set(false);
-  btn.addEventListener("click", function () { set(!wrap.classList.contains("is-open")); });
-  wrap.addEventListener("mouseenter", function () { if (hover.matches) { clearTimeout(timer); set(true); } });
-  wrap.addEventListener("mouseleave", function () { if (hover.matches) timer = setTimeout(function () { set(false); }, 250); });
-  document.addEventListener("click", function (e) { if (!wrap.contains(e.target)) set(false); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { set(false); btn.focus(); } });
-  wrap.addEventListener("focusout", function (e) { if (!wrap.contains(e.relatedTarget)) set(false); });
-})();
-</script>
+
 </body>
 </html>
