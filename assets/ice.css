@@ -34,3 +34,28 @@ body{
 a.plate:hover,a.plate:focus-visible{color:var(--ice-hi);filter:drop-shadow(0 0 8px rgba(81,197,217,.7));outline:none}
 .glow{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
 @media (prefers-reduced-motion:reduce){.rune{animation:none}}
+
+/* Tool pages (body.page): shared frame for boosts and checklist. :where() keeps these at element-level
+   specificity, so each page's own <style> can still override them. */
+:where(.page){overflow-x:hidden}
+:where(.page) .bg-rune{position:fixed;width:min(110vw,760px);aspect-ratio:1;right:max(-30vw,-240px);top:-200px;opacity:.16;pointer-events:none;z-index:0}
+:where(.page) .wrap{position:relative;z-index:1;width:min(100% - 32px,760px);margin:0 auto;padding:40px 0 56px}
+:where(.page) header{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:34px}
+:where(.page) .back{display:inline-flex;align-items:center;gap:10px;padding:6px 0;margin-bottom:14px;font-size:15px;color:var(--muted);text-decoration:none;transition:color .15s}
+:where(.page) .back svg{width:18px;height:18px;overflow:visible}
+:where(.page) .back .chev{stroke:var(--frost);transition:stroke .15s}
+:where(.page) .back .dash{fill:var(--ice);filter:drop-shadow(0 0 4px rgba(81,197,217,.7));transition:transform .2s ease}
+:where(.page) .back:hover,:where(.page) .back:focus-visible{color:var(--frost);outline:none}
+:where(.page) .back:hover .dash,:where(.page) .back:focus-visible .dash{transform:translateX(-3px)}
+:where(.page) .back:focus-visible{text-decoration:underline;text-underline-offset:4px}
+:where(.page) h1{font-weight:300;font-size:clamp(34px,7vw,52px);letter-spacing:.01em;line-height:1.05}
+:where(.page) .sub{margin-top:10px;color:var(--muted);font-size:14px;line-height:1.6}
+:where(.page) h2{display:flex;align-items:center;gap:10px;font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);margin:0 0 14px}
+:where(.page) h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--edge),transparent)}
+@media (min-width:1100px){
+  /* Desktop: title and tools in a left sidebar (width via --side-w), the main list fills the rest */
+  :where(.page) .wrap{width:min(100% - 64px,1720px);display:grid;grid-template-columns:var(--side-w,360px) minmax(0,1fr);column-gap:44px;grid-template-areas:"side main" "side2 main";grid-template-rows:auto 1fr;align-items:start}
+  :where(.page) .side{grid-area:side}
+  :where(.page) .main{grid-area:main;padding-top:4px}
+  :where(.page) .side2{grid-area:side2}
+}

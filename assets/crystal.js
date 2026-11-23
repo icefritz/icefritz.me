@@ -2,7 +2,6 @@
    Click or tap the crystal to open; click outside or press Esc to close. No hover. */
 (function () {
   var PAGES = [
-    { href: "/", title: "Home", sub: "Break the ice" },
     { href: "/boosts/", title: "Boosts", sub: "Server & resource boosts" },
     { href: "/checklist/", title: "Checklist", sub: "Track the gear you own" }
   ];
