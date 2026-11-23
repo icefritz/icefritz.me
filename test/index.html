@@ -230,12 +230,12 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       { id: "exap", name: "Exalted Apotheosis", wiki: "exalted-apotheosis", match: ["Exalted Apotheosis"], tags: [ALL51] },
       { id: "gde", name: "Gramiel's Divine Enoch", wiki: "gramiel-s-divine-enoch", match: ["Gramiel's Divine Enoch"], tags: [ALL51] },
       { id: "gee", name: "Greatblade of the Entwined Eclipse", wiki: "greatblade-of-the-entwined-eclipse", match: ["Greatblade of the Entwined Eclipse"], tags: [ALL51] },
-      { id: "hbsod-ioda", name: "Hollowborn Sword of Doom (IoDA)", wiki: "hollowborn-sword-of-doom-ioda", match: [], tags: [IODA, ALL51, GOLD25] },
+      { id: "hbsod-ioda", name: "Hollowborn Sword of Doom (IoDA)", wiki: "hollowborn-sword-of-doom-ioda", match: ["Hollowborn Sword of Doom (IoDA)", { name: "Hollowborn Sword of Doom", copy: 2 }], tags: [IODA, ALL51, GOLD25] },
       { id: "hbsod", name: "Hollowborn Sword of Doom", wiki: "hollowborn-sword-of-doom-sword", match: ["Hollowborn Sword of Doom"], tags: [L, SDKA, ALL51, GOLD25] },
       { id: "msfb", name: "Malgor's ShadowFlame Blade", wiki: "malgor-s-shadowflame-blade", match: ["Malgor's ShadowFlame Blade"], tags: [ALL51] },
       { id: "nbod", name: "Necrotic Blade of Doom", wiki: "necrotic-blade-of-doom", match: ["Necrotic Blade of Doom"], tags: [ALL51] },
       { id: "nbou", name: "Necrotic Blade of the Underworld", wiki: "necrotic-blade-of-the-underworld", match: ["Necrotic Blade of the Underworld"], tags: [ALL51, GOLD25] },
-      { id: "nsod-ioda", name: "Necrotic Sword of Doom (IoDA)", wiki: "necrotic-sword-of-doom-ioda", match: [], tags: [IODA, ALL51] },
+      { id: "nsod-ioda", name: "Necrotic Sword of Doom (IoDA)", wiki: "necrotic-sword-of-doom-ioda", match: ["Necrotic Sword of Doom (IoDA)", { name: "Necrotic Sword of Doom", copy: 2 }], tags: [IODA, ALL51] },
       { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword", match: ["Necrotic Sword of Doom"], tags: [ALL51] },
       { id: "nsoa", name: "Necrotic Sword of the Abyss", wiki: "necrotic-sword-of-the-abyss", match: ["Necrotic Sword of the Abyss"], tags: [ALL51] },
       { id: "prov", name: "Providence", wiki: "providence", match: ["Providence"], tags: [ALL51] },
@@ -393,18 +393,25 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   function decode(s) { s = String(s || ""); if (s.indexOf("&") < 0) return s; DEC.innerHTML = s; return DEC.value; } // textarea never runs markup
   function norm(s) { return decode(s).toLowerCase().replace(/[\u2018\u2019\u02bc`\u00b4]/g, "'").replace(/\s+/g, " ").trim(); }
   function applyInventory(rows, source) {
-    // rows: [{name, bank}] - data only, never executed
+    // rows: [{name, bank}] - data only, never executed. Count copies per name: IoDA versions share their
+    // in-game name with the normal item, so owning both shows up as the same name twice.
     var have = {};
-    rows.forEach(function (r) { var k = norm(r.name); if (k && !(k in have && !have[k])) have[k] = !!r.bank; });
+    rows.forEach(function (r) {
+      var k = norm(r.name); if (!k) return;
+      var h = have[k] || (have[k] = { n: 0, banks: [] });
+      h.n++; h.banks.push(!!r.bank);
+    });
     var found = 0, fresh = 0;
     ALL.forEach(function (it) {
       for (var i = 0; i < it.match.length; i++) {
-        var k = norm(it.match[i]);
-        if (k in have) {
+        var m = it.match[i], k = norm(typeof m === "string" ? m : m.name), copy = (typeof m === "object" && m.copy) || 1;
+        var h = have[k];
+        if (h && h.n >= copy) {
           found++;
           var p = state.progress[it.id];
           if (!p || !p.done) fresh++;
-          state.progress[it.id] = { done: true, at: Date.now(), src: "sync", where: have[k] ? "bank" : "inventory" };
+          var bank = copy > 1 ? h.banks[copy - 1] : h.banks.indexOf(false) < 0;
+          state.progress[it.id] = { done: true, at: Date.now(), src: "sync", where: bank ? "bank" : "inventory" };
           break;
         }
       }
