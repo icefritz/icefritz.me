@@ -22,7 +22,7 @@ main{translate:0 0}
 @media (orientation:portrait){main{translate:0 -11svh}}
 /* touch tablets held sideways (iPad landscape): lift a little; desktops stay centred */
 @media (orientation:landscape) and (pointer:coarse) and (min-width:900px){main{translate:0 -7svh}}
-main{position:relative;max-width:100%;text-align:center;width:min(100%,560px);aspect-ratio:1;display:grid;place-content:center;justify-items:center}
+main{position:relative;max-width:100%;text-align:center;width:min(100%,560px,100svh - 48px);aspect-ratio:1;display:grid;place-content:center;justify-items:center}
 /* on phones the circle grows past the text block (up to 120% of the screen width) so the text stays inside the inner ring */
 .rune{position:absolute;left:50%;top:50%;width:max(100%,min(560px,120vw));height:auto;aspect-ratio:1;translate:-50% -50%}
 .name{font-size:clamp(20px,6vw,38px);position:relative}
