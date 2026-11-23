@@ -4,6 +4,12 @@
 .crystal-btn:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
 .crystal{display:block;width:46px;height:auto;filter:drop-shadow(0 0 14px rgba(81,197,217,.75));animation:bob 4s ease-in-out infinite;transition:filter .25s}
 .is-open .crystal{filter:drop-shadow(0 0 22px rgba(182,240,251,.95)) brightness(1.12)}
+/* hover: glow only (no opening), on devices with a real mouse */
+.crystal-btn::after{content:"";position:absolute;inset:-6px 0;border-radius:50%;background:radial-gradient(closest-side,rgba(81,197,217,.32),transparent);opacity:0;transform:scale(.7);transition:opacity .3s ease,transform .3s ease;pointer-events:none;z-index:-1}
+@media (hover:hover){
+  .crystal-btn:hover .crystal{filter:drop-shadow(0 0 20px rgba(182,240,251,.9)) drop-shadow(0 0 6px rgba(81,197,217,.9)) brightness(1.15)}
+  .crystal-btn:hover::after{opacity:1;transform:scale(1.15)}
+}
 @keyframes bob{50%{transform:translateY(-6px)}}
 
 .site-nav{position:absolute;top:100%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:16px;pointer-events:none}
