@@ -199,8 +199,25 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved && saved.progress) state = saved; } catch (e) {}
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { toast("Your browser blocked saving. Export to keep your progress.", true); } }
 
+  /* An item that does the same extra damage to every tagged monster race (Chaos, Dragon,
+     Elemental, Human, Undead) shows one "X% Tagged" tag instead of five. */
+  var RACES = ["Chaos", "Dragon", "Elemental", "Human", "Undead"];
+  function collapseTagged(tags) {
+    var byPct = {};
+    tags.forEach(function (t) { if (t.kind === "dmg" && RACES.indexOf(t.text) >= 0) (byPct[t.pct] = byPct[t.pct] || []).push(t.text); });
+    var full = Object.keys(byPct).filter(function (pct) { return RACES.every(function (r) { return byPct[pct].indexOf(r) >= 0; }); });
+    if (!full.length) return tags;
+    var out = [], placed = {};
+    tags.forEach(function (t) {
+      if (t.kind === "dmg" && full.indexOf(t.pct) >= 0 && RACES.indexOf(t.text) >= 0) {
+        if (!placed[t.pct]) { placed[t.pct] = 1; out.push({ kind: "dmg", pct: t.pct, text: "Tagged", title: t.pct + " more damage to " + RACES.join(", ") + " monsters" }); }
+      } else out.push(t);
+    });
+    return out;
+  }
+
   var ALL = [];
-  GROUPS.forEach(function (g) { g.items.forEach(function (it) { ALL.push(it); }); });
+  GROUPS.forEach(function (g) { g.items.forEach(function (it) { it.tags = collapseTagged(it.tags); ALL.push(it); }); });
 
   /* ---------- Tag filter: each tag cycles off -> include -> exclude -> off ---------- */
   var FKEY = "icefritz-checklist-filters-v1";
@@ -233,7 +250,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   function tagLabel(t) { return (t.pct ? t.pct + " " : "") + t.text; }
   function tagHtml(t) {
     var on = filters[tagLabel(t)];
-    return '<span class="tag ' + t.kind + (on ? " is-" + on : "") + '">' + (t.pct ? "<b>" + esc(t.pct) + "</b> " : "") + esc(t.text) + "</span>";
+    return '<span class="tag ' + t.kind + (on ? " is-" + on : "") + '"' + (t.title ? ' title="' + esc(t.title) + '"' : "") + ">" + (t.pct ? "<b>" + esc(t.pct) + "</b> " : "") + esc(t.text) + "</span>";
   }
   function statusText(p) {
     if (!p || !p.done) return "";
