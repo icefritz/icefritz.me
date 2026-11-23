@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "checklist/index.html"
+        ],
+        "createdAt": "2026-11-23T22:46:08.008Z",
+        "reason": "Claude: static scan no longer sees the h1, which moved to assets/ice.css (:where(.page) h1); the rendered h1 is 34-44px in 390x844 and 1440x900 screenshots"
+      }
+    ]
+  }
+}

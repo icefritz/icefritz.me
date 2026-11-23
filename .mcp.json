@@ -2,7 +2,7 @@
   "mcpServers": {
     "playwright": {
       "command": "npx",
-      "args": ["@playwright/mcp@latest", "--isolated", "--output-dir", ".ui-review-tmp"]
+      "args": ["@playwright/mcp@latest", "--browser", "chromium", "--headless", "--isolated", "--output-dir", ".ui-review-tmp"]
     }
   }
 }
