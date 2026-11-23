@@ -3,7 +3,8 @@
 (function () {
   var PAGES = [
     { href: "/", title: "Home", sub: "Break the ice" },
-    { href: "/boosts/", title: "Boosts", sub: "Server & resource boosts" }
+    { href: "/boosts/", title: "Boosts", sub: "Server & resource boosts" },
+    { href: "/checklist/", title: "Checklist", sub: "Track the gear you own" }
   ];
   var GEM = '<svg class="crystal" viewBox="0 0 40 80" aria-hidden="true">' +
     '<path d="M20 0 34 34 20 80 6 34Z" fill="#51c5d9"/><path d="M20 0 34 34H20Z" fill="#b6f0fb"/>' +
