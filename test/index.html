@@ -240,7 +240,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
         tags: [{ kind: "cp", pct: "50%", text: "Class Points" }, { kind: "rep", pct: "50%", text: "Rep" }, { kind: "gold", pct: "30%", text: "Gold" },
                { kind: "dmg", pct: "50%", text: "Chaos" }, { kind: "dmg", pct: "50%", text: "Dragon" }, { kind: "dmg", pct: "50%", text: "Elemental" }, { kind: "dmg", pct: "50%", text: "Human" }, { kind: "dmg", pct: "50%", text: "Undead" }] }
     ]},
-    { id: "weapons", title: "Weapons", items: [
+    { id: "weapons", title: "Weapons", allDone: "Wow. You got them all\u2026 Whale.", items: [
       { id: "bsod", name: "Burning Sword of Doom", wiki: "burning-sword-of-doom", base: "30-30", match: ["Burning Sword of Doom"], tags: [SEAS, ALL51] },
       { id: "dexap", name: "Dual Exalted Apotheosis", wiki: "dual-exalted-apotheosis", base: "30-30", match: ["Dual Exalted Apotheosis"], tags: [ALL51] },
       { id: "dnsod", name: "Dual Necrotic Swords of Doom", wiki: "dual-necrotic-swords-of-doom", base: "30-30", match: ["Dual Necrotic Swords of Doom"], tags: [ALL51] },
@@ -409,7 +409,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       var have = g.items.filter(isDone).length;
       var shown = g.items.filter(visible), open = shown.filter(function (it) { return !isDone(it); }), fin = shown.filter(isDone);
       var body = open.map(itemHtml).join("") ||
-        '<li class="empty">' + (!shown.length ? "No items match your filters." : "Everything here is completed. Nice.") + "</li>";
+        '<li class="empty">' + (!shown.length ? "No items match your filters." : have === g.items.length && g.allDone ? g.allDone : "Everything here is completed. Nice.") + "</li>";
       html += sectionHtml(g.id, g.title, have + " / " + g.items.length, body, false);
       if (fin.length) doneHtml += sectionHtml(g.id + "-done", g.title + " \u00b7 Completed", fin.length + (fin.length === 1 ? " item" : " items"), fin.map(itemHtml).join(""), true, "completed");
     });
