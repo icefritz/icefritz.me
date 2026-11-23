@@ -210,7 +210,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
         <ol class="steps">
           <li>Drag <a class="btn bm" id="bookmarklet" href="#" title="Drag me to your bookmarks bar"><b>AQW sync</b></a> to your bookmarks bar.</li>
           <li>Log in at <a class="btn" href="https://account.aq.com/AQW/Inventory" target="_blank" rel="noopener">account.aq.com</a></li>
-          <li>On that page, click the <b>AQW sync</b> bookmark. This page opens and ticks what you own.</li>
+          <li>On that page, click the <b>AQW sync</b> bookmark. This page opens, ticks what you own and fills in how many you have for your goals.</li>
         </ol>
         <details>
           <summary>On a phone, or prefer copy and paste?</summary>
@@ -592,7 +592,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     var amounts = 0;
     ALL.forEach(function (it) {
       if (it.goal && it.goal.target) {
-        // Amount goals: fill in the amount when AQW's data says how many you have; otherwise leave it to you.
+        // Amount goals: AQW's inventory data gives each item's Quantity (inventory and bank rows are added together).
         var gh = have[norm(it.goal.name)];
         if (gh && gh.qty != null) { var was = isDone(it); setHave(it.goal, gh.qty, "sync"); amounts++; if (isDone(it)) { found++; if (!was) fresh++; state.progress[it.id].where = gh.banks.indexOf(false) < 0 ? "bank" : "inventory"; } }
         return;
@@ -622,7 +622,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     return list.map(function (r) {
       if (typeof r === "string") return { name: r, bank: false };
       if (Array.isArray(r)) return { name: r[0], bank: !!r[1], qty: qtyOf(r[2]) };
-      return r && typeof r === "object" ? { name: r.Name || r.name || r.n, bank: r.Bank === 1 || r.Bank === true || r.bank === true || r.b === true, qty: qtyOf(r.Quantity != null ? r.Quantity : r.Qty != null ? r.Qty : r.Count != null ? r.Count : r.quantity) } : null;
+      return r && typeof r === "object" ? { name: r.Name || r.name || r.n, bank: r.Bank === 1 || r.Bank === true || r.bank === true || r.b === true, qty: qtyOf(r.Quantity != null ? r.Quantity : r.quantity) } : null;
     }).filter(function (r) { return r && typeof r.name === "string" && r.name.length < 200; });
   }
 
@@ -633,13 +633,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     "const w=window.open(T+'?sync=1','icefritz-sync');if(!w){alert('Your browser blocked the checklist window. Allow pop-ups for account.aq.com, then click AQW sync again.');return}" +
     "const API='https://account.aq.com/myapi/inventory/InventoryData?take=500&sort='+encodeURIComponent('[{\"selector\":\"ID\",\"desc\":false}]');" +
     "const get=async q=>{const r=await fetch(API+q+'&_='+Date.now(),{credentials:'include',headers:{accept:'application/json, text/javascript, */*; q=0.01','x-requested-with':'XMLHttpRequest'}});const j=await r.json();if(!j||!Array.isArray(j.data))throw 0;return j};" +
-    "const run=async()=>{const seen=new Map();const add=d=>{for(const r of d)seen.set(r.ID??(r.Name+'|'+seen.size),[r.Name,r.Bank===1||r.Bank===true?1:0,r.Quantity??r.Qty??r.Count??null])};" +
+    "const run=async()=>{const seen=new Map();const add=d=>{for(const r of d)seen.set(r.ID??(r.Name+'|'+seen.size),[r.Name,r.Bank===1||r.Bank===true?1:0,r.Quantity??null])};" +
     "const f=await get('&skip=0&requireTotalCount=true');const total=f.totalCount??f.data.length;add(f.data);let last=f.data.length?f.data[f.data.length-1].ID:0,g=0;" +
     "while(seen.size<total&&g++<200){const p=await get('&skip=0&filter='+encodeURIComponent(JSON.stringify([['ID','>',last]])));if(!p.data.length)break;add(p.data);const nl=p.data[p.data.length-1].ID;if(nl===last)break;last=nl}" +
     "if(seen.size<total){let skip=0;g=0;while(skip<total&&g++<200){const p=await get('&skip='+skip);if(!p.data.length)break;add(p.data);skip+=p.data.length}}" +
     "return{rows:[...seen.values()],total}};" +
     "let res;try{res=await run()}catch(e){try{await fetch('https://account.aq.com/AQW/Inventory',{credentials:'include'});res=await run()}catch(e2){if(w)w.close();alert('Could not read your inventory. Make sure you are logged in at account.aq.com, then try again.');return}}" +
-    "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',v:2,items:res.rows,total:res.total},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
+    "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',v:3,items:res.rows,total:res.total},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
     "addEventListener('message',e=>{if(e.origin===O&&e.data==='aqw-inventory-ok')clearInterval(t)})})()";
   var bm = document.getElementById("bookmarklet");
   bm.href = "javascript:" + encodeURIComponent(BM);
@@ -653,8 +653,11 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     if (window.__synced) return; window.__synced = true;
     var rows = rowsFromJson(d.items);
     if (rows) applyInventory(rows, "bookmark");
-    if (d.v !== 2) setTimeout(function () {
+    if (d.v !== 2 && d.v !== 3) setTimeout(function () {
       toast("Your AQW sync bookmark is out of date and can miss items. Drag the new AQW sync button to your bookmarks bar to replace it.", true);
+    }, 4400);
+    else if (d.v === 2 && state.goals.some(function (g) { return g.target; })) setTimeout(function () {
+      toast("Your AQW sync bookmark doesn't send item amounts for your goals. Drag the new AQW sync button to your bookmarks bar to replace it.", true);
     }, 4400);
     setTimeout(function () { window.__synced = false; }, 3000);
   });
