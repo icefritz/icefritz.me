@@ -14,11 +14,11 @@
 
 .site-nav{position:absolute;top:100%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:16px;pointer-events:none}
 .site-nav::before{content:"";width:1px;height:0;margin-bottom:-4px;background:linear-gradient(var(--ice),transparent);box-shadow:0 0 8px var(--ice);transition:height .3s ease}
-.site-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:170px;padding:11px 20px;text-decoration:none;background:var(--panel);border:1px solid var(--edge);border-radius:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .25s ease,transform .3s ease,border-color .15s,box-shadow .15s}
+.site-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:170px;padding:11px 20px;text-decoration:none;border-bottom:1px solid var(--edge);
+  opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .25s ease,transform .3s ease,border-color .15s}
 .site-nav a b{font-family:"Silkscreen",monospace;font-weight:400;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--plate)}
 .site-nav a span{font-size:12px;color:var(--muted);white-space:nowrap}
-.site-nav a:hover,.site-nav a:focus-visible{outline:none;border-color:var(--ice);box-shadow:0 0 18px -4px var(--ice)}
+.site-nav a:hover,.site-nav a:focus-visible{outline:none;border-color:var(--ice)}
 .site-nav a:hover b,.site-nav a:focus-visible b{color:var(--ice-hi)}
 .is-open .site-nav{pointer-events:auto}
 .is-open .site-nav::before{height:22px}

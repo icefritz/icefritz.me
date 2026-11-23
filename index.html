@@ -30,12 +30,12 @@ main{position:relative;max-width:100%;text-align:center;width:min(100%,560px,100
 .name{font-size:clamp(20px,6vw,38px);position:relative}
 .tag{font-size:clamp(17px,5.1vw,25px);margin-top:4px;position:relative}
 .crystal-nav{margin:26px 0 18px}
-.tagline{position:relative;display:grid;justify-items:center;width:max-content;transition:opacity .25s ease,transform .3s ease}
+.tagline{position:relative;display:grid;justify-items:center;width:max-content;min-width:min(78vw,300px);transition:opacity .25s ease,transform .3s ease}
 .menu-open main .tagline{opacity:0;transform:translateY(10px)}
 h1{position:relative;font-weight:300;font-size:clamp(22px,6.4vw,42px);white-space:nowrap;line-height:1.15;letter-spacing:.02em;color:var(--frost)}
-h1 b{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
+h1 b{font-weight:600;color:var(--ice-hi)}
 /* hint: one line, never wider than the tagline (width:0 + min-width:100% keeps it from widening the box) */
-.hint{width:0;min-width:100%;margin-top:8px;font-size:clamp(10px,2.25vw,14.5px);font-weight:300;letter-spacing:.03em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center}
+.hint{width:0;min-width:100%;margin-top:8px;font-size:12px;font-weight:400;letter-spacing:.03em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center}
 @media (prefers-reduced-motion:reduce){.tagline{transition:none}}
 
 </style>
