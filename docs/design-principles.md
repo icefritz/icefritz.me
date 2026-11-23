@@ -9,9 +9,15 @@
 
 ## 形と区切り
 
+- メニュー項目は箱ではなく1pxの罫線で区切る（ui-refine-home）
+
 ## 色と階層
 
+- グロー（text-shadow / drop-shadow）は結晶だけに使う（ui-refine-home）
+
 ## アイコンと文字
+
+- 操作を示す説明文は12px以上にする（ui-refine-home）
 
 ## 余白とレイアウト
 

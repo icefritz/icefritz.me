@@ -23,9 +23,9 @@
 
 ## dev サーバー
 
-- 起動コマンド: `npx serve -l 3000 .`
-- ベースURL: http://localhost:3000/
-- 起動確認: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/` が 200
+- 起動コマンド: `npx serve -l 3917 .`（3000 は別プロジェクトが使うことがあるため 3917）
+- ベースURL: http://localhost:3917/
+- 起動確認: `curl -s -o /dev/null -w "%{http_code}" http://localhost:3917/` が 200
 - ハッシュルーター: いいえ
 
 ## ビューポート
@@ -43,9 +43,9 @@
 
 | 画面名（引数で受け付ける名前） | URL | 主なファイル | spec の capability（OpenSpec を使う場合） | change 名 |
 | ------------------------------ | --- | ------------ | ----------------------------------------- | --------- |
-| home / トップ                  | http://localhost:3000/ | index.html, assets/ice.css, assets/crystal.css, assets/crystal.js | - | ui-refine-home |
-| boosts / ブースト              | http://localhost:3000/boosts/ | boosts/index.html, boosts/boosts.json | - | ui-refine-boosts |
-| checklist / チェックリスト     | http://localhost:3000/checklist/ | checklist/index.html | - | ui-refine-checklist |
+| home / トップ                  | http://localhost:3917/ | index.html, assets/ice.css, assets/crystal.css, assets/crystal.js | - | ui-refine-home |
+| boosts / ブースト              | http://localhost:3917/boosts/ | boosts/index.html, boosts/boosts.json | - | ui-refine-boosts |
+| checklist / チェックリスト     | http://localhost:3917/checklist/ | checklist/index.html | - | ui-refine-checklist |
 
 - トップは結晶メニューを開いた状態（結晶をクリック）も撮る。
 - `404.html`、`test/`・`tests/` はリダイレクト用でレビュー対象外。
@@ -62,4 +62,4 @@
 
 - OpenSpec: 使わない（`openspec/` ディレクトリも CLI も無い）
   - `docs/ui-reviews/ui-refine-<画面>/` に proposal.md / tasks.md / screenshots/ を書き出す。
-- テスト・lint のコマンド: なし（ビルド・テストなし）。`npx serve -l 3000 .` で表示を確認する
+- テスト・lint のコマンド: なし（ビルド・テストなし）。`npx serve -l 3917 .` で表示を確認する
