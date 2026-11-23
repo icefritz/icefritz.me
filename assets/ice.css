@@ -26,13 +26,13 @@ body{
   color:var(--frost);
   font-family:"Outfit",system-ui,sans-serif;
 }
-.rune{color:var(--ice);opacity:.38;filter:drop-shadow(0 0 6px rgba(81,197,217,.6));animation:turn 90s linear infinite}
+.rune{color:var(--ice);opacity:.38;animation:turn 90s linear infinite}
 @keyframes turn{to{transform:rotate(360deg)}}
 .plate{display:block;text-decoration:none;transition:color .15s,filter .15s;font-family:"Silkscreen",monospace;color:var(--plate);letter-spacing:.12em;text-transform:uppercase;
   text-shadow:-2px 0 #000,2px 0 #000,0 -2px #000,0 2px #000,-2px -2px #000,2px 2px #000,-2px 2px #000,2px -2px #000}
 .plate.tag{color:#fff}
 a.plate:hover,a.plate:focus-visible{color:var(--ice-hi);filter:drop-shadow(0 0 8px rgba(81,197,217,.7));outline:none}
-.glow{font-weight:600;color:var(--ice-hi);text-shadow:0 0 18px rgba(81,197,217,.55)}
+.glow{font-weight:600;color:var(--ice-hi)}
 @media (prefers-reduced-motion:reduce){.rune{animation:none}}
 
 /* Tool pages (body.page): shared frame for boosts and checklist. :where() keeps these at element-level
@@ -44,14 +44,14 @@ a.plate:hover,a.plate:focus-visible{color:var(--ice-hi);filter:drop-shadow(0 0 8
 :where(.page) .back{display:inline-flex;align-items:center;gap:10px;padding:6px 0;margin-bottom:14px;font-size:15px;color:var(--muted);text-decoration:none;transition:color .15s}
 :where(.page) .back svg{width:18px;height:18px;overflow:visible}
 :where(.page) .back .chev{stroke:var(--frost);transition:stroke .15s}
-:where(.page) .back .dash{fill:var(--ice);filter:drop-shadow(0 0 4px rgba(81,197,217,.7));transition:transform .2s ease}
+:where(.page) .back .dash{fill:var(--ice);transition:transform .2s ease}
 :where(.page) .back:hover,:where(.page) .back:focus-visible{color:var(--frost);outline:none}
 :where(.page) .back:hover .dash,:where(.page) .back:focus-visible .dash{transform:translateX(-3px)}
 :where(.page) .back:focus-visible{text-decoration:underline;text-underline-offset:4px}
 :where(.page) h1{font-weight:300;font-size:clamp(34px,7vw,52px);letter-spacing:.01em;line-height:1.05}
 :where(.page) .sub{margin-top:10px;color:var(--muted);font-size:14px;line-height:1.6}
 :where(.page) h2{display:flex;align-items:center;gap:10px;font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);margin:0 0 14px}
-:where(.page) h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--edge),transparent)}
+:where(.page) h2::after{content:"";flex:1;height:1px;background:var(--edge)}
 @media (min-width:1100px){
   /* Desktop: title and tools in a left sidebar (width via --side-w), the main list fills the rest */
   :where(.page) .wrap{width:min(100% - 64px,1720px);display:grid;grid-template-columns:var(--side-w,360px) minmax(0,1fr);column-gap:44px;grid-template-areas:"side main" "side2 main";grid-template-rows:auto 1fr;align-items:start}

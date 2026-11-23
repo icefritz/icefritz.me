@@ -8,17 +8,20 @@
 - 例外を作るときは、ルールを消さずに例外として追記する。
 
 ## 形と区切り
-
+- 一覧の種類は行の左の2pxの罫線で示す（ui-refine-boosts）
 - メニュー項目は箱ではなく1pxの罫線で区切る（ui-refine-home）
 
 ## 色と階層
-
+- 見出しの区切り線は単色の1pxにする（ui-refine-boosts）
 - グロー（text-shadow / drop-shadow）は結晶だけに使う（ui-refine-home）
 
 ## アイコンと文字
-
 - 操作を示す説明文は12px以上にする（ui-refine-home）
 
 ## 余白とレイアウト
+- ライブ中の項目は残り時間を最も大きな数字として右に置き、次の予定は一覧に任せる（ui-refine-boosts）
+- 一覧の補助情報（日数）は行の右端に置き、行を折り返さない（ui-refine-boosts）
+- 週ごとの一覧は読む順番を上から下に保つ（グリッドで横に並べない）（ui-refine-boosts）
+- 日時は分断せず、nowrap で一塊にする（ui-refine-boosts）
 
 ## 例外
