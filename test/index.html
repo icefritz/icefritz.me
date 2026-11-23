@@ -61,6 +61,31 @@ section{margin-bottom:34px}
 .tag.legend{border-color:color-mix(in srgb,var(--legend) 60%,transparent);color:var(--legend);font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .tag.dmg b{color:var(--ice-hi);font-weight:600}
 .tag.cp b{color:#a99bff}.tag.rep b{color:#62d6a8}.tag.gold b{color:var(--legend)}
+.tag.sdka,.tag.ioda,.tag.ac,.tag.heromart,.tag.kickstarter{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
+.tag.sdka{border-color:rgba(240,120,120,.55);color:#f29a9a}
+.tag.ioda{border-color:rgba(255,150,220,.5);color:#f6a8de}
+.tag.ac,.tag.heromart,.tag.kickstarter{border-color:rgba(127,214,255,.5);color:#8fd8ff}
+.tag.rare{border-color:rgba(255,120,90,.5);color:#ff9a7a}
+.tag.pseudo{border-color:rgba(190,160,255,.45);color:#c3b0ff}
+.tag.seasonal{border-color:rgba(98,214,168,.45);color:#7fe0b8}
+.ftag.sdka,.ftag.ioda,.ftag.ac{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
+.req{margin-top:10px}
+.req summary{cursor:pointer;font-size:12.5px;color:var(--muted);list-style:none;display:inline-flex;align-items:center;gap:8px}
+.req summary::-webkit-details-marker{display:none}
+.req summary::before{content:"";width:0;height:0;border:4px solid transparent;border-left:5px solid var(--slate);transition:transform .15s}
+.req[open] summary::before{transform:rotate(90deg) translateX(2px)}
+.req summary:hover{color:var(--frost)}
+.paynote{font-size:11px;color:#f0a3a3}
+.where{margin-top:8px;font-size:13px;color:var(--frost)}
+.req ul{margin:6px 0 0;padding-left:18px;font-size:13px;line-height:1.6;color:var(--muted)}
+.req li.pay{color:var(--frost)}
+.paychip{display:inline-block;font-family:"Silkscreen",monospace;font-size:9.5px;letter-spacing:.05em;padding:2px 6px;border-radius:4px;border:1px solid var(--edge);vertical-align:1px;margin-left:4px}
+.paychip.legend{color:var(--legend);border-color:color-mix(in srgb,var(--legend) 60%,transparent)}
+.paychip.ac{color:#8fd8ff;border-color:rgba(127,214,255,.5)}
+.paychip.ioda{color:#f6a8de;border-color:rgba(255,150,220,.5)}
+.paychip.sdka{color:#f29a9a;border-color:rgba(240,120,120,.55)}
+.paychip.pseudo{color:#c3b0ff;border-color:rgba(190,160,255,.45)}
+.paychip.seasonal{color:#7fe0b8;border-color:rgba(98,214,168,.45)}
 .tag.is-inc{border-color:var(--ice);box-shadow:0 0 0 1px color-mix(in srgb,var(--ice) 35%,transparent)}
 .filterbar{margin-bottom:26px}
 .ftags{display:flex;flex-wrap:wrap;gap:6px}
@@ -176,20 +201,100 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 
   /* ---------- The checklist. Add items here; "match" lists the in-game names to look for. ---------- */
   var WIKI = "https://aqwwiki.wikidot.com/";
+  /* Tag kinds: legend, heromart, kickstarter, ac, ioda, sdka (pay-to-win) · rare, pseudo, seasonal (availability)
+     · dmg (damage) · gold, rep, cp, xp (boosts).
+     Requirements: "where" is the shop/quest/map; "req" lists what you need. A trailing [Legend] / [AC] / [IoDA]
+     / [Pseudo-rare] / [Seasonal] / [SDKA] marks a paywalled or no-longer-available requirement.
+     Source: AQW Wiki, "Boosted Items Sorted by Boost" (51% weapons) and each item's page. */
+  var L = { kind: "legend", text: "Legend-only" }, SDKA = { kind: "sdka", text: "SDKA" }, AC = { kind: "ac", text: "AC" },
+      IODA = { kind: "ioda", text: "IoDA" }, PSEUDO = { kind: "pseudo", text: "Pseudo-rare" }, SEAS = { kind: "seasonal", text: "Seasonal" },
+      ALL51 = { kind: "dmg", pct: "51%", text: "All" }, GOLD25 = { kind: "gold", pct: "25%", text: "Gold" };
+  var NULG = ["Voucher of Nulgath (non-mem)", "Nulgath Insignia ×25"];
   var GROUPS = [
     { id: "armours", title: "Armours", items: [
       { id: "sdka", name: "Sepulchure's DoomKnight Armor", wiki: "sepulchure-s-doomknight-armor",
-        match: ["Sepulchure's DoomKnight Armor"],
-        tags: [{ kind: "legend", text: "Legend-only" }, { kind: "dmg", pct: "51%", text: "Human" }] },
+        match: ["Sepulchure's DoomKnight Armor"], tags: [L, SDKA, { kind: "dmg", pct: "51%", text: "Human" }],
+        where: "Necropolis · quest “Summoning Sepulchure's Armor”",
+        req: ["Doom Aura [Legend]", "Dark Spirit Orb ×500 [Legend]", "Corrupt Spirit Orb ×250 [Legend]", "Ominous Aura ×125 [Legend]", "Diabolical Aura ×75 [Legend]", "Experimental Dark Item [Legend]", "DoomKnight Weapon Kit [Legend]", "Heart of Darkness"] },
       { id: "rgow", name: "Radiant Goddess of War", wiki: "radiant-goddess-of-war",
         match: ["Radiant Goddess of War"],
         tags: [{ kind: "cp", pct: "50%", text: "Class Points" }, { kind: "rep", pct: "50%", text: "Rep" }, { kind: "gold", pct: "30%", text: "Gold" },
-               { kind: "dmg", pct: "50%", text: "Chaos" }, { kind: "dmg", pct: "50%", text: "Dragon" }, { kind: "dmg", pct: "50%", text: "Elemental" }, { kind: "dmg", pct: "50%", text: "Human" }, { kind: "dmg", pct: "50%", text: "Undead" }] }
+               { kind: "dmg", pct: "50%", text: "Chaos" }, { kind: "dmg", pct: "50%", text: "Dragon" }, { kind: "dmg", pct: "50%", text: "Elemental" }, { kind: "dmg", pct: "50%", text: "Human" }, { kind: "dmg", pct: "50%", text: "Undead" }],
+        where: "Ultra Speaker · quest “The Goddess of War”" }
     ]},
     { id: "weapons", title: "Weapons", items: [
-      { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword",
-        match: ["Necrotic Sword of Doom"],
-        tags: [{ kind: "dmg", pct: "51%", text: "All" }] }
+      { id: "bsod", name: "Burning Sword of Doom", wiki: "burning-sword-of-doom", match: ["Burning Sword of Doom"], tags: [SEAS, ALL51],
+        where: "Lavarock Bay · quest “Forging the Burning Sword of Doom”", req: ["Necrotic Sword of Doom"] },
+      { id: "dexap", name: "Dual Exalted Apotheosis", wiki: "dual-exalted-apotheosis", match: ["Dual Exalted Apotheosis"], tags: [ALL51],
+        where: "Exaltia Merge", req: ["Exalted Apotheosis", "Ezrajal Insignia ×14", "Warden Insignia ×14", "Engineer Insignia ×14"] },
+      { id: "dnsod", name: "Dual Necrotic Swords of Doom", wiki: "dual-necrotic-swords-of-doom", match: ["Dual Necrotic Swords of Doom"], tags: [ALL51],
+        where: "Yulgar's Dual Wield Shop", req: ["Necrotic Sword of Doom", "Weapon Reflection"] },
+      { id: "ebmk", name: "Empowered BladeMaster's Katana", wiki: "empowered-blademaster-s-katana", match: ["Empowered BladeMaster's Katana"], tags: [L, PSEUDO, ALL51],
+        where: "Ultra Dage · quest “Empowered BladeMaster”", req: ["BladeMaster's Dual Katanas [Pseudo-rare]", "Living BladeMaster [Pseudo-rare]", "Dark Unicorn Rib (Binky) [Legend]", "Legion Token ×15,000", "Dage the Evil Insignia ×30"] },
+      { id: "ebl", name: "Empowered Bloodletter", wiki: "empowered-bloodletter", match: ["Empowered Bloodletter"], tags: [PSEUDO, ALL51],
+        where: "Ultra Nulgath · quest “Empowered Bloodletter”", req: ["Bloodletter of Nulgath", "Tainted Gem ×350", "Dark Crystal Shard ×200", "Diamond of Nulgath ×500"].concat(NULG) },
+      { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", match: ["Empowered Caladbolg"], tags: [ALL51],
+        where: "Ultra Dage · quest “Empowered Caladbolg”", req: ["Caladbolg", "Dual Caladbolgs", "Legion Token ×25,000", "Dage the Evil Insignia ×35"] },
+      { id: "ecob", name: "Empowered Charged Oblivion Blade", wiki: "empowered-charged-oblivion-blade", match: ["Empowered Charged Oblivion Blade"], tags: [L, AC, PSEUDO, ALL51],
+        where: "Ultra Nulgath · quest “Empowered Charged Oblivion Blade”", req: ["Oblivion Blade of Nulgath (Sword), 200 AC [AC]", "Oblivion Blade of Nulgath (Pet) [Legend]", "Bane of Nulgath", "Dark Crystal Shard ×150", "Diamond of Nulgath ×500", "Totem of Nulgath ×30"].concat(NULG) },
+      { id: "edcal", name: "Empowered Dual Caladbolgs", wiki: "empowered-dual-caladbolgs", match: ["Empowered Dual Caladbolgs"], tags: [ALL51],
+        where: "Ultra Dage · quest “Empowered Caladbolg”", req: ["Caladbolg", "Dual Caladbolgs", "Legion Token ×25,000", "Dage the Evil Insignia ×35"] },
+      { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [ALL51],
+        where: "Dage Challenge Merge", req: ["Empowered Dual Caladbolgs", "Dual Hollowborn Caladbolgs"] },
+      { id: "edk", name: "Empowered Dual Katanas", wiki: "empowered-dual-katanas", match: ["Empowered Dual Katanas"], tags: [L, PSEUDO, ALL51],
+        where: "Ultra Dage · quest “Empowered BladeMaster”", req: ["BladeMaster's Dual Katanas [Pseudo-rare]", "Living BladeMaster [Pseudo-rare]", "Dark Unicorn Rib (Binky) [Legend]", "Legion Token ×15,000", "Dage the Evil Insignia ×30"] },
+      { id: "ehig", name: "Empowered Higure", wiki: "empowered-higure", match: ["Empowered Higure"], tags: [SEAS, ALL51],
+        where: "Darkon Ultra Merge", req: ["Higure (Lolosia merge) [Seasonal]", "King Drago Insignia ×20", "Darkon Insignia ×20"] },
+      { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", match: ["Empowered Hollowborn Caladbolg"], tags: [ALL51],
+        where: "Dage Challenge Merge", req: ["Empowered Caladbolg", "Hollowborn Caladbolg"] },
+      { id: "ehob", name: "Empowered Hollowborn Overfiend Blade", wiki: "empowered-hollowborn-overfiend-blade", match: ["Empowered Hollowborn Overfiend Blade"], tags: [ALL51],
+        where: "Nulgath's Merge Shop · Ultra Nulgath", req: ["Empowered Overfiend Blade", "Hollowborn Overfiend Blade of Nulgath", "Quest “Tug and Pull” completed"] },
+      { id: "eob", name: "Empowered Oblivion Blade", wiki: "empowered-oblivion-blade", match: ["Empowered Oblivion Blade"], tags: [AC, PSEUDO, ALL51],
+        where: "Ultra Nulgath · quest “Empowered Oblivion Blade”", req: ["Oblivion Blade of Nulgath (Sword), 200 AC [AC]", "Bane of Nulgath", "Dark Crystal Shard ×150", "Diamond of Nulgath ×500", "Totem of Nulgath ×30"].concat(NULG) },
+      { id: "eofb", name: "Empowered Overfiend Blade", wiki: "empowered-overfiend-blade", match: ["Empowered Overfiend Blade"], tags: [ALL51],
+        where: "Ultra Nulgath · quest “Empowered Overfiend Blade”", req: ["Overfiend Blade of Nulgath", "Tainted Gem ×200", "Dark Crystal Shard ×100", "Diamond of Nulgath ×400", "Totem of Nulgath ×30", "Gem of Nulgath ×80"].concat(NULG) },
+      { id: "epm", name: "Empowered Prismatic Manslayer", wiki: "empowered-prismatic-manslayer", match: ["Empowered Prismatic Manslayer"], tags: [ALL51],
+        where: "Ultra Nulgath · quest “Empowered Prismatic Manslayers”", req: ["Taro's Prismatic Manslayer", "Taro's Dual Prismatic Manslayers", "Tainted Gem ×400", "Dark Crystal Shard ×250", "Diamond of Nulgath ×600", "Gem of Nulgath ×150", "Blood Gem of the Archfiend ×70", "Nulgath Insignia ×25"] },
+      { id: "epms", name: "Empowered Prismatic Manslayers", wiki: "empowered-prismatic-manslayers", match: ["Empowered Prismatic Manslayers"], tags: [ALL51],
+        where: "Ultra Nulgath · quest “Empowered Prismatic Manslayers”", req: ["Taro's Prismatic Manslayer", "Taro's Dual Prismatic Manslayers", "Tainted Gem ×400", "Dark Crystal Shard ×250", "Diamond of Nulgath ×600", "Gem of Nulgath ×150", "Blood Gem of the Archfiend ×70", "Nulgath Insignia ×25"] },
+      { id: "ess", name: "Empowered Shadow Spear", wiki: "empowered-shadow-spear", match: ["Empowered Shadow Spear"], tags: [PSEUDO, ALL51],
+        where: "Ultra Nulgath · quest “Empowered Shadow Spear”", req: ["Shadow Spear of Nulgath [Pseudo-rare]", "Tainted Gem ×350", "Dark Crystal Shard ×200", "Diamond of Nulgath ×500"].concat(NULG) },
+      { id: "esbl", name: "Empowered Sole Bloodletter", wiki: "empowered-sole-bloodletter", match: ["Empowered Sole Bloodletter"], tags: [PSEUDO, ALL51],
+        where: "Tercessuinotlim · quest “Sole Empowered Blood Blade”", req: ["Sole Bloodletter of Nulgath", "The Secret 1", "Tainted Gem ×350", "Dark Crystal Shard ×200", "Diamond of Nulgath ×500"].concat(NULG) },
+      { id: "eur", name: "Empowered Ungodly Reavers", wiki: "empowered-ungodly-reavers", match: ["Empowered Ungodly Reavers"], tags: [ALL51],
+        where: "Ultra Nulgath · quest “Empowered Ungodly Reavers”", req: ["Ungodly Reavers of Nulgath", "Tainted Gem ×200", "Dark Crystal Shard ×100", "Diamond of Nulgath ×400", "Totem of Nulgath ×30", "Gem of Nulgath ×80"].concat(NULG) },
+      { id: "exap", name: "Exalted Apotheosis", wiki: "exalted-apotheosis", match: ["Exalted Apotheosis"], tags: [ALL51],
+        where: "Exaltia Merge", req: ["Exalted Penultima", "Ezrajal Insignia ×4", "Warden Insignia ×4", "Engineer Insignia ×8"] },
+      { id: "gde", name: "Gramiel's Divine Enoch", wiki: "gramiel-s-divine-enoch", match: ["Gramiel's Divine Enoch"], tags: [ALL51],
+        where: "Gramiel's Merge · Ultra Gramiel", req: ["Gramiel's Glorified Enoch", "Gramiel the Graceful's Insignia ×30", "Gold Voucher 500k ×40"] },
+      { id: "gee", name: "Greatblade of the Entwined Eclipse", wiki: "greatblade-of-the-entwined-eclipse", match: ["Greatblade of the Entwined Eclipse"], tags: [ALL51],
+        where: "Celestial Temple Forge · Eclipse Ascent", req: ["Blade of the Bound Eclipse", "Greatblade of the Solstice Moon", "Greatblade of the Midnight Sun", "Ecliptic Offering ×100"] },
+      { id: "hbsod-ioda", name: "Hollowborn Sword of Doom (IoDA)", wiki: "hollowborn-sword-of-doom-ioda", match: [], tags: [IODA, ALL51, GOLD25],
+        where: "Account Manager · Awesome Prizes", req: ["Any “… of Digital Awesomeness” token [IoDA]"] },
+      { id: "hbsod", name: "Hollowborn Sword of Doom", wiki: "hollowborn-sword-of-doom-sword", match: ["Hollowborn Sword of Doom"], tags: [L, SDKA, ALL51, GOLD25],
+        where: "Hollowdeep · quest “A Dark Knight Returns” (level 100)", req: ["Sepulchure's DoomKnight Armor [SDKA]", "Necrotic Sword of Doom", "Sepulchure's Original Helm", "Hollowborn Shadow of Fate", "Lae's Hardcore Contract", "Dark Energy ×10,000 [Legend]", "Dark Fragment ×30", "Doom Fragment ×10", "Weapon Imprint ×12", "Desolich's Dark Horn ×3", "(Necro) Scroll of Dark Arts ×3", "Bones from the Void Realm", "Doom Heart"] },
+      { id: "msfb", name: "Malgor's ShadowFlame Blade", wiki: "malgor-s-shadowflame-blade", match: ["Malgor's ShadowFlame Blade"], tags: [ALL51],
+        where: "Ultra Speaker Merge", req: ["ShadowFlame Dragon Blade", "Malgor Insignia ×20", "Elemental Core ×20"] },
+      { id: "nbod", name: "Necrotic Blade of Doom", wiki: "necrotic-blade-of-doom", match: ["Necrotic Blade of Doom"], tags: [ALL51],
+        where: "Necrotic Sword of Doom shop · Shadowfall", req: ["Necrotic Sword of Doom", "Void Aura ×750", "Void Essentia"] },
+      { id: "nbou", name: "Necrotic Blade of the Underworld", wiki: "necrotic-blade-of-the-underworld", match: ["Necrotic Blade of the Underworld"], tags: [ALL51, GOLD25],
+        where: "Ultra Dage · quest “Necrotic Sword of the Underworld”", req: ["Necrotic Sword of Doom", "Underworld Blade of DOOM", "Legion Token ×25,000", "Beast Soul ×25", "Soul Sand ×7", "Dage the Evil Insignia ×5"] },
+      { id: "nsod-ioda", name: "Necrotic Sword of Doom (IoDA)", wiki: "necrotic-sword-of-doom-ioda", match: [], tags: [IODA, ALL51],
+        where: "Account Manager · Awesome Prizes", req: ["Any “… of Digital Awesomeness” token [IoDA]"] },
+      { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword", match: ["Necrotic Sword of Doom"], tags: [ALL51],
+        where: "Necrotic Sword of Doom shop · Shadowfall", req: ["Necrotic Sword's Blade", "Necrotic Sword's Hilt", "Necrotic Sword's Aura", "Void Aura ×800", "Doom Heart (Ultra Sepulchure)"] },
+      { id: "nsoa", name: "Necrotic Sword of the Abyss", wiki: "necrotic-sword-of-the-abyss", match: ["Necrotic Sword of the Abyss"], tags: [ALL51],
+        where: "Void Highlord Merge Shop · Tercessuinotlim", req: ["Necrotic Sword of Doom", "Other merge items: see wiki"] },
+      { id: "prov", name: "Providence", wiki: "providence", match: ["Providence"], tags: [ALL51],
+        where: "Archmage · quest “Lumina Elementi”" },
+      { id: "sota", name: "Sin of the Abyss", wiki: "sin-of-the-abyss", match: ["Sin of the Abyss"], tags: [ALL51, GOLD25],
+        where: "Nulgath's Merge Shop · Ultra Nulgath", req: ["Sin of Revontheus (Sword)", "Blood Gem of the Archfiend ×50", "Dark Crystal Shard ×200", "Diamond of Nulgath ×500", "Gem of Nulgath ×150", "Tainted Gem ×300", "Totem of Nulgath ×50", "Nulgath Insignia ×20"] },
+      { id: "sotu", name: "Sin of the Underworld", wiki: "sin-of-the-underworld", match: ["Sin of the Underworld"], tags: [ALL51],
+        where: "Ultra Dage · quest “Sin of the Underworld”", req: ["Sin of the Undying", "Undead Champion Blade", "Corrupted Dragon Slayer", "Wrath of the Legion Blade", "Fatal Keraunos", "Yami no Ronin Katana", "Dual Legion Soul Devourers", "Legion Token ×25,000", "Dage the Evil Insignia ×30"] },
+      { id: "sle", name: "Star Light of the Empyrean", wiki: "star-light-of-the-empyrean", match: ["Star Light of the Empyrean"], tags: [ALL51],
+        where: "Nova Shrine Gifts · Astral Shrine", req: ["Star Light of Destiny", "Star of the Empyrean ×7", "Star Piece ×250"] },
+      { id: "slse", name: "Star Lights of the Empyrean", wiki: "star-lights-of-the-empyrean", match: ["Star Lights of the Empyrean"], tags: [ALL51],
+        where: "Nova Shrine Gifts · Astral Shrine", req: ["Star Lights of Destiny", "Star of the Empyrean ×7", "Star Piece ×250"] }
     ]}
   ];
 
@@ -225,14 +330,15 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   try { filters = JSON.parse(localStorage.getItem(FKEY) || "{}") || {}; } catch (e) {}
   var TAGS = [], KIND = {}, TEXT = {}, PCT = {};
   ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TEXT[l] = t.text; PCT[l] = parseFloat(t.pct) || 0; TAGS.push(l); } }); });
-  // Filter order: pay-to-win first, then damage (All > Tagged > single types), then boosts (Gold > Rep > Class > XP).
-  var P2W = ["legend", "heromart", "kickstarter", "ac"], BOOSTS = ["gold", "rep", "cp", "xp"];
+  // Filter order: pay-to-win (Legend > Heromart > Kickstarter > AC > IoDA > SDKA), availability (Rare > Pseudo-rare > Seasonal), damage (All > Tagged > types), boosts (Gold > Rep > Class > XP).
+  var P2W = ["legend", "heromart", "kickstarter", "ac", "ioda", "sdka"], AVAIL = ["rare", "pseudo", "seasonal"], BOOSTS = ["gold", "rep", "cp", "xp"];
   function rank(l) {
     var k = KIND[l];
     if (P2W.indexOf(k) >= 0) return [0, P2W.indexOf(k)];
-    if (k === "dmg") return [1, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
-    if (BOOSTS.indexOf(k) >= 0) return [2, BOOSTS.indexOf(k)];
-    return [3, 0];
+    if (AVAIL.indexOf(k) >= 0) return [1, AVAIL.indexOf(k)];
+    if (k === "dmg") return [2, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
+    if (BOOSTS.indexOf(k) >= 0) return [3, BOOSTS.indexOf(k)];
+    return [4, 0];
   }
   TAGS.sort(function (a, b) {
     var ra = rank(a), rb = rank(b);
@@ -265,6 +371,21 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     var on = filters[tagLabel(t)];
     return '<span class="tag ' + t.kind + (on ? " is-" + on : "") + '"' + (t.title ? ' title="' + esc(t.title) + '"' : "") + ">" + (t.pct ? "<b>" + esc(t.pct) + "</b> " : "") + esc(t.text) + "</span>";
   }
+  function sortedTags(tags) {
+    return tags.slice().sort(function (a, b) { var la = tagLabel(a), lb = tagLabel(b); return TAGS.indexOf(la) - TAGS.indexOf(lb); });
+  }
+  var PAY = { "Legend": "legend", "AC": "ac", "IoDA": "ioda", "SDKA": "sdka", "Pseudo-rare": "pseudo", "Seasonal": "seasonal", "Rare": "rare", "Heromart": "heromart", "Kickstarter": "kickstarter" };
+  function reqHtml(it) {
+    if (!it.where && !(it.req && it.req.length)) return "";
+    var paid = 0;
+    var list = (it.req || []).map(function (r) {
+      var m = /^(.*?)\s*\[([^\]]+)\]$/.exec(r), txt = m ? m[1] : r, pay = m ? m[2] : "";
+      if (pay && pay !== "Pseudo-rare" && pay !== "Seasonal") paid++;
+      return "<li" + (pay ? ' class="pay"' : "") + ">" + esc(txt) + (pay ? ' <span class="paychip ' + (PAY[pay] || "") + '">' + esc(pay) + "</span>" : "") + "</li>";
+    }).join("");
+    return '<details class="req"><summary>Requirements' + (paid ? ' <span class="paynote">' + paid + " paywalled</span>" : "") + "</summary>" +
+      (it.where ? '<p class="where">' + esc(it.where) + "</p>" : "") + (list ? "<ul>" + list + "</ul>" : "") + "</details>";
+  }
   function statusText(p) {
     if (!p || !p.done) return "";
     if (p.src === "sync") return p.where === "bank" ? "In your bank" : "In your inventory";
@@ -284,7 +405,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
           '<label class="check"><input type="checkbox" data-id="' + it.id + '"' + (done ? " checked" : "") + ' aria-label="I own ' + esc(it.name) + '"><span>' + TICK + "</span></label>" +
           '<div><div class="name"><a href="' + WIKI + it.wiki + '" target="_blank" rel="noopener">' + esc(it.name) + "</a>" +
           '<span class="status">' + statusText(p) + "</span></div>" +
-          '<div class="tags">' + it.tags.map(tagHtml).join("") + "</div></div></li>";
+          '<div class="tags">' + sortedTags(it.tags).map(tagHtml).join("") + "</div>" + reqHtml(it) + "</div></li>";
       });
       html += "</ul></section>";
     });
