@@ -15,7 +15,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/ice.css">
 <style>
-:root{--legend:#e8c45a;--good:#62d6a8}
+:root{--legend:#e8c45a;--good:#62d6a8;
+  /* tag colours */
+  --c-legend:#b48cff; --c-ac:#e8c45a; --c-ioda:#4fe3f0; --c-sdka:#f06a6a; --c-seasonal:#e58ce0; --c-f2p:#f4f6f8; --c-pseudo:#9ce89c; --c-rare:#ff9a7a; --c-dmg:#ff6f6f}
+.tag.legend,.ftag.legend{--c:var(--c-legend)}.tag.ac,.ftag.ac{--c:var(--c-ac)}.tag.ioda,.ftag.ioda{--c:var(--c-ioda)}.tag.sdka,.ftag.sdka{--c:var(--c-sdka)}
+.tag.seasonal,.ftag.seasonal{--c:var(--c-seasonal)}.tag.f2p,.ftag.f2p{--c:var(--c-f2p)}.tag.pseudo,.ftag.pseudo{--c:var(--c-pseudo)}.tag.rare,.ftag.rare{--c:var(--c-rare)}
+.tag.heromart,.tag.kickstarter,.ftag.heromart,.ftag.kickstarter{--c:var(--c-ac)}
 body{overflow-x:hidden}
 .bg-rune{position:fixed;width:min(110vw,760px);aspect-ratio:1;right:max(-30vw,-240px);top:-200px;opacity:.16;pointer-events:none;z-index:0}
 .wrap{position:relative;z-index:1;width:min(100% - 32px,760px);margin:0 auto;padding:40px 0 56px}
@@ -58,17 +63,14 @@ section{margin-bottom:34px}
 .status{font-size:12px;color:var(--good)}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .tag{font-size:12px;line-height:1;padding:5px 8px;border-radius:6px;border:1px solid var(--edge);background:rgba(13,21,32,.5);color:var(--frost);white-space:nowrap}
-.tag.legend{border-color:color-mix(in srgb,var(--legend) 60%,transparent);color:var(--legend);font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
-.tag.dmg b{color:var(--ice-hi);font-weight:600}
-.tag.cp b{color:#a99bff}.tag.rep b{color:#62d6a8}.tag.gold b{color:var(--legend)}
+.tag.legend{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
+.tag.dmg b{color:var(--c-dmg);font-weight:600}
+.tag.cp b{color:#a99bff}.tag.rep b{color:#62d6a8}.tag.gold b{color:var(--c-ac)}
 .tag.sdka,.tag.ioda,.tag.ac,.tag.heromart,.tag.kickstarter{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
-.tag.sdka{border-color:rgba(240,120,120,.55);color:#f29a9a}
-.tag.ioda{border-color:rgba(255,150,220,.5);color:#f6a8de}
-.tag.ac,.tag.heromart,.tag.kickstarter{border-color:rgba(127,214,255,.5);color:#8fd8ff}
-.tag.rare{border-color:rgba(255,120,90,.5);color:#ff9a7a}
-.tag.pseudo{border-color:rgba(190,160,255,.45);color:#c3b0ff}
-.tag.seasonal{border-color:rgba(98,214,168,.45);color:#7fe0b8}
 .ftag.sdka,.ftag.ioda,.ftag.ac{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
+.tag[class*=" "]:not(.dmg):not(.gold):not(.rep):not(.cp):not(.xp){color:var(--c,var(--frost));border-color:color-mix(in srgb,var(--c,var(--edge)) 55%,transparent)}
+.ftag:not(.is-inc):not(.is-exc){color:color-mix(in srgb,var(--c,var(--muted)) 85%,var(--muted))}
+.ftag.dmg:not(.is-inc):not(.is-exc){color:var(--muted)}
 .tag.is-inc{border-color:var(--ice);box-shadow:0 0 0 1px color-mix(in srgb,var(--ice) 35%,transparent)}
 .filterbar{margin-bottom:26px}
 .ftags{display:grid;gap:8px}
@@ -76,7 +78,7 @@ section{margin-bottom:34px}
 .flabel{padding-top:7px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .fchips{display:flex;flex-wrap:wrap;gap:6px}
 @media (max-width:560px){.frow{grid-template-columns:1fr;gap:6px}.flabel{padding-top:0}.flabel:empty{display:none}}
-.tag.f2p{border-color:rgba(98,214,168,.55);color:#7fe0b8;font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
+.tag.f2p{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .ftag.f2p{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
 .ftag{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;line-height:1;padding:6px 10px;border-radius:999px;border:1px solid var(--edge);background:rgba(13,21,32,.45);color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s,background .15s,opacity .15s}
 .ftag:hover{color:var(--frost);border-color:color-mix(in srgb,var(--ice) 60%,transparent)}
@@ -212,13 +214,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       { id: "dnsod", name: "Dual Necrotic Swords of Doom", wiki: "dual-necrotic-swords-of-doom", match: ["Dual Necrotic Swords of Doom"], tags: [ALL51] },
       { id: "ebmk", name: "Empowered BladeMaster's Katana", wiki: "empowered-blademaster-s-katana", match: ["Empowered BladeMaster's Katana"], tags: [PSEUDO, ALL51] },
       { id: "ebl", name: "Empowered Bloodletter", wiki: "empowered-bloodletter", match: ["Empowered Bloodletter"], tags: [PSEUDO, ALL51] },
-      { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", match: ["Empowered Caladbolg"], tags: [ALL51] },
+      { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", match: ["Empowered Caladbolg"], tags: [AC, ALL51] },
       { id: "ecob", name: "Empowered Charged Oblivion Blade", wiki: "empowered-charged-oblivion-blade", match: ["Empowered Charged Oblivion Blade"], tags: [L, AC, PSEUDO, ALL51] },
-      { id: "edcal", name: "Empowered Dual Caladbolgs", wiki: "empowered-dual-caladbolgs", match: ["Empowered Dual Caladbolgs"], tags: [ALL51] },
-      { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [ALL51] },
+      { id: "edcal", name: "Empowered Dual Caladbolgs", wiki: "empowered-dual-caladbolgs", match: ["Empowered Dual Caladbolgs"], tags: [AC, ALL51] },
+      { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [AC, ALL51] },
       { id: "edk", name: "Empowered Dual Katanas", wiki: "empowered-dual-katanas", match: ["Empowered Dual Katanas"], tags: [PSEUDO, ALL51] },
       { id: "ehig", name: "Empowered Higure", wiki: "empowered-higure", match: ["Empowered Higure"], tags: [SEAS, ALL51] },
-      { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", match: ["Empowered Hollowborn Caladbolg"], tags: [ALL51] },
+      { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", match: ["Empowered Hollowborn Caladbolg"], tags: [AC, ALL51] },
       { id: "ehob", name: "Empowered Hollowborn Overfiend Blade", wiki: "empowered-hollowborn-overfiend-blade", match: ["Empowered Hollowborn Overfiend Blade"], tags: [ALL51] },
       { id: "eob", name: "Empowered Oblivion Blade", wiki: "empowered-oblivion-blade", match: ["Empowered Oblivion Blade"], tags: [AC, PSEUDO, ALL51] },
       { id: "eofb", name: "Empowered Overfiend Blade", wiki: "empowered-overfiend-blade", match: ["Empowered Overfiend Blade"], tags: [ALL51] },
