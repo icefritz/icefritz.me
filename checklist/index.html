@@ -143,6 +143,33 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .toast.show{opacity:1;translate:-50% 0}
 .toast.err{border-color:#f0a3a3}
 .note{color:var(--muted);font-size:13px;line-height:1.55;max-width:62ch;margin-top:8px}
+
+/* My goals: your own farming goals, added on this page */
+.goalwrap[hidden]{display:none!important}
+.goalform{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:8px;margin-bottom:12px;padding:14px;background:var(--panel);border:1px solid var(--edge);border-radius:16px}
+.goalform input{min-width:0;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:10px;padding:9px 12px}
+.goalform input::placeholder{color:var(--muted)}
+.goalform input:focus{outline:none;border-color:var(--ice)}
+.goalform .gf-note{grid-column:1/-1}
+.goalform .gf-cancel{grid-column:1/-1;justify-self:start;font:inherit;font-size:12.5px;padding:0;border:0;background:none;color:var(--plate);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:560px){.goalform{grid-template-columns:1fr 1fr}.goalform .gf-name{grid-column:1/-1}}
+.goal .name{justify-content:space-between}
+.goal .gname{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;min-width:0}
+.gact{display:flex;gap:2px;margin-left:auto}
+.gact button{font:inherit;font-size:12px;padding:3px 6px;border:0;border-radius:6px;background:none;color:var(--muted);cursor:pointer}
+.gact button:hover,.gact button:focus-visible{color:var(--frost);background:rgba(81,197,217,.1);outline:none}
+.gact .gdel:hover{color:#f0a3a3;background:rgba(240,163,163,.08)}
+.gtext{margin-top:6px;font-size:13.5px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.amt{display:flex;align-items:center;gap:8px;margin-top:10px}
+.amt button{width:28px;height:28px;flex:none;display:grid;place-items:center;font:inherit;font-size:16px;line-height:1;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:8px;cursor:pointer}
+.amt button:hover,.amt button:focus-visible{border-color:var(--ice);outline:none}
+.amt input{width:78px;font:inherit;font-size:14px;text-align:right;color:#fff;background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:8px;padding:4px 8px;-moz-appearance:textfield}
+.amt input::-webkit-inner-spin-button,.amt input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.amt input:focus{outline:none;border-color:var(--ice)}
+.amt .of{font-family:"Silkscreen",monospace;font-size:12px;letter-spacing:.06em;color:var(--plate);white-space:nowrap}
+.amt .mbar{flex:1;min-width:40px;height:6px;border-radius:999px;background:rgba(13,21,32,.6);border:1px solid var(--edge);overflow:hidden}
+.amt .mbar i{display:block;height:100%;background:linear-gradient(90deg,var(--steel),var(--ice));box-shadow:0 0 10px var(--ice);transition:width .3s ease}
+@media (min-width:1100px){.goalform{grid-template-columns:minmax(0,1fr) 130px auto}}
 @media (prefers-reduced-motion:reduce){.bar i,.check span svg,.toast{transition:none}}
 </style>
 </head>
@@ -159,7 +186,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   <header>
     <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Go back</a>
     <h1>Item <span class="glow">checklist</span></h1>
-    <p class="sub">Sync your inventory or tick manually to get started</p>
+    <p class="sub">Sync your inventory or tick manually to get started. Add your own farming goals too</p>
     <div class="progress" aria-live="polite"><div class="bar"><i id="bar"></i></div><span class="count" id="count">0 / 0</span></div>
   </header>
 
@@ -281,8 +308,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 
   /* ---------- Storage (per visitor, per browser) ---------- */
   var KEY = "icefritz-checklist-v1";
-  var state = { progress: {}, sync: null };
+  var state = { progress: {}, sync: null, goals: [] };
   try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved && saved.progress) state = saved; } catch (e) {}
+  if (!Array.isArray(state.goals)) state.goals = [];
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { toast("Your browser blocked saving. Export to keep your progress.", true); } }
 
   /* An item that does the same extra damage to every tagged monster race (Chaos, Dragon,
@@ -309,15 +337,24 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     return spread === 0 ? "Fixed" : spread <= 0.2 ? "Stable" : spread <= 0.6 ? "Medium" : "High";
   }
 
-  var ALL = [];
+  var BUILTIN = [];
   var PAYWALL = ["legend", "sdka", "ac", "ioda", "legion", "heromart", "kickstarter"];
   GROUPS.forEach(function (g) { g.items.forEach(function (it) {
     it.tags = collapseTagged(it.tags);
     if (it.base) it.tags.push({ kind: "range", text: rangeOf(it.base), title: "Base damage " + it.base });
     // Free-player: nothing on the item needs Legend, SDKA, AC, IoDA, Legion Tokens, Heromart or Kickstarter.
     if (!it.tags.some(function (t) { return PAYWALL.indexOf(t.kind) >= 0; })) it.tags = [{ kind: "f2p", text: "F2P" }].concat(it.tags);
-    ALL.push(it);
+    BUILTIN.push(it);
   }); });
+
+  /* ---------- My goals: farming goals each visitor adds for themselves (kept with their progress) ---------- */
+  function slug(name) { return name.toLowerCase().replace(/['\u2019]/g, "-").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
+  function goalItems() {
+    return state.goals.map(function (g) { return { id: g.id, name: g.name, wiki: slug(g.name), match: [g.name], tags: [], goal: g }; });
+  }
+  var ALL = BUILTIN;
+  function refreshAll() { ALL = goalItems().concat(BUILTIN); }
+  refreshAll();
 
   /* ---------- Tag filter: each tag cycles off -> include -> exclude -> off ---------- */
   var FKEY = "icefritz-checklist-filters-v1";
@@ -342,6 +379,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   });
   Object.keys(filters).forEach(function (k) { if (!(k in KIND) || (filters[k] !== "inc" && filters[k] !== "exc")) delete filters[k]; });
   function visible(it) {
+    if (it.goal) return true;
     var labels = it.tags.map(tagLabel);
     for (var k in filters) {
       if (filters[k] === "inc" && labels.indexOf(k) < 0) return false;
@@ -394,6 +432,37 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       '<span class="status">' + statusText(p) + "</span></div>" +
       '<div class="tags">' + sortedTags(it.tags).map(tagHtml).join("") + "</div></div></li>";
   }
+  function goalHtml(it) {
+    var g = it.goal, p = state.progress[it.id], done = !!(p && p.done), t = g.target, have = Math.max(0, +g.have || 0);
+    var amt = t ? '<div class="amt"><button type="button" data-act="dec" data-id="' + it.id + '" aria-label="One less">\u2212</button>' +
+      '<input type="number" inputmode="numeric" min="0" step="1" value="' + have + '" data-amt="' + it.id + '" aria-label="How many ' + esc(g.name) + ' you have">' +
+      '<span class="of">/ ' + t.toLocaleString("en-GB") + '</span><button type="button" data-act="inc" data-id="' + it.id + '" aria-label="One more">+</button>' +
+      '<span class="mbar" aria-hidden="true"><i style="width:' + Math.min(100, have / t * 100) + '%"></i></span></div>' : "";
+    return '<li class="item goal' + (done ? " done" : "") + '">' +
+      '<label class="check"><input type="checkbox" data-id="' + it.id + '"' + (done ? " checked" : "") + ' aria-label="Done: ' + esc(g.name) + '"><span>' + TICK + "</span></label>" +
+      '<div><div class="name"><span class="gname"><a href="' + WIKI + it.wiki + '" target="_blank" rel="noopener">' + esc(g.name) + "</a>" +
+      '<span class="status">' + statusText(p) + "</span></span>" +
+      '<span class="gact"><button type="button" data-act="edit" data-id="' + it.id + '">Edit</button><button type="button" class="gdel" data-act="del" data-id="' + it.id + '">Remove</button></span></div>' +
+      (g.note ? '<p class="gtext">' + esc(g.note) + "</p>" : "") + amt + "</div></li>";
+  }
+  var editing = null;
+  function goalFormHtml() {
+    var g = editing && state.goals.filter(function (x) { return x.id === editing; })[0];
+    return '<form class="goalform" id="goalform" autocomplete="off">' +
+      '<input class="gf-name" name="name" maxlength="120" required placeholder="Item or goal, e.g. Void Aura" aria-label="Goal" value="' + (g ? esc(g.name) : "") + '">' +
+      '<input name="target" type="number" inputmode="numeric" min="1" max="10000000" step="1" placeholder="Amount (optional)" aria-label="Amount to farm (optional)" value="' + (g && g.target ? g.target : "") + '">' +
+      '<button class="btn primary" type="submit">' + (g ? "Save goal" : "Add goal") + "</button>" +
+      '<input class="gf-note" name="note" maxlength="200" placeholder="Note (optional), e.g. where to farm it" aria-label="Note (optional)" value="' + (g && g.note ? esc(g.note) : "") + '">' +
+      (g ? '<button type="button" class="gf-cancel" data-act="cancel">Cancel editing</button>' : "") + "</form>";
+  }
+  function goalsSectionHtml(items) {
+    var shut = isCollapsed("goals", false), open = items.filter(function (it) { return !isDone(it); });
+    var have = items.length - open.length;
+    var body = open.map(goalHtml).join("") || '<li class="empty">' + (items.length ? "All your goals are done. Nice." : "Add something you want to farm, with an amount if it stacks. Goals stay in this browser and go with your exports.") + "</li>";
+    return '<section class="grp' + (shut ? " is-shut" : "") + '">' +
+      '<h2><button type="button" class="gtoggle" data-sec="goals" aria-expanded="' + !shut + '" aria-controls="sec-goals"><i class="chev" aria-hidden="true"></i>My goals</button><small>' + (items.length ? have + " / " + items.length : "") + "</small></h2>" +
+      '<div class="goalwrap" id="sec-goals"' + (shut ? " hidden" : "") + ">" + goalFormHtml() + '<ul class="list">' + body + "</ul></div></section>";
+  }
   function sectionHtml(id, title, count, body, def, extraClass) {
     var shut = isCollapsed(id, def);
     return '<section class="grp' + (extraClass ? " " + extraClass : "") + (shut ? " is-shut" : "") + '">' +
@@ -403,7 +472,10 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   }
 
   function render() {
-    var html = "", doneHtml = "";
+    refreshAll();
+    var goals = ALL.filter(function (it) { return it.goal; }), gDone = goals.filter(isDone);
+    var html = goalsSectionHtml(goals), doneHtml = "";
+    if (gDone.length) doneHtml += sectionHtml("goals-done", "My goals \u00b7 Completed", gDone.length + (gDone.length === 1 ? " goal" : " goals"), gDone.map(goalHtml).join(""), true, "completed");
     GROUPS.forEach(function (g) {
       var have = g.items.filter(isDone).length;
       var shown = g.items.filter(visible), open = shown.filter(function (it) { return !isDone(it); }), fin = shown.filter(isDone);
@@ -415,8 +487,8 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     html += doneHtml;
     document.getElementById("lists").innerHTML = html;
     renderFilters();
-    var vis = ALL.filter(visible).length, fn = Object.keys(filters).length;
-    document.getElementById("fstate").textContent = fn ? "Showing " + vis + " of " + ALL.length + " items" : "Click a tag to show only items with it, again to hide them, again to clear.";
+    var vis = BUILTIN.filter(visible).length, fn = Object.keys(filters).length;
+    document.getElementById("fstate").textContent = fn ? "Showing " + vis + " of " + BUILTIN.length + " items (your goals always show)" : "Click a tag to show only items with it, again to hide them, again to clear.";
     var n = ALL.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
     document.getElementById("count").textContent = n + " / " + ALL.length;
     document.getElementById("bar").style.width = (ALL.length ? n / ALL.length * 100 : 0) + "%";
@@ -424,7 +496,51 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     ls.textContent = state.sync ? "Last AQW sync: " + new Date(state.sync.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " · " + state.sync.count.toLocaleString("en-GB") + " items checked" : "";
   }
 
+  function goalById(id) { return state.goals.filter(function (g) { return g.id === id; })[0]; }
+  function setHave(g, n, src) {
+    g.have = Math.max(0, Math.min(1e9, Math.round(+n) || 0));
+    if (g.target) {
+      var p = state.progress[g.id];
+      if (g.have >= g.target) state.progress[g.id] = { done: true, at: Date.now(), src: src || "manual", where: p && p.where };
+      else if (p && p.done && p.auto) state.progress[g.id] = { done: false, at: Date.now(), src: "manual" };
+      if (state.progress[g.id] && state.progress[g.id].done && g.have >= g.target) state.progress[g.id].auto = true;
+    }
+  }
+  function focusForm() { var f = document.querySelector("#goalform input[name=name]"); if (f) { f.focus(); f.select(); } }
+  document.getElementById("lists").addEventListener("submit", function (e) {
+    if (e.target.id !== "goalform") return;
+    e.preventDefault();
+    var f = e.target, name = f.name.value.replace(/\s+/g, " ").trim(), note = f.note.value.replace(/\s+/g, " ").trim(), t = Math.round(+f.target.value) || 0;
+    if (!name) return toast("Give your goal a name.", true);
+    t = t > 0 ? Math.min(t, 1e7) : 0;
+    var g = editing && goalById(editing);
+    if (g) { g.name = name; g.note = note; g.target = t || undefined; setHave(g, g.have || 0); toast("Goal saved."); }
+    else {
+      if (state.goals.length >= 200) return toast("That's a lot of goals. Remove some before adding more.", true);
+      g = { id: "g-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: name, note: note, target: t || undefined, have: 0, added: Date.now() };
+      state.goals.unshift(g); toast("Added \u201c" + name + "\u201d to your goals.");
+    }
+    editing = null; save(); render(); focusForm();
+  });
   document.getElementById("lists").addEventListener("click", function (e) {
+    var a = e.target.closest("[data-act]");
+    if (a) {
+      var act = a.dataset.act, g = goalById(a.dataset.id);
+      if (act === "cancel") { editing = null; render(); return; }
+      if (!g) return;
+      if (act === "inc" || act === "dec") { setHave(g, (+g.have || 0) + (act === "inc" ? 1 : -1)); save(); render(); var nb = document.querySelector('[data-act="' + act + '"][data-id="' + g.id + '"]'); if (nb) nb.focus(); }
+      else if (act === "edit") { editing = g.id; collapsed.goals = false; render(); focusForm(); document.getElementById("goalform").scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+      else if (act === "del") {
+        var i = state.goals.indexOf(g), prog = state.progress[g.id];
+        state.goals.splice(i, 1); delete state.progress[g.id]; if (editing === g.id) editing = null; save(); render();
+        toast("Removed \u201c" + g.name + "\u201d. ");
+        var el = document.getElementById("toast"), u = document.createElement("button");
+        u.className = "btn"; u.style.cssText = "margin-left:8px;padding:3px 10px;pointer-events:auto"; u.textContent = "Undo";
+        u.onclick = function () { state.goals.splice(Math.min(i, state.goals.length), 0, g); if (prog) state.progress[g.id] = prog; save(); render(); toast("Restored."); };
+        el.appendChild(u); el.style.pointerEvents = "auto"; setTimeout(function () { el.style.pointerEvents = ""; }, 4200);
+      }
+      return;
+    }
     var b = e.target.closest(".gtoggle"); if (!b) return;
     var id = b.dataset.sec, sec = b.closest(".grp"), shut = !sec.classList.contains("is-shut");
     collapsed[id] = shut;
@@ -434,6 +550,8 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     document.getElementById("sec-" + id).hidden = shut;
   });
   document.getElementById("lists").addEventListener("change", function (e) {
+    var aid = e.target && e.target.dataset.amt;
+    if (aid) { var g = goalById(aid); if (g) { setHave(g, e.target.value); save(); render(); } return; }
     var id = e.target && e.target.dataset.id; if (!id) return;
     state.progress[id] = e.target.checked ? { done: true, at: Date.now(), src: "manual" } : { done: false, at: Date.now(), src: "manual" };
     save(); render();
@@ -465,11 +583,20 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     var have = {};
     rows.forEach(function (r) {
       var k = norm(r.name); if (!k) return;
-      var h = have[k] || (have[k] = { n: 0, banks: [] });
+      var h = have[k] || (have[k] = { n: 0, banks: [], qty: null });
       h.n++; h.banks.push(!!r.bank);
+      if (typeof r.qty === "number" && isFinite(r.qty)) h.qty = (h.qty || 0) + r.qty;
     });
     var found = 0, fresh = 0;
+    refreshAll();
+    var amounts = 0;
     ALL.forEach(function (it) {
+      if (it.goal && it.goal.target) {
+        // Amount goals: fill in the amount when AQW's data says how many you have; otherwise leave it to you.
+        var gh = have[norm(it.goal.name)];
+        if (gh && gh.qty != null) { var was = isDone(it); setHave(it.goal, gh.qty, "sync"); amounts++; if (isDone(it)) { found++; if (!was) fresh++; state.progress[it.id].where = gh.banks.indexOf(false) < 0 ? "bank" : "inventory"; } }
+        return;
+      }
       for (var i = 0; i < it.match.length; i++) {
         var m = it.match[i], k = norm(typeof m === "string" ? m : m.name), copy = (typeof m === "object" && m.copy) || 1;
         var h = have[k];
@@ -485,16 +612,17 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     });
     state.sync = { at: Date.now(), count: rows.length, via: source };
     save(); render();
-    toast("Checked " + rows.length.toLocaleString("en-GB") + " items: you own " + found + " of " + ALL.length + (fresh ? " (" + fresh + " newly ticked)" : "") + ".");
+    toast("Checked " + rows.length.toLocaleString("en-GB") + " items: you own " + found + " of " + ALL.length + (fresh ? " (" + fresh + " newly ticked)" : "") + (amounts ? ", " + amounts + " goal amount" + (amounts === 1 ? "" : "s") + " updated" : "") + ".");
   }
 
+  function qtyOf(v) { var n = typeof v === "string" ? parseFloat(v) : v; return typeof n === "number" && isFinite(n) && n >= 0 ? n : null; }
   function rowsFromJson(j) {
     var list = Array.isArray(j) ? j : j && Array.isArray(j.data) ? j.data : j && Array.isArray(j.items) ? j.items : null;
     if (!list) return null;
     return list.map(function (r) {
       if (typeof r === "string") return { name: r, bank: false };
-      if (Array.isArray(r)) return { name: r[0], bank: !!r[1] };
-      return r && typeof r === "object" ? { name: r.Name || r.name || r.n, bank: r.Bank === 1 || r.Bank === true || r.bank === true || r.b === true } : null;
+      if (Array.isArray(r)) return { name: r[0], bank: !!r[1], qty: qtyOf(r[2]) };
+      return r && typeof r === "object" ? { name: r.Name || r.name || r.n, bank: r.Bank === 1 || r.Bank === true || r.bank === true || r.b === true, qty: qtyOf(r.Quantity != null ? r.Quantity : r.Qty != null ? r.Qty : r.Count != null ? r.Count : r.quantity) } : null;
     }).filter(function (r) { return r && typeof r.name === "string" && r.name.length < 200; });
   }
 
@@ -505,7 +633,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     "const w=window.open(T+'?sync=1','icefritz-sync');if(!w){alert('Your browser blocked the checklist window. Allow pop-ups for account.aq.com, then click AQW sync again.');return}" +
     "const API='https://account.aq.com/myapi/inventory/InventoryData?take=500&sort='+encodeURIComponent('[{\"selector\":\"ID\",\"desc\":false}]');" +
     "const get=async q=>{const r=await fetch(API+q+'&_='+Date.now(),{credentials:'include',headers:{accept:'application/json, text/javascript, */*; q=0.01','x-requested-with':'XMLHttpRequest'}});const j=await r.json();if(!j||!Array.isArray(j.data))throw 0;return j};" +
-    "const run=async()=>{const seen=new Map();const add=d=>{for(const r of d)seen.set(r.ID??(r.Name+'|'+seen.size),[r.Name,r.Bank===1||r.Bank===true?1:0])};" +
+    "const run=async()=>{const seen=new Map();const add=d=>{for(const r of d)seen.set(r.ID??(r.Name+'|'+seen.size),[r.Name,r.Bank===1||r.Bank===true?1:0,r.Quantity??r.Qty??r.Count??null])};" +
     "const f=await get('&skip=0&requireTotalCount=true');const total=f.totalCount??f.data.length;add(f.data);let last=f.data.length?f.data[f.data.length-1].ID:0,g=0;" +
     "while(seen.size<total&&g++<200){const p=await get('&skip=0&filter='+encodeURIComponent(JSON.stringify([['ID','>',last]])));if(!p.data.length)break;add(p.data);const nl=p.data[p.data.length-1].ID;if(nl===last)break;last=nl}" +
     "if(seen.size<total){let skip=0;g=0;while(skip<total&&g++<200){const p=await get('&skip='+skip);if(!p.data.length)break;add(p.data);skip+=p.data.length}}" +
@@ -549,23 +677,30 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   });
 
   /* ---------- Export / import ---------- */
-  function payload() { return { app: "icefritz-checklist", v: 1, exported: new Date().toISOString(), progress: state.progress, sync: state.sync }; }
+  function payload() { return { app: "icefritz-checklist", v: 1, exported: new Date().toISOString(), progress: state.progress, sync: state.sync, goals: state.goals }; }
   function toCode(obj) { return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
   function fromCode(code) { code = code.trim().replace(/-/g, "+").replace(/_/g, "/"); while (code.length % 4) code += "="; return JSON.parse(decodeURIComponent(escape(atob(code)))); }
   function importObj(obj) {
     if (!obj || obj.app !== "icefritz-checklist" || typeof obj.progress !== "object") throw new Error("bad");
+    var goals = [];
+    if (Array.isArray(obj.goals)) obj.goals.slice(0, 200).forEach(function (g) {
+      if (!g || typeof g.name !== "string" || !/^g-[a-z0-9]{1,24}$/.test(g.id || "")) return;
+      var t = Math.round(+g.target) || 0;
+      goals.push({ id: g.id, name: g.name.slice(0, 120), note: typeof g.note === "string" ? g.note.slice(0, 200) : "", target: t > 0 ? Math.min(t, 1e7) : undefined, have: Math.max(0, Math.round(+g.have) || 0), added: +g.added || Date.now() });
+    });
+    state.goals = goals; refreshAll();
     var ids = {}; ALL.forEach(function (it) { ids[it.id] = 1; });
     var next = {}, n = 0;
     Object.keys(obj.progress).forEach(function (k) {
       var p = obj.progress[k];
       if (!ids[k] || !p || typeof p !== "object") return;
-      next[k] = { done: !!p.done, at: +p.at || Date.now(), src: p.src === "sync" ? "sync" : "manual", where: p.where === "bank" ? "bank" : p.where === "inventory" ? "inventory" : undefined };
+      next[k] = { done: !!p.done, at: +p.at || Date.now(), src: p.src === "sync" ? "sync" : "manual", where: p.where === "bank" ? "bank" : p.where === "inventory" ? "inventory" : undefined, auto: p.auto === true || undefined };
       if (next[k].done) n++;
     });
     state.progress = next;
     if (obj.sync && +obj.sync.at) state.sync = { at: +obj.sync.at, count: +obj.sync.count || 0, via: "import" };
     save(); render();
-    toast("Imported: " + n + " of " + ALL.length + " ticked.");
+    toast("Imported: " + n + " of " + ALL.length + " ticked" + (goals.length ? ", " + goals.length + " goal" + (goals.length === 1 ? "" : "s") : "") + ".");
   }
 
   document.getElementById("exportFile").addEventListener("click", function () {
@@ -599,7 +734,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   document.getElementById("reset").addEventListener("click", function () {
     if (!Object.keys(state.progress).length) return toast("Nothing to clear.");
     var backup = JSON.stringify(state);
-    state = { progress: {}, sync: null }; save(); render();
+    state = { progress: {}, sync: null, goals: state.goals.map(function (g) { return Object.assign({}, g, { have: 0 }); }) }; save(); render();
     var el = document.getElementById("toast");
     toast("Cleared. ");
     var u = document.createElement("button"); u.className = "btn"; u.style.cssText = "margin-left:8px;padding:3px 10px;pointer-events:auto"; u.textContent = "Undo";
@@ -608,7 +743,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   });
 
   // keep tabs in step
-  window.addEventListener("storage", function (e) { if (e.key === KEY) { try { state = JSON.parse(e.newValue) || { progress: {}, sync: null }; } catch (x) {} render(); } });
+  window.addEventListener("storage", function (e) { if (e.key === KEY) { try { state = JSON.parse(e.newValue) || { progress: {}, sync: null }; } catch (x) {} if (!Array.isArray(state.goals)) state.goals = []; render(); } });
 
   render();
 })();
