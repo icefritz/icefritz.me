@@ -17,7 +17,8 @@
 <style>
 :root{--legend:#e8c45a;--good:#62d6a8;
   /* tag colours */
-  --c-legend:#b48cff; --c-ac:#e8c45a; --c-ioda:#4fe3f0; --c-sdka:#f06a6a; --c-seasonal:#e58ce0; --c-f2p:#f4f6f8; --c-pseudo:#9ce89c; --c-rare:#ff9a7a; --c-dmg:#ff6f6f}
+  --c-legend:#b48cff; --c-ac:#e8c45a; --c-ioda:#4fe3f0; --c-sdka:#f06a6a; --c-seasonal:#e58ce0; --c-f2p:#f4f6f8; --c-pseudo:#9ce89c; --c-rare:#ff9a7a; --c-dmg:#ff6f6f; --c-legion:#5d7bff}
+.tag.legion,.ftag.legion{--c:var(--c-legion)}
 .tag.legend,.ftag.legend{--c:var(--c-legend)}.tag.ac,.ftag.ac{--c:var(--c-ac)}.tag.ioda,.ftag.ioda{--c:var(--c-ioda)}.tag.sdka,.ftag.sdka{--c:var(--c-sdka)}
 .tag.seasonal,.ftag.seasonal{--c:var(--c-seasonal)}.tag.f2p,.ftag.f2p{--c:var(--c-f2p)}.tag.pseudo,.ftag.pseudo{--c:var(--c-pseudo)}.tag.rare,.ftag.rare{--c:var(--c-rare)}
 .tag.heromart,.tag.kickstarter,.ftag.heromart,.ftag.kickstarter{--c:var(--c-ac)}
@@ -66,8 +67,8 @@ section{margin-bottom:34px}
 .tag.legend{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .tag.dmg b{color:var(--c-dmg);font-weight:600}
 .tag.cp b{color:#a99bff}.tag.rep b{color:#62d6a8}.tag.gold b{color:var(--c-ac)}
-.tag.sdka,.tag.ioda,.tag.ac,.tag.heromart,.tag.kickstarter{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
-.ftag.sdka,.ftag.ioda,.ftag.ac{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
+.tag.sdka,.tag.ioda,.tag.ac,.tag.legion,.tag.heromart,.tag.kickstarter{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
+.ftag.sdka,.ftag.ioda,.ftag.ac,.ftag.legion{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
 .tag[class*=" "]:not(.dmg):not(.gold):not(.rep):not(.cp):not(.xp){color:var(--c,var(--frost));border-color:color-mix(in srgb,var(--c,var(--edge)) 55%,transparent)}
 .ftag:not(.is-inc):not(.is-exc){color:color-mix(in srgb,var(--c,var(--muted)) 85%,var(--muted))}
 .ftag.dmg:not(.is-inc):not(.is-exc){color:var(--muted)}
@@ -197,7 +198,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
      Requirements live on the AQW Wiki (each name links there); the tags summarise what they cost.
      Source: AQW Wiki, "Boosted Items Sorted by Boost" (51% weapons) and each item's page. */
   var L = { kind: "legend", text: "Legend" }, SDKA = { kind: "sdka", text: "SDKA" }, AC = { kind: "ac", text: "AC" },
-      IODA = { kind: "ioda", text: "IoDA" }, PSEUDO = { kind: "pseudo", text: "Pseudo-rare" }, SEAS = { kind: "seasonal", text: "Seasonal" },
+      IODA = { kind: "ioda", text: "IoDA" }, LEGION = { kind: "legion", text: "Legion" }, PSEUDO = { kind: "pseudo", text: "Pseudo-rare" }, SEAS = { kind: "seasonal", text: "Seasonal" },
       ALL51 = { kind: "dmg", pct: "51%", text: "All" }, GOLD25 = { kind: "gold", pct: "25%", text: "Gold" };
   var GROUPS = [
     { id: "armours", title: "Armours", items: [
@@ -212,15 +213,15 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       { id: "bsod", name: "Burning Sword of Doom", wiki: "burning-sword-of-doom", match: ["Burning Sword of Doom"], tags: [SEAS, ALL51] },
       { id: "dexap", name: "Dual Exalted Apotheosis", wiki: "dual-exalted-apotheosis", match: ["Dual Exalted Apotheosis"], tags: [ALL51] },
       { id: "dnsod", name: "Dual Necrotic Swords of Doom", wiki: "dual-necrotic-swords-of-doom", match: ["Dual Necrotic Swords of Doom"], tags: [ALL51] },
-      { id: "ebmk", name: "Empowered BladeMaster's Katana", wiki: "empowered-blademaster-s-katana", match: ["Empowered BladeMaster's Katana"], tags: [PSEUDO, ALL51] },
+      { id: "ebmk", name: "Empowered BladeMaster's Katana", wiki: "empowered-blademaster-s-katana", match: ["Empowered BladeMaster's Katana"], tags: [LEGION, PSEUDO, ALL51] },
       { id: "ebl", name: "Empowered Bloodletter", wiki: "empowered-bloodletter", match: ["Empowered Bloodletter"], tags: [PSEUDO, ALL51] },
-      { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", match: ["Empowered Caladbolg"], tags: [AC, ALL51] },
+      { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", match: ["Empowered Caladbolg"], tags: [LEGION, AC, ALL51] },
       { id: "ecob", name: "Empowered Charged Oblivion Blade", wiki: "empowered-charged-oblivion-blade", match: ["Empowered Charged Oblivion Blade"], tags: [L, AC, PSEUDO, ALL51] },
-      { id: "edcal", name: "Empowered Dual Caladbolgs", wiki: "empowered-dual-caladbolgs", match: ["Empowered Dual Caladbolgs"], tags: [AC, ALL51] },
-      { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [AC, ALL51] },
-      { id: "edk", name: "Empowered Dual Katanas", wiki: "empowered-dual-katanas", match: ["Empowered Dual Katanas"], tags: [PSEUDO, ALL51] },
+      { id: "edcal", name: "Empowered Dual Caladbolgs", wiki: "empowered-dual-caladbolgs", match: ["Empowered Dual Caladbolgs"], tags: [LEGION, AC, ALL51] },
+      { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [LEGION, AC, ALL51] },
+      { id: "edk", name: "Empowered Dual Katanas", wiki: "empowered-dual-katanas", match: ["Empowered Dual Katanas"], tags: [LEGION, PSEUDO, ALL51] },
       { id: "ehig", name: "Empowered Higure", wiki: "empowered-higure", match: ["Empowered Higure"], tags: [SEAS, ALL51] },
-      { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", match: ["Empowered Hollowborn Caladbolg"], tags: [AC, ALL51] },
+      { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", match: ["Empowered Hollowborn Caladbolg"], tags: [LEGION, AC, ALL51] },
       { id: "ehob", name: "Empowered Hollowborn Overfiend Blade", wiki: "empowered-hollowborn-overfiend-blade", match: ["Empowered Hollowborn Overfiend Blade"], tags: [ALL51] },
       { id: "eob", name: "Empowered Oblivion Blade", wiki: "empowered-oblivion-blade", match: ["Empowered Oblivion Blade"], tags: [AC, PSEUDO, ALL51] },
       { id: "eofb", name: "Empowered Overfiend Blade", wiki: "empowered-overfiend-blade", match: ["Empowered Overfiend Blade"], tags: [ALL51] },
@@ -236,13 +237,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       { id: "hbsod", name: "Hollowborn Sword of Doom", wiki: "hollowborn-sword-of-doom-sword", match: ["Hollowborn Sword of Doom"], tags: [L, SDKA, ALL51, GOLD25] },
       { id: "msfb", name: "Malgor's ShadowFlame Blade", wiki: "malgor-s-shadowflame-blade", match: ["Malgor's ShadowFlame Blade"], tags: [ALL51] },
       { id: "nbod", name: "Necrotic Blade of Doom", wiki: "necrotic-blade-of-doom", match: ["Necrotic Blade of Doom"], tags: [ALL51] },
-      { id: "nbou", name: "Necrotic Blade of the Underworld", wiki: "necrotic-blade-of-the-underworld", match: ["Necrotic Blade of the Underworld"], tags: [ALL51, GOLD25] },
+      { id: "nbou", name: "Necrotic Blade of the Underworld", wiki: "necrotic-blade-of-the-underworld", match: ["Necrotic Blade of the Underworld"], tags: [LEGION, ALL51, GOLD25] },
       { id: "nsod-ioda", name: "Necrotic Sword of Doom (IoDA)", wiki: "necrotic-sword-of-doom-ioda", match: ["Necrotic Sword of Doom (IoDA)"], tags: [IODA, ALL51] },
       { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword", match: ["Necrotic Sword of Doom"], tags: [ALL51] },
       { id: "nsoa", name: "Necrotic Sword of the Abyss", wiki: "necrotic-sword-of-the-abyss", match: ["Necrotic Sword of the Abyss"], tags: [ALL51] },
       { id: "prov", name: "Providence", wiki: "providence", match: ["Providence"], tags: [ALL51] },
       { id: "sota", name: "Sin of the Abyss", wiki: "sin-of-the-abyss", match: ["Sin of the Abyss"], tags: [ALL51, GOLD25] },
-      { id: "sotu", name: "Sin of the Underworld", wiki: "sin-of-the-underworld", match: ["Sin of the Underworld"], tags: [ALL51] },
+      { id: "sotu", name: "Sin of the Underworld", wiki: "sin-of-the-underworld", match: ["Sin of the Underworld"], tags: [LEGION, ALL51] },
       { id: "sle", name: "Star Light of the Empyrean", wiki: "star-light-of-the-empyrean", match: ["Star Light of the Empyrean"], tags: [ALL51] },
       { id: "slse", name: "Star Lights of the Empyrean", wiki: "star-lights-of-the-empyrean", match: ["Star Lights of the Empyrean"], tags: [ALL51] }
     ]}
@@ -272,10 +273,10 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   }
 
   var ALL = [];
-  var PAYWALL = ["legend", "sdka", "ac", "ioda", "heromart", "kickstarter"];
+  var PAYWALL = ["legend", "sdka", "ac", "ioda", "legion", "heromart", "kickstarter"];
   GROUPS.forEach(function (g) { g.items.forEach(function (it) {
     it.tags = collapseTagged(it.tags);
-    // Free-player: nothing on the item needs Legend, SDKA, AC, IoDA, Heromart or Kickstarter.
+    // Free-player: nothing on the item needs Legend, SDKA, AC, IoDA, Legion Tokens, Heromart or Kickstarter.
     if (!it.tags.some(function (t) { return PAYWALL.indexOf(t.kind) >= 0; })) it.tags = [{ kind: "f2p", text: "F2P" }].concat(it.tags);
     ALL.push(it);
   }); });
@@ -287,7 +288,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   var TAGS = [], KIND = {}, TEXT = {}, PCT = {};
   ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TEXT[l] = t.text; PCT[l] = parseFloat(t.pct) || 0; TAGS.push(l); } }); });
   // Filter order: pay-to-win (Legend > Heromart > Kickstarter > AC > IoDA > SDKA), availability (Rare > Pseudo-rare > Seasonal), damage (All > Tagged > types), boosts (Gold > Rep > Class > XP).
-  var P2W = ["legend", "heromart", "kickstarter", "ac", "ioda", "sdka"], AVAIL = ["rare", "pseudo", "seasonal", "f2p"], BOOSTS = ["gold", "rep", "cp", "xp"];
+  var P2W = ["legend", "heromart", "kickstarter", "ac", "ioda", "sdka", "legion"], AVAIL = ["rare", "pseudo", "seasonal", "f2p"], BOOSTS = ["gold", "rep", "cp", "xp"];
   function rank(l) {
     var k = KIND[l];
     if (P2W.indexOf(k) >= 0) return [0, P2W.indexOf(k)];
