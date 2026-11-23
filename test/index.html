@@ -223,8 +223,21 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   var FKEY = "icefritz-checklist-filters-v1";
   var filters = {};
   try { filters = JSON.parse(localStorage.getItem(FKEY) || "{}") || {}; } catch (e) {}
-  var TAGS = [], KIND = {};
-  ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TAGS.push(l); } }); });
+  var TAGS = [], KIND = {}, TEXT = {}, PCT = {};
+  ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TEXT[l] = t.text; PCT[l] = parseFloat(t.pct) || 0; TAGS.push(l); } }); });
+  // Filter order: pay-to-win first, then damage (All > Tagged > single types), then boosts (Gold > Rep > Class > XP).
+  var P2W = ["legend", "heromart", "kickstarter", "ac"], BOOSTS = ["gold", "rep", "cp", "xp"];
+  function rank(l) {
+    var k = KIND[l];
+    if (P2W.indexOf(k) >= 0) return [0, P2W.indexOf(k)];
+    if (k === "dmg") return [1, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
+    if (BOOSTS.indexOf(k) >= 0) return [2, BOOSTS.indexOf(k)];
+    return [3, 0];
+  }
+  TAGS.sort(function (a, b) {
+    var ra = rank(a), rb = rank(b);
+    return ra[0] - rb[0] || ra[1] - rb[1] || PCT[b] - PCT[a] || (TEXT[a] < TEXT[b] ? -1 : TEXT[a] > TEXT[b] ? 1 : 0);
+  });
   Object.keys(filters).forEach(function (k) { if (!(k in KIND) || (filters[k] !== "inc" && filters[k] !== "exc")) delete filters[k]; });
   function visible(it) {
     var labels = it.tags.map(tagLabel);
@@ -309,7 +322,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   }
 
   /* ---------- Inventory matching ---------- */
-  function norm(s) { return String(s || "").toLowerCase().replace(/[‘’`]/g, "'").replace(/\s+/g, " ").trim(); }
+  var DEC = document.createElement("textarea");
+  function decode(s) { s = String(s || ""); if (s.indexOf("&") < 0) return s; DEC.innerHTML = s; return DEC.value; } // textarea never runs markup
+  function norm(s) { return decode(s).toLowerCase().replace(/[\u2018\u2019\u02bc`\u00b4]/g, "'").replace(/\s+/g, " ").trim(); }
   function applyInventory(rows, source) {
     // rows: [{name, bank}] - data only, never executed
     var have = {};
@@ -346,11 +361,16 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   var TARGET = location.origin + location.pathname;
   var BM = "(async()=>{const T=" + JSON.stringify(TARGET) + ",O=new URL(T).origin;" +
     "if(!/(^|\\.)aq\\.com$/.test(location.hostname)){if(confirm('AQW sync runs on account.aq.com. Open it now? Log in, then click AQW sync again.'))location.href='https://account.aq.com/AQW/Inventory';return}" +
-    "const w=window.open(T+'?sync=1','icefritz-sync');const rows=[];const S=encodeURIComponent('[{\"selector\":\"ID\",\"desc\":false}]');let skip=0,total=1,g=0;" +
-    "try{while(skip<total&&g++<80){const r=await fetch('https://account.aq.com/myapi/inventory/InventoryData?skip='+skip+'&take=500&requireTotalCount=true&sort='+S+'&_='+Date.now(),{credentials:'include',headers:{accept:'application/json, text/javascript, */*; q=0.01','x-requested-with':'XMLHttpRequest'}});" +
-    "const j=await r.json();if(!j||!Array.isArray(j.data))throw 0;total=j.totalCount??j.data.length;for(const d of j.data)rows.push([d.Name,d.Bank===1?1:0]);if(!j.data.length)break;skip+=500}}" +
-    "catch(e){if(w)w.close();alert('Could not read your inventory. Make sure you are logged in at account.aq.com, then try again.');return}" +
-    "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',items:rows},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
+    "const w=window.open(T+'?sync=1','icefritz-sync');" +
+    "const API='https://account.aq.com/myapi/inventory/InventoryData?take=500&sort='+encodeURIComponent('[{\"selector\":\"ID\",\"desc\":false}]');" +
+    "const get=async q=>{const r=await fetch(API+q+'&_='+Date.now(),{credentials:'include',headers:{accept:'application/json, text/javascript, */*; q=0.01','x-requested-with':'XMLHttpRequest'}});const j=await r.json();if(!j||!Array.isArray(j.data))throw 0;return j};" +
+    "const run=async()=>{const seen=new Map();const add=d=>{for(const r of d)seen.set(r.ID??(r.Name+'|'+seen.size),[r.Name,r.Bank===1||r.Bank===true?1:0])};" +
+    "const f=await get('&skip=0&requireTotalCount=true');const total=f.totalCount??f.data.length;add(f.data);let last=f.data.length?f.data[f.data.length-1].ID:0,g=0;" +
+    "while(seen.size<total&&g++<200){const p=await get('&skip=0&filter='+encodeURIComponent(JSON.stringify([['ID','>',last]])));if(!p.data.length)break;add(p.data);const nl=p.data[p.data.length-1].ID;if(nl===last)break;last=nl}" +
+    "if(seen.size<total){let skip=0;g=0;while(skip<total&&g++<200){const p=await get('&skip='+skip);if(!p.data.length)break;add(p.data);skip+=p.data.length}}" +
+    "return{rows:[...seen.values()],total}};" +
+    "let res;try{res=await run()}catch(e){try{await fetch('https://account.aq.com/AQW/Inventory',{credentials:'include'});res=await run()}catch(e2){if(w)w.close();alert('Could not read your inventory. Make sure you are logged in at account.aq.com, then try again.');return}}" +
+    "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',items:res.rows,total:res.total},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
     "addEventListener('message',e=>{if(e.origin===O&&e.data==='aqw-inventory-ok')clearInterval(t)})})()";
   var bm = document.getElementById("bookmarklet");
   bm.href = "javascript:" + encodeURIComponent(BM);
