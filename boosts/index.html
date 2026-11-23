@@ -65,9 +65,12 @@ section{margin-bottom:38px}
 .filters button:hover{color:var(--frost)}
 .filters button[aria-pressed="true"]{color:var(--abyss);background:var(--ice);border-color:var(--ice);font-weight:600}
 
-.list{list-style:none;padding:0;background:var(--panel);border:1px solid var(--edge);border-radius:16px;overflow:hidden}
-.week{padding:10px 18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:rgba(13,21,32,.45);border-top:1px solid var(--edge)}
-.week:first-child{border-top:0}
+.list{list-style:none;padding:0;margin:0;display:grid;gap:12px;align-items:start}
+.wk{background:var(--panel);border:1px solid var(--edge);border-radius:16px;overflow:hidden}
+.wk-items{list-style:none;padding:0;margin:0}
+.wk-items .item:first-child{border-top:0}
+.week{margin:0;font-weight:400;padding:10px 18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:rgba(13,21,32,.45);border-top:1px solid var(--edge)}
+.week{border-top:0;border-bottom:1px solid var(--edge)}
 .item{display:grid;grid-template-columns:52px 36px 1fr auto;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid rgba(81,197,217,.08)}
 .date{text-align:center;line-height:1}
 .date .dow{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -84,6 +87,13 @@ section{margin-bottom:38px}
 .note a{color:var(--plate)}
 .err{color:#f0a3a3}
 
+@media (min-width:1100px){
+  /* Desktop: title and live boosts in a left sidebar, the upcoming weeks fill the rest as cards */
+  .wrap{width:min(100% - 64px,1720px);display:grid;grid-template-columns:360px minmax(0,1fr);column-gap:44px;grid-template-areas:"side main" "side2 main";grid-template-rows:auto 1fr;align-items:start}
+  .side{grid-area:side}.main{grid-area:main;padding-top:4px}.side2{grid-area:side2;margin-top:4px}
+  .side .now{grid-template-columns:1fr}
+  .list{grid-template-columns:repeat(auto-fill,minmax(360px,1fr))}
+}
 @media (max-width:520px){
   .item{grid-template-columns:44px 32px 1fr;gap:12px;padding:12px 14px}
   .item .len{grid-column:3;margin-top:-6px}
@@ -102,6 +112,7 @@ section{margin-bottom:38px}
 </svg>
 
 <div class="wrap">
+  <aside class="side">
   <header>
     <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Go back</a>
     <h1>Server <span class="glow">boosts</span></h1>
@@ -112,7 +123,9 @@ section{margin-bottom:38px}
     <h2 id="now-h">Live now</h2>
     <div class="now" id="now"></div>
   </section>
+  </aside>
 
+  <main class="main">
   <section aria-labelledby="next-h">
     <h2 id="next-h">Coming up</h2>
     <div class="filters" role="group" aria-label="Show">
@@ -122,8 +135,11 @@ section{margin-bottom:38px}
     </div>
     <ol class="list" id="list"></ol>
   </section>
+  </main>
 
+  <aside class="side2">
   <p class="note">Dates come from the <a href="https://www.artix.com/calendar/" target="_blank" rel="noopener">Artix calendar</a> and refresh every few hours. Days roll over at midnight server time (US Eastern). The calendar only lists start days, so end days are estimates: server doubles run 2 days (3 from a Friday) and resource boosts run a week, until the next one starts.</p>
+  </aside>
 </div>
 
 <script>
@@ -220,7 +236,7 @@ section{margin-bottom:38px}
     rows.forEach(function (b) {
       var s = d(b.start), e = d(b.end), live = s <= t && t < e;
       var wk = weekLabel(live ? t : s, t);
-      if (wk !== lastWeek) { html += '<li class="week">' + wk + "</li>"; lastWeek = wk; }
+      if (wk !== lastWeek) { html += (lastWeek ? "</ol></li>" : "") + '<li class="wk"><h3 class="week">' + wk + '</h3><ol class="wk-items">'; lastWeek = wk; }
       var len = days(s, e);
       html += '<li class="item' + (live ? " is-live" : "") + '" style="--k:var(--k-' + b.kind + ')">' +
         '<span class="date"><span class="dow">' + fmt(s, { weekday: "short" }) + '</span><span class="day">' + s.getDate() + "</span></span>" +
@@ -229,7 +245,8 @@ section{margin-bottom:38px}
         "<span>" + (b.group === "core" ? "Server boost" : "Resource boost") + " · " + fmt(s, { day: "numeric", month: "short" }) + "</span></span>" +
         '<span class="len">' + len + (len === 1 ? " day" : " days") + "</span></li>";
     });
-    document.getElementById("list").innerHTML = html || '<li class="empty">Nothing on the calendar yet.</li>';
+    if (html) html += "</ol></li>";
+    document.getElementById("list").innerHTML = html || '<li class="wk"><p class="empty">Nothing on the calendar yet.</p></li>';
   }
 
   document.querySelectorAll(".filters button").forEach(function (btn) {
