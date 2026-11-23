@@ -88,7 +88,13 @@ section{margin-bottom:34px}
 .paychip.seasonal{color:#7fe0b8;border-color:rgba(98,214,168,.45)}
 .tag.is-inc{border-color:var(--ice);box-shadow:0 0 0 1px color-mix(in srgb,var(--ice) 35%,transparent)}
 .filterbar{margin-bottom:26px}
-.ftags{display:flex;flex-wrap:wrap;gap:6px}
+.ftags{display:grid;gap:8px}
+.frow{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:start}
+.flabel{padding-top:7px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fchips{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:560px){.frow{grid-template-columns:1fr;gap:6px}.flabel{padding-top:0}.flabel:empty{display:none}}
+.tag.f2p{border-color:rgba(98,214,168,.55);color:#7fe0b8;font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
+.ftag.f2p{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
 .ftag{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;line-height:1;padding:6px 10px;border-radius:999px;border:1px solid var(--edge);background:rgba(13,21,32,.45);color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s,background .15s,opacity .15s}
 .ftag:hover{color:var(--frost);border-color:color-mix(in srgb,var(--ice) 60%,transparent)}
 .ftag:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
@@ -230,7 +236,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       { id: "dnsod", name: "Dual Necrotic Swords of Doom", wiki: "dual-necrotic-swords-of-doom", match: ["Dual Necrotic Swords of Doom"], tags: [ALL51],
         where: "Yulgar's Dual Wield Shop", req: ["Necrotic Sword of Doom", "Weapon Reflection"] },
       { id: "ebmk", name: "Empowered BladeMaster's Katana", wiki: "empowered-blademaster-s-katana", match: ["Empowered BladeMaster's Katana"], tags: [PSEUDO, ALL51],
-        where: "Ultra Dage · quest “Empowered BladeMaster”", req: ["BladeMaster's Dual Katanas [Pseudo-rare]", "Living BladeMaster [Pseudo-rare]", "Dark Unicorn Rib (Binky, Grimskull's Dungeon)", "Legion Token ×15,000", "Dage the Evil Insignia ×30"] },
+        where: "Ultra Dage · quest “Empowered BladeMaster”", req: ["BladeMaster's Dual Katanas [Pseudo-rare]", "Living BladeMaster [Pseudo-rare]", "Dark Unicorn Rib [Pseudo-rare]", "Legion Token ×15,000", "Dage the Evil Insignia ×30"] },
       { id: "ebl", name: "Empowered Bloodletter", wiki: "empowered-bloodletter", match: ["Empowered Bloodletter"], tags: [PSEUDO, ALL51],
         where: "Ultra Nulgath · quest “Empowered Bloodletter”", req: ["Bloodletter of Nulgath", "Tainted Gem ×350", "Dark Crystal Shard ×200", "Diamond of Nulgath ×500"].concat(NULG) },
       { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", match: ["Empowered Caladbolg"], tags: [ALL51],
@@ -242,7 +248,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [ALL51],
         where: "Dage Challenge Merge", req: ["Empowered Dual Caladbolgs", "Dual Hollowborn Caladbolgs"] },
       { id: "edk", name: "Empowered Dual Katanas", wiki: "empowered-dual-katanas", match: ["Empowered Dual Katanas"], tags: [PSEUDO, ALL51],
-        where: "Ultra Dage · quest “Empowered BladeMaster”", req: ["BladeMaster's Dual Katanas [Pseudo-rare]", "Living BladeMaster [Pseudo-rare]", "Dark Unicorn Rib (Binky, Grimskull's Dungeon)", "Legion Token ×15,000", "Dage the Evil Insignia ×30"] },
+        where: "Ultra Dage · quest “Empowered BladeMaster”", req: ["BladeMaster's Dual Katanas [Pseudo-rare]", "Living BladeMaster [Pseudo-rare]", "Dark Unicorn Rib [Pseudo-rare]", "Legion Token ×15,000", "Dage the Evil Insignia ×30"] },
       { id: "ehig", name: "Empowered Higure", wiki: "empowered-higure", match: ["Empowered Higure"], tags: [SEAS, ALL51],
         where: "Darkon Ultra Merge", req: ["Higure (Lolosia merge) [Seasonal]", "King Drago Insignia ×20", "Darkon Insignia ×20"] },
       { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", match: ["Empowered Hollowborn Caladbolg"], tags: [ALL51],
@@ -322,7 +328,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   }
 
   var ALL = [];
-  GROUPS.forEach(function (g) { g.items.forEach(function (it) { it.tags = collapseTagged(it.tags); ALL.push(it); }); });
+  var PAYWALL = ["legend", "sdka", "ac", "ioda", "heromart", "kickstarter"];
+  GROUPS.forEach(function (g) { g.items.forEach(function (it) {
+    it.tags = collapseTagged(it.tags);
+    // Free-player: nothing on the item needs Legend, SDKA, AC, IoDA, Heromart or Kickstarter.
+    if (!it.tags.some(function (t) { return PAYWALL.indexOf(t.kind) >= 0; })) it.tags = [{ kind: "f2p", text: "F2P" }].concat(it.tags);
+    ALL.push(it);
+  }); });
 
   /* ---------- Tag filter: each tag cycles off -> include -> exclude -> off ---------- */
   var FKEY = "icefritz-checklist-filters-v1";
@@ -331,14 +343,14 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   var TAGS = [], KIND = {}, TEXT = {}, PCT = {};
   ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TEXT[l] = t.text; PCT[l] = parseFloat(t.pct) || 0; TAGS.push(l); } }); });
   // Filter order: pay-to-win (Legend > Heromart > Kickstarter > AC > IoDA > SDKA), availability (Rare > Pseudo-rare > Seasonal), damage (All > Tagged > types), boosts (Gold > Rep > Class > XP).
-  var P2W = ["legend", "heromart", "kickstarter", "ac", "ioda", "sdka"], AVAIL = ["rare", "pseudo", "seasonal"], BOOSTS = ["gold", "rep", "cp", "xp"];
+  var P2W = ["legend", "heromart", "kickstarter", "ac", "ioda", "sdka"], AVAIL = ["rare", "pseudo", "seasonal", "f2p"], BOOSTS = ["gold", "rep", "cp", "xp"];
   function rank(l) {
     var k = KIND[l];
     if (P2W.indexOf(k) >= 0) return [0, P2W.indexOf(k)];
-    if (AVAIL.indexOf(k) >= 0) return [1, AVAIL.indexOf(k)];
-    if (k === "dmg") return [2, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
-    if (BOOSTS.indexOf(k) >= 0) return [3, BOOSTS.indexOf(k)];
-    return [4, 0];
+    if (AVAIL.indexOf(k) >= 0) return [0, 10 + AVAIL.indexOf(k)];
+    if (k === "dmg") return [1, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
+    if (BOOSTS.indexOf(k) >= 0) return [2, BOOSTS.indexOf(k)];
+    return [3, 0];
   }
   TAGS.sort(function (a, b) {
     var ra = rank(a), rb = rank(b);
@@ -353,14 +365,18 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     }
     return true;
   }
+  var ROWS = ["Access & rarity", "Damage", "Boosts", "Other"];
   function renderFilters() {
-    var n = Object.keys(filters).length;
-    document.getElementById("filters").innerHTML = TAGS.map(function (l) {
+    var n = Object.keys(filters).length, rows = [[], [], [], []];
+    TAGS.forEach(function (l) {
       var st = filters[l] || "off";
       var lab = st === "inc" ? "Only items with " : st === "exc" ? "Hiding items with " : "Filter by ";
-      return '<button type="button" class="ftag ' + KIND[l] + " is-" + st + '" data-tag="' + esc(l) + '" aria-label="' + esc(lab + l) + '" title="' + (st === "off" ? "Click to show only items with this tag" : st === "inc" ? "Click to hide items with this tag" : "Click to clear") + '">' +
-        '<i aria-hidden="true">' + (st === "inc" ? "+" : st === "exc" ? "\u2212" : "") + "</i>" + esc(l) + "</button>";
-    }).join("") + (n ? '<button type="button" class="fclear" id="fclear">Clear filters</button>' : "");
+      rows[rank(l)[0]].push('<button type="button" class="ftag ' + KIND[l] + " is-" + st + '" data-tag="' + esc(l) + '" aria-label="' + esc(lab + l) + '" title="' + (st === "off" ? "Click to show only items with this tag" : st === "inc" ? "Click to hide items with this tag" : "Click to clear") + '">' +
+        '<i aria-hidden="true">' + (st === "inc" ? "+" : st === "exc" ? "\u2212" : "") + "</i>" + esc(l) + "</button>");
+    });
+    document.getElementById("filters").innerHTML = rows.map(function (r, i) {
+      return r.length ? '<div class="frow"><span class="flabel">' + ROWS[i] + '</span><div class="fchips">' + r.join("") + "</div></div>" : "";
+    }).join("") + (n ? '<div class="frow"><span class="flabel"></span><div class="fchips"><button type="button" class="fclear" id="fclear">Clear filters</button></div></div>' : "");
   }
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
