@@ -34,4 +34,7 @@
 ## 8. Check
 
 - [x] 8.1 Check boosts at 360×740, 390×844 and 1440×900, with All and Server filters, and check that the home and checklist headings and back arrows still render.
-- [ ] 8.2 (User runs) `/ui-review --verify ui-refine-boosts` for Before/After. The implementer does not check this task.
+- [x] 8.2 （検証で追加）一覧の日数を名前の行に揃え、行の高さを約60pxにする（`boosts/index.html` の `.item`、`.item .len`、`.item .what b`）
+- [x] 8.3 （検証で追加）`a.plate` の hover の drop-shadow を外す（`assets/ice.css`）。ホーム・ブースト・チェックリストに効く
+- [x] 8.4 （検証で追加）ヘッダーの「All times are AQW server time (ET)」を削除する
+- [ ] 8.5 (User runs) `/ui-review --verify ui-refine-boosts` for Before/After. The implementer does not check this task.

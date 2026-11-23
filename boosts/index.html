@@ -13,8 +13,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/ice.css">
-<link rel="stylesheet" href="../assets/crystal.css">
-<script src="../assets/crystal.js" defer></script>
 <style>
 :root{
   --k-xp:#51c5d9; --k-class:#a99bff; --k-rep:#62d6a8; --k-gold:#e8c45a; --k-all:#d7d8cd; --k-resource:#7fb2cc;
@@ -58,14 +56,14 @@ section{margin-bottom:38px}
 .wk-items{list-style:none;padding:0;margin:0}
 .wk-items .item:first-child{border-top:0}
 .week{margin:0;font-weight:400;padding:0 0 9px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--edge)}
-.item{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:14px;padding:12px 0 12px 16px;border-left:2px solid var(--k);border-top:1px solid rgba(81,197,217,.08)}
+.item{display:grid;grid-template-columns:52px 1fr auto;align-items:start;gap:14px;padding:10px 0 10px 16px;border-left:2px solid var(--k);border-top:1px solid rgba(81,197,217,.08)}
 .date{text-align:center;line-height:1}
 .date .dow{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .date .day{display:block;margin-top:4px;font-family:"Silkscreen",monospace;font-size:20px;color:#fff}
 .item .what{min-width:0}
-.item .what b{display:block;font-weight:600;color:#fff;overflow-wrap:anywhere}
+.item .what b{display:block;font-weight:600;color:#fff;overflow-wrap:anywhere;line-height:24px}
 .item .what span{font-size:13px;color:var(--muted)}
-.item .len{font-size:13px;color:var(--muted);white-space:nowrap}
+.item .len{font-size:13px;line-height:24px;color:var(--muted);white-space:nowrap}
 .empty{padding:12px 0;color:var(--muted)}
 
 .note{color:var(--muted);font-size:13px;line-height:1.55;max-width:60ch}
@@ -86,7 +84,6 @@ section{margin-bottom:38px}
 </style>
 </head>
 <body class="page">
-<div class="crystal-nav corner" data-crystal-nav></div>
 <svg class="rune bg-rune" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor">
   <circle cx="100" cy="100" r="96" stroke-width="1.2"/>
   <circle cx="100" cy="100" r="84" stroke-width=".6" stroke-dasharray="2 5"/>
@@ -243,7 +240,7 @@ section{margin-bottom:38px}
     .then(function (j) {
       data = j.boosts.slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
       var up = new Date(j.updated);
-      document.getElementById("sub").innerHTML = "All times are AQW server time (ET) · Server time <b id='clock'></b>" +
+      document.getElementById("sub").innerHTML = "Server time <b id='clock'></b>" +
         "<br>Schedule last changed <time datetime='" + j.updated + "'>" + serverClock(up) + " ET</time>";
       render();
       
