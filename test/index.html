@@ -43,6 +43,16 @@ h1{font-weight:300;font-size:clamp(34px,7vw,52px);letter-spacing:.01em;line-heig
 
 h2{display:flex;align-items:center;gap:10px;font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);margin:0 0 14px}
 h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--edge),transparent)}
+.gtoggle{display:inline-flex;align-items:center;gap:10px;padding:4px 0;margin:-4px 0;background:none;border:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer}
+.gtoggle:hover{color:var(--ice-hi)}
+.gtoggle:focus-visible{outline:1px dashed var(--ice);outline-offset:4px}
+.gtoggle .chev{width:0;height:0;border:5px solid transparent;border-top:6px solid currentColor;border-bottom:0;transition:transform .2s}
+.is-shut .gtoggle .chev{transform:rotate(-90deg)}
+.list[hidden]{display:none!important}
+.grp.is-shut h2{margin-bottom:0}
+.grp.is-shut{margin-bottom:22px}
+.grp.completed h2{color:var(--muted)}
+.grp.completed .gtoggle:hover{color:var(--frost)}
 h2 small{font-family:"Outfit",sans-serif;font-size:12px;letter-spacing:.04em;color:var(--muted);text-transform:none;order:3}
 section{margin-bottom:34px}
 
@@ -371,23 +381,39 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     return "";
   }
 
+  /* Collapsible sections. Completed items move to "<Group> · Completed" sections below everything else,
+     collapsed until opened. Open/closed state is remembered per browser. */
+  var CKEY = "icefritz-checklist-collapsed-v1", collapsed = {};
+  try { collapsed = JSON.parse(localStorage.getItem(CKEY) || "{}") || {}; } catch (e) {}
+  function isCollapsed(id, def) { return id in collapsed ? !!collapsed[id] : def; }
+  function isDone(it) { return !!(state.progress[it.id] && state.progress[it.id].done); }
+  function itemHtml(it) {
+    var p = state.progress[it.id], done = !!(p && p.done);
+    return '<li class="item' + (done ? " done" : "") + '">' +
+      '<label class="check"><input type="checkbox" data-id="' + it.id + '"' + (done ? " checked" : "") + ' aria-label="I own ' + esc(it.name) + '"><span>' + TICK + "</span></label>" +
+      '<div><div class="name"><a href="' + WIKI + it.wiki + '" target="_blank" rel="noopener">' + esc(it.name) + "</a>" +
+      '<span class="status">' + statusText(p) + "</span></div>" +
+      '<div class="tags">' + sortedTags(it.tags).map(tagHtml).join("") + "</div></div></li>";
+  }
+  function sectionHtml(id, title, count, body, def, extraClass) {
+    var shut = isCollapsed(id, def);
+    return '<section class="grp' + (extraClass ? " " + extraClass : "") + (shut ? " is-shut" : "") + '">' +
+      '<h2><button type="button" class="gtoggle" data-sec="' + id + '" aria-expanded="' + !shut + '" aria-controls="sec-' + id + '">' +
+      '<i class="chev" aria-hidden="true"></i>' + esc(title) + "</button><small>" + count + "</small></h2>" +
+      '<ul class="list" id="sec-' + id + '"' + (shut ? " hidden" : "") + ">" + body + "</ul></section>";
+  }
+
   function render() {
-    var html = "";
+    var html = "", doneHtml = "";
     GROUPS.forEach(function (g) {
-      var have = g.items.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
-      html += '<section aria-labelledby="h-' + g.id + '"><h2 id="h-' + g.id + '">' + esc(g.title) + "<small>" + have + " / " + g.items.length + "</small></h2><ul class=\"list\">";
-      var shown = g.items.filter(visible);
-      if (!shown.length) html += '<li class="empty">No items match your filters.</li>';
-      shown.forEach(function (it) {
-        var p = state.progress[it.id], done = !!(p && p.done);
-        html += '<li class="item' + (done ? " done" : "") + '">' +
-          '<label class="check"><input type="checkbox" data-id="' + it.id + '"' + (done ? " checked" : "") + ' aria-label="I own ' + esc(it.name) + '"><span>' + TICK + "</span></label>" +
-          '<div><div class="name"><a href="' + WIKI + it.wiki + '" target="_blank" rel="noopener">' + esc(it.name) + "</a>" +
-          '<span class="status">' + statusText(p) + "</span></div>" +
-          '<div class="tags">' + sortedTags(it.tags).map(tagHtml).join("") + "</div></div></li>";
-      });
-      html += "</ul></section>";
+      var have = g.items.filter(isDone).length;
+      var shown = g.items.filter(visible), open = shown.filter(function (it) { return !isDone(it); }), fin = shown.filter(isDone);
+      var body = open.map(itemHtml).join("") ||
+        '<li class="empty">' + (!shown.length ? "No items match your filters." : "Everything here is completed. Nice.") + "</li>";
+      html += sectionHtml(g.id, g.title, have + " / " + g.items.length, body, false);
+      if (fin.length) doneHtml += sectionHtml(g.id + "-done", g.title + " \u00b7 Completed", fin.length + (fin.length === 1 ? " item" : " items"), fin.map(itemHtml).join(""), true, "completed");
     });
+    html += doneHtml;
     document.getElementById("lists").innerHTML = html;
     renderFilters();
     var vis = ALL.filter(visible).length, fn = Object.keys(filters).length;
@@ -399,6 +425,15 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     ls.textContent = state.sync ? "Last AQW sync: " + new Date(state.sync.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " · " + state.sync.count.toLocaleString("en-GB") + " items checked" : "";
   }
 
+  document.getElementById("lists").addEventListener("click", function (e) {
+    var b = e.target.closest(".gtoggle"); if (!b) return;
+    var id = b.dataset.sec, sec = b.closest(".grp"), shut = !sec.classList.contains("is-shut");
+    collapsed[id] = shut;
+    try { localStorage.setItem(CKEY, JSON.stringify(collapsed)); } catch (x) {}
+    sec.classList.toggle("is-shut", shut);
+    b.setAttribute("aria-expanded", String(!shut));
+    document.getElementById("sec-" + id).hidden = shut;
+  });
   document.getElementById("lists").addEventListener("change", function (e) {
     var id = e.target && e.target.dataset.id; if (!id) return;
     state.progress[id] = e.target.checked ? { done: true, at: Date.now(), src: "manual" } : { done: false, at: Date.now(), src: "manual" };
