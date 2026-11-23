@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="darkreader-lock">
+<title>Checklist · IceFritz</title>
+<meta name="description" content="Track AQW items you own, save your progress, and sync it from your AQW inventory.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#36393f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2336393f'/%3E%3Cpath d='M32 6 42 30 32 58 22 30Z' fill='%2351c5d9'/%3E%3Cpath d='M32 6 42 30H22Z' fill='%23b6f0fb'/%3E%3Cpath d='M32 58 42 30H32Z' fill='%23284e68'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ice.css">
+<style>
+:root{--legend:#e8c45a;--good:#62d6a8}
+body{overflow-x:hidden}
+.bg-rune{position:fixed;width:min(110vw,760px);aspect-ratio:1;right:max(-30vw,-240px);top:-200px;opacity:.16;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;width:min(100% - 32px,760px);margin:0 auto;padding:40px 0 56px}
+
+header{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:28px}
+.back{display:inline-flex;align-items:center;gap:10px;padding:6px 0;margin-bottom:14px;font-size:15px;color:var(--muted);text-decoration:none;transition:color .15s}
+.back svg{width:18px;height:18px;overflow:visible}
+.back .chev{stroke:var(--frost)}
+.back .dash{fill:var(--ice);filter:drop-shadow(0 0 4px rgba(81,197,217,.7));transition:transform .2s ease}
+.back:hover,.back:focus-visible{color:var(--frost);outline:none}
+.back:hover .dash,.back:focus-visible .dash{transform:translateX(-3px)}
+h1{font-weight:300;font-size:clamp(34px,7vw,52px);letter-spacing:.01em;line-height:1.05}
+.sub{margin-top:10px;color:var(--muted);font-size:14px;line-height:1.6}
+
+.progress{display:flex;align-items:center;gap:14px;margin-top:18px;width:100%}
+.bar{flex:1;height:8px;border-radius:999px;background:rgba(13,21,32,.6);border:1px solid var(--edge);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--steel),var(--ice));box-shadow:0 0 12px var(--ice);transition:width .4s ease}
+.count{font-family:"Silkscreen",monospace;font-size:13px;letter-spacing:.08em;color:var(--plate);white-space:nowrap}
+
+h2{display:flex;align-items:center;gap:10px;font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);margin:0 0 14px}
+h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--edge),transparent)}
+h2 small{font-family:"Outfit",sans-serif;font-size:12px;letter-spacing:.04em;color:var(--muted);text-transform:none;order:3}
+section{margin-bottom:34px}
+
+.list{list-style:none;padding:0;background:var(--panel);border:1px solid var(--edge);border-radius:16px;overflow:hidden}
+.item{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:16px 18px;border-top:1px solid rgba(81,197,217,.08);transition:background .2s}
+.item:first-child{border-top:0}
+.item.done{background:linear-gradient(90deg,rgba(81,197,217,.10),transparent 70%)}
+.check{position:relative;width:26px;height:26px;margin-top:1px;cursor:pointer}
+.check input{position:absolute;inset:0;margin:0;opacity:0;cursor:pointer}
+.check span{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;border:1.5px solid var(--slate);border-radius:7px;background:rgba(13,21,32,.6);transition:border-color .15s,background .15s,box-shadow .15s}
+.check span svg{width:12px;height:auto;opacity:0;transform:scale(.4) rotate(-20deg);transition:opacity .15s,transform .25s cubic-bezier(.3,1.6,.5,1)}
+.check input:checked + span{border-color:var(--ice);background:color-mix(in srgb,var(--ice) 18%,var(--abyss));box-shadow:0 0 14px -2px var(--ice)}
+.check input:checked + span svg{opacity:1;transform:none}
+.check input:focus-visible + span{outline:1px dashed var(--ice);outline-offset:3px}
+.name{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.name a{font-size:18px;font-weight:600;color:#fff;text-decoration:none}
+.name a:hover{color:var(--ice-hi);text-decoration:underline;text-underline-offset:3px}
+.done .name a{color:var(--ice-hi)}
+.status{font-size:12px;color:var(--good)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:12px;line-height:1;padding:5px 8px;border-radius:6px;border:1px solid var(--edge);background:rgba(13,21,32,.5);color:var(--frost);white-space:nowrap}
+.tag.legend{border-color:color-mix(in srgb,var(--legend) 60%,transparent);color:var(--legend);font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
+.tag.dmg b{color:var(--ice-hi);font-weight:600}
+.tag.cp b{color:#a99bff}.tag.rep b{color:#62d6a8}.tag.gold b{color:var(--legend)}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px}
+.card h3{font-size:16px;font-weight:600;color:#fff;margin-bottom:6px}
+.card p{font-size:13.5px;line-height:1.55;color:var(--muted)}
+.card p b{color:var(--frost);font-weight:400}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:10px;padding:8px 14px;cursor:pointer;text-decoration:none;transition:border-color .15s,color .15s,box-shadow .15s}
+.btn:hover,.btn:focus-visible{border-color:var(--ice);color:#fff;outline:none}
+.btn.primary{background:var(--ice);border-color:var(--ice);color:var(--abyss);font-weight:600}
+.btn.primary:hover{box-shadow:0 0 18px -4px var(--ice)}
+.bm{cursor:grab;border-style:dashed}
+.bm b{font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.06em;color:var(--plate)}
+ol.steps{margin:10px 0 0 18px;padding:0;font-size:13.5px;line-height:1.6;color:var(--muted)}
+ol.steps b{color:var(--frost);font-weight:400}
+textarea{width:100%;min-height:84px;margin-top:12px;resize:vertical;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--frost);background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:10px;padding:10px}
+textarea:focus{outline:none;border-color:var(--ice)}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
+.small{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.small a{color:var(--plate)}
+
+.toast{position:fixed;left:50%;bottom:22px;translate:-50% 20px;z-index:50;max-width:calc(100% - 32px);padding:11px 16px;border-radius:12px;background:var(--navy);border:1px solid var(--ice);box-shadow:0 10px 30px -10px #000,0 0 18px -6px var(--ice);font-size:14px;color:#fff;opacity:0;pointer-events:none;transition:opacity .25s,translate .25s}
+.toast.show{opacity:1;translate:-50% 0}
+.toast.err{border-color:#f0a3a3}
+.note{color:var(--muted);font-size:13px;line-height:1.55;max-width:62ch;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.bar i,.check span svg,.toast{transition:none}}
+</style>
+</head>
+<body>
+<svg class="rune bg-rune" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor">
+  <circle cx="100" cy="100" r="96" stroke-width="1.2"/>
+  <circle cx="100" cy="100" r="84" stroke-width=".6" stroke-dasharray="2 5"/>
+  <circle cx="100" cy="100" r="72" stroke-width="1"/>
+  <path d="M100 28 168 128H32Z M100 172 32 72H168Z" stroke-width=".7" opacity=".7"/>
+</svg>
+
+<div class="wrap">
+  <header>
+    <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Go back</a>
+    <h1>Item <span class="glow">checklist</span></h1>
+    <p class="sub">Tick what you own. Your progress is saved in this browser, only for you.</p>
+    <div class="progress" aria-live="polite"><div class="bar"><i id="bar"></i></div><span class="count" id="count">0 / 0</span></div>
+  </header>
+
+  <div id="lists"></div>
+
+  <section aria-labelledby="sync-h">
+    <h2 id="sync-h">Your progress</h2>
+    <div class="tools">
+      <div class="card">
+        <h3>Auto-complete from AQW</h3>
+        <p>Checks your real AQW inventory and bank for these items, using AQW's own inventory page. Nothing is sent anywhere but this page.</p>
+        <ol class="steps">
+          <li>Drag <a class="btn bm" id="bookmarklet" href="#" title="Drag me to your bookmarks bar"><b>AQW sync</b></a> to your bookmarks bar.</li>
+          <li>Log in at <a class="btn" href="https://account.aq.com/AQW/Inventory" target="_blank" rel="noopener">account.aq.com</a></li>
+          <li>On that page, click the <b>AQW sync</b> bookmark. This page opens and ticks what you own.</li>
+        </ol>
+        <details>
+          <summary>On a phone, or prefer copy and paste?</summary>
+          <p class="small">While logged in, open <a id="invlink" href="#" target="_blank" rel="noopener">your AQW inventory data</a>, select all, copy, and paste it here. A plain list of item names (one per line) works too.</p>
+          <textarea id="paste" placeholder='Paste here: {"data":[{"Name":"…"}], …} or item names, one per line' spellcheck="false"></textarea>
+          <div class="row"><button class="btn primary" type="button" id="pasteGo">Check my items</button></div>
+        </details>
+      </div>
+      <div class="card">
+        <h3>Save, move or restore</h3>
+        <p>Progress lives in <b>this browser only</b>. Export it to keep a backup or to carry it to another device, then import it there.</p>
+        <div class="row">
+          <button class="btn" type="button" id="exportFile">Export file</button>
+          <button class="btn" type="button" id="exportCode">Copy code</button>
+          <button class="btn" type="button" id="importFileBtn">Import file</button>
+          <input type="file" id="importFile" accept=".json,application/json" hidden>
+        </div>
+        <details>
+          <summary>Import from a code</summary>
+          <textarea id="code" placeholder="Paste a progress code" spellcheck="false"></textarea>
+          <div class="row"><button class="btn primary" type="button" id="importCode">Import code</button><button class="btn" type="button" id="reset">Clear all ticks</button></div>
+        </details>
+        <p class="small" id="lastSync"></p>
+      </div>
+    </div>
+  </section>
+
+  <p class="note">Item details from the <a href="https://aqwwiki.wikidot.com/" target="_blank" rel="noopener" style="color:var(--plate)">AQW Wiki</a>. The sync reads the same inventory data AQW Wiki Enhanced uses, from your own logged-in session; this site never sees your password.</p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- The checklist. Add items here; "match" lists the in-game names to look for. ---------- */
+  var WIKI = "https://aqwwiki.wikidot.com/";
+  var GROUPS = [
+    { id: "armours", title: "Armours", items: [
+      { id: "sdka", name: "Sepulchure's DoomKnight Armor", wiki: "sepulchure-s-doomknight-armor",
+        match: ["Sepulchure's DoomKnight Armor"],
+        tags: [{ legend: "Legend-only" }, { dmg: "+51%", text: "Human damage" }] },
+      { id: "rgow", name: "Radiant Goddess of War", wiki: "radiant-goddess-of-war",
+        match: ["Radiant Goddess of War"],
+        tags: [{ cls: "cp", pct: "+50%", text: "Class Points" }, { cls: "rep", pct: "+50%", text: "Reputation" }, { cls: "gold", pct: "+30%", text: "Gold" },
+               { dmg: "+50%", text: "Chaos" }, { dmg: "+50%", text: "Dragon" }, { dmg: "+50%", text: "Elemental" }, { dmg: "+50%", text: "Human" }, { dmg: "+50%", text: "Undead" }] }
+    ]},
+    { id: "weapons", title: "Weapons", items: [
+      { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword",
+        match: ["Necrotic Sword of Doom"],
+        tags: [{ dmg: "+51%", text: "All damage" }] }
+    ]}
+  ];
+
+  /* ---------- Storage (per visitor, per browser) ---------- */
+  var KEY = "icefritz-checklist-v1";
+  var state = { progress: {}, sync: null };
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved && saved.progress) state = saved; } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { toast("Your browser blocked saving. Export to keep your progress.", true); } }
+
+  var ALL = [];
+  GROUPS.forEach(function (g) { g.items.forEach(function (it) { ALL.push(it); }); });
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var TICK = '<svg viewBox="0 0 12 10" aria-hidden="true"><path d="M1 5.2 4.4 8.6 11 1.6" fill="none" stroke="#b6f0fb" stroke-width="2.2" stroke-linecap="square"/></svg>';
+
+  function tagHtml(t) {
+    if (t.legend) return '<span class="tag legend">' + esc(t.legend) + "</span>";
+    if (t.dmg) return '<span class="tag dmg"><b>' + esc(t.dmg) + "</b> " + esc(t.text) + "</span>";
+    return '<span class="tag ' + t.cls + '"><b>' + esc(t.pct) + "</b> " + esc(t.text) + "</span>";
+  }
+  function statusText(p) {
+    if (!p || !p.done) return "";
+    if (p.src === "sync") return p.where === "bank" ? "In your bank" : "In your inventory";
+    return "";
+  }
+
+  function render() {
+    var html = "";
+    GROUPS.forEach(function (g) {
+      var have = g.items.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
+      html += '<section aria-labelledby="h-' + g.id + '"><h2 id="h-' + g.id + '">' + esc(g.title) + "<small>" + have + " / " + g.items.length + "</small></h2><ul class=\"list\">";
+      g.items.forEach(function (it) {
+        var p = state.progress[it.id], done = !!(p && p.done);
+        html += '<li class="item' + (done ? " done" : "") + '">' +
+          '<label class="check"><input type="checkbox" data-id="' + it.id + '"' + (done ? " checked" : "") + ' aria-label="I own ' + esc(it.name) + '"><span>' + TICK + "</span></label>" +
+          '<div><div class="name"><a href="' + WIKI + it.wiki + '" target="_blank" rel="noopener">' + esc(it.name) + "</a>" +
+          '<span class="status">' + statusText(p) + "</span></div>" +
+          '<div class="tags">' + it.tags.map(tagHtml).join("") + "</div></div></li>";
+      });
+      html += "</ul></section>";
+    });
+    document.getElementById("lists").innerHTML = html;
+    var n = ALL.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
+    document.getElementById("count").textContent = n + " / " + ALL.length;
+    document.getElementById("bar").style.width = (ALL.length ? n / ALL.length * 100 : 0) + "%";
+    var ls = document.getElementById("lastSync");
+    ls.textContent = state.sync ? "Last AQW sync: " + new Date(state.sync.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " · " + state.sync.count.toLocaleString("en-GB") + " items checked" : "";
+  }
+
+  document.getElementById("lists").addEventListener("change", function (e) {
+    var id = e.target && e.target.dataset.id; if (!id) return;
+    state.progress[id] = e.target.checked ? { done: true, at: Date.now(), src: "manual" } : { done: false, at: Date.now(), src: "manual" };
+    save(); render();
+  });
+
+  /* ---------- Toast ---------- */
+  var tt;
+  function toast(msg, err) {
+    var el = document.getElementById("toast");
+    el.textContent = msg; el.classList.toggle("err", !!err); el.classList.add("show");
+    clearTimeout(tt); tt = setTimeout(function () { el.classList.remove("show"); }, 4200);
+  }
+
+  /* ---------- Inventory matching ---------- */
+  function norm(s) { return String(s || "").toLowerCase().replace(/[‘’`]/g, "'").replace(/\s+/g, " ").trim(); }
+  function applyInventory(rows, source) {
+    // rows: [{name, bank}] - data only, never executed
+    var have = {};
+    rows.forEach(function (r) { var k = norm(r.name); if (k && !(k in have && !have[k])) have[k] = !!r.bank; });
+    var found = 0, fresh = 0;
+    ALL.forEach(function (it) {
+      for (var i = 0; i < it.match.length; i++) {
+        var k = norm(it.match[i]);
+        if (k in have) {
+          found++;
+          var p = state.progress[it.id];
+          if (!p || !p.done) fresh++;
+          state.progress[it.id] = { done: true, at: Date.now(), src: "sync", where: have[k] ? "bank" : "inventory" };
+          break;
+        }
+      }
+    });
+    state.sync = { at: Date.now(), count: rows.length, via: source };
+    save(); render();
+    toast("Checked " + rows.length.toLocaleString("en-GB") + " items: you own " + found + " of " + ALL.length + (fresh ? " (" + fresh + " newly ticked)" : "") + ".");
+  }
+
+  function rowsFromJson(j) {
+    var list = Array.isArray(j) ? j : j && Array.isArray(j.data) ? j.data : j && Array.isArray(j.items) ? j.items : null;
+    if (!list) return null;
+    return list.map(function (r) {
+      if (typeof r === "string") return { name: r, bank: false };
+      if (Array.isArray(r)) return { name: r[0], bank: !!r[1] };
+      return r && typeof r === "object" ? { name: r.Name || r.name || r.n, bank: r.Bank === 1 || r.Bank === true || r.bank === true || r.b === true } : null;
+    }).filter(function (r) { return r && typeof r.name === "string" && r.name.length < 200; });
+  }
+
+  /* 1) Bookmarklet: runs on account.aq.com with the visitor's own login, then posts item names here. */
+  var TARGET = location.origin + location.pathname;
+  var BM = "(async()=>{const T=" + JSON.stringify(TARGET) + ",O=new URL(T).origin;" +
+    "if(!/(^|\\.)aq\\.com$/.test(location.hostname)){if(confirm('AQW sync runs on account.aq.com. Open it now? Log in, then click AQW sync again.'))location.href='https://account.aq.com/AQW/Inventory';return}" +
+    "const w=window.open(T+'?sync=1','icefritz-sync');const rows=[];const S=encodeURIComponent('[{\"selector\":\"ID\",\"desc\":false}]');let skip=0,total=1,g=0;" +
+    "try{while(skip<total&&g++<80){const r=await fetch('https://account.aq.com/myapi/inventory/InventoryData?skip='+skip+'&take=500&requireTotalCount=true&sort='+S+'&_='+Date.now(),{credentials:'include',headers:{accept:'application/json, text/javascript, */*; q=0.01','x-requested-with':'XMLHttpRequest'}});" +
+    "const j=await r.json();if(!j||!Array.isArray(j.data))throw 0;total=j.totalCount??j.data.length;for(const d of j.data)rows.push([d.Name,d.Bank===1?1:0]);if(!j.data.length)break;skip+=500}}" +
+    "catch(e){if(w)w.close();alert('Could not read your inventory. Make sure you are logged in at account.aq.com, then try again.');return}" +
+    "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',items:rows},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
+    "addEventListener('message',e=>{if(e.origin===O&&e.data==='aqw-inventory-ok')clearInterval(t)})})()";
+  var bm = document.getElementById("bookmarklet");
+  bm.href = "javascript:" + encodeURIComponent(BM);
+  bm.addEventListener("click", function (e) { e.preventDefault(); toast("Drag this button to your bookmarks bar, then click it on account.aq.com."); });
+
+  window.addEventListener("message", function (e) {
+    if (e.origin !== "https://account.aq.com") return;
+    var d = e.data;
+    if (!d || d.type !== "aqw-inventory" || !Array.isArray(d.items)) return;
+    try { e.source && e.source.postMessage("aqw-inventory-ok", e.origin); } catch (x) {}
+    if (window.__synced) return; window.__synced = true;
+    var rows = rowsFromJson(d.items);
+    if (rows) applyInventory(rows, "bookmark");
+    setTimeout(function () { window.__synced = false; }, 3000);
+  });
+  if (/[?&]sync=1/.test(location.search)) { toast("Waiting for your AQW inventory…"); history.replaceState(null, "", location.pathname); }
+
+  /* 2) Paste */
+  document.getElementById("invlink").href = "https://account.aq.com/myapi/inventory/InventoryData?skip=0&take=10000&requireTotalCount=true";
+  document.getElementById("pasteGo").addEventListener("click", function () {
+    var txt = document.getElementById("paste").value.trim();
+    if (!txt) return toast("Paste your inventory first.", true);
+    var rows = null;
+    try { rows = rowsFromJson(JSON.parse(txt)); } catch (e) {}
+    if (!rows) {
+      if (/^\s*[{[]/.test(txt)) return toast("That doesn't look like AQW inventory data. Make sure you copied the whole page.", true);
+      rows = txt.split(/\r?\n/).map(function (l) { return { name: l.replace(/^\s*[-*•\d.)]+\s*/, "").trim(), bank: false }; }).filter(function (r) { return r.name; });
+    }
+    if (!rows.length) return toast("No items found in what you pasted.", true);
+    applyInventory(rows, "paste");
+    document.getElementById("paste").value = "";
+  });
+
+  /* ---------- Export / import ---------- */
+  function payload() { return { app: "icefritz-checklist", v: 1, exported: new Date().toISOString(), progress: state.progress, sync: state.sync }; }
+  function toCode(obj) { return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+  function fromCode(code) { code = code.trim().replace(/-/g, "+").replace(/_/g, "/"); while (code.length % 4) code += "="; return JSON.parse(decodeURIComponent(escape(atob(code)))); }
+  function importObj(obj) {
+    if (!obj || obj.app !== "icefritz-checklist" || typeof obj.progress !== "object") throw new Error("bad");
+    var ids = {}; ALL.forEach(function (it) { ids[it.id] = 1; });
+    var next = {}, n = 0;
+    Object.keys(obj.progress).forEach(function (k) {
+      var p = obj.progress[k];
+      if (!ids[k] || !p || typeof p !== "object") return;
+      next[k] = { done: !!p.done, at: +p.at || Date.now(), src: p.src === "sync" ? "sync" : "manual", where: p.where === "bank" ? "bank" : p.where === "inventory" ? "inventory" : undefined };
+      if (next[k].done) n++;
+    });
+    state.progress = next;
+    if (obj.sync && +obj.sync.at) state.sync = { at: +obj.sync.at, count: +obj.sync.count || 0, via: "import" };
+    save(); render();
+    toast("Imported: " + n + " of " + ALL.length + " ticked.");
+  }
+
+  document.getElementById("exportFile").addEventListener("click", function () {
+    var blob = new Blob([JSON.stringify(payload(), null, 1)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "icefritz-checklist-" + new Date().toISOString().slice(0, 10) + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    toast("Exported your progress.");
+  });
+  document.getElementById("exportCode").addEventListener("click", function () {
+    var code = toCode(payload());
+    var done = function () { toast("Progress code copied. Paste it on another device to import."); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, function () { fallback(); });
+    else fallback();
+    function fallback() { var t = document.getElementById("code"); t.value = code; t.closest("details").open = true; t.select(); toast("Here's your code: copy it from the box."); }
+  });
+  document.getElementById("importFileBtn").addEventListener("click", function () { document.getElementById("importFile").click(); });
+  document.getElementById("importFile").addEventListener("change", function (e) {
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    if (f.size > 200000) return toast("That file is too big to be a checklist export.", true);
+    f.text().then(function (t) { try { importObj(JSON.parse(t)); } catch (x) { toast("That file isn't a checklist export.", true); } });
+    e.target.value = "";
+  });
+  document.getElementById("importCode").addEventListener("click", function () {
+    var v = document.getElementById("code").value;
+    if (!v.trim()) return toast("Paste a progress code first.", true);
+    try { importObj(fromCode(v)); document.getElementById("code").value = ""; } catch (x) { toast("That code didn't work. Check you copied all of it.", true); }
+  });
+  document.getElementById("reset").addEventListener("click", function () {
+    if (!Object.keys(state.progress).length) return toast("Nothing to clear.");
+    var backup = JSON.stringify(state);
+    state = { progress: {}, sync: null }; save(); render();
+    var el = document.getElementById("toast");
+    toast("Cleared. ");
+    var u = document.createElement("button"); u.className = "btn"; u.style.cssText = "margin-left:8px;padding:3px 10px;pointer-events:auto"; u.textContent = "Undo";
+    u.onclick = function () { state = JSON.parse(backup); save(); render(); toast("Restored."); };
+    el.appendChild(u); el.style.pointerEvents = "auto"; setTimeout(function () { el.style.pointerEvents = ""; }, 4200);
+  });
+
+  // keep tabs in step
+  window.addEventListener("storage", function (e) { if (e.key === KEY) { try { state = JSON.parse(e.newValue) || { progress: {}, sync: null }; } catch (x) {} render(); } });
+
+  render();
+})();
+</script>
+</body>
+</html>
