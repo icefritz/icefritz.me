@@ -450,7 +450,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     var g = editing && state.goals.filter(function (x) { return x.id === editing; })[0];
     return '<form class="goalform" id="goalform" autocomplete="off">' +
       '<input class="gf-name" name="name" maxlength="120" required placeholder="Item or goal, e.g. Void Aura" aria-label="Goal" value="' + (g ? esc(g.name) : "") + '">' +
-      '<input name="target" type="number" inputmode="numeric" min="1" max="10000000" step="1" placeholder="Amount (optional)" aria-label="Amount to farm (optional)" value="' + (g && g.target ? g.target : "") + '">' +
+      '<input name="target" type="number" inputmode="numeric" min="1" max="10000000" step="1" placeholder="Amount" aria-label="Amount to farm (optional)" title="Optional: how many you want" value="' + (g && g.target ? g.target : "") + '">' +
       '<button class="btn primary" type="submit">' + (g ? "Save goal" : "Add goal") + "</button>" +
       '<input class="gf-note" name="note" maxlength="200" placeholder="Note (optional), e.g. where to farm it" aria-label="Note (optional)" value="' + (g && g.note ? esc(g.note) : "") + '">' +
       (g ? '<button type="button" class="gf-cancel" data-act="cancel">Cancel editing</button>' : "") + "</form>";
