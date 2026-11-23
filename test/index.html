@@ -95,6 +95,20 @@ section{margin-bottom:34px}
 .fstate{margin-top:10px;font-size:12.5px;color:var(--muted)}
 .empty{padding:16px 18px;color:var(--muted);font-size:14px}
 
+@media (min-width:1100px){
+  /* Desktop: sidebar on the far left (title, progress, filters, sync), items fill the rest in a card grid */
+  .wrap{width:min(100% - 64px,1720px);display:grid;grid-template-columns:330px minmax(0,1fr);column-gap:44px;grid-template-areas:"side main" "side2 main";grid-template-rows:auto 1fr;align-items:start}
+  .side{grid-area:side}.main{grid-area:main;padding-top:4px}.side2{grid-area:side2;margin-top:8px}
+  h1{font-size:44px}
+  .frow{grid-template-columns:1fr;gap:6px}.flabel{padding-top:0}.flabel:empty{display:none}
+  .side2 .tools{grid-template-columns:1fr}
+  .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;background:none;border:0;border-radius:0;overflow:visible}
+  .item{height:100%;background:var(--panel);border:1px solid var(--edge);border-radius:14px;transition:background .2s,border-color .2s}
+  .item:first-child{border-top:1px solid var(--edge)}
+  .item:hover{border-color:color-mix(in srgb,var(--ice) 35%,transparent)}
+  .item.done{background:linear-gradient(160deg,rgba(81,197,217,.14),transparent 70%),var(--panel);border-color:color-mix(in srgb,var(--ice) 45%,transparent)}
+  .empty{grid-column:1/-1;background:var(--panel);border:1px solid var(--edge);border-radius:14px}
+}
 .tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
 .card{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px}
 .card h3{font-size:16px;font-weight:600;color:#fff;margin-bottom:6px}
@@ -132,6 +146,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 </svg>
 
 <div class="wrap">
+  <aside class="side">
   <header>
     <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Go back</a>
     <h1>Item <span class="glow">checklist</span></h1>
@@ -144,8 +159,11 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     <div class="ftags" id="filters" role="group" aria-label="Tag filters"></div>
     <p class="fstate" id="fstate"></p>
   </section>
+  </aside>
 
-  <div id="lists"></div>
+  <main class="main" id="lists"></main>
+
+  <aside class="side2">
 
   <section aria-labelledby="sync-h">
     <h2 id="sync-h">Your progress</h2>
@@ -185,6 +203,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   </section>
 
   <p class="note">Item details from the <a href="https://aqwwiki.wikidot.com/" target="_blank" rel="noopener" style="color:var(--plate)">AQW Wiki</a>. The sync reads the same inventory data <a href="https://github.com/60GHz/aqw-wiki-enhanced" target="_blank" rel="noopener" style="color:var(--plate)">AQW Wiki Enhanced</a> uses, from your own logged-in session; this site never sees your password.</p>
+  </aside>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
