@@ -66,6 +66,8 @@ section{margin-bottom:34px}
 .tag{font-size:12px;line-height:1;padding:5px 8px;border-radius:6px;border:1px solid var(--edge);background:rgba(13,21,32,.5);color:var(--frost);white-space:nowrap}
 .tag.legend{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .tag.dmg b{color:var(--c-dmg);font-weight:600}
+.tag.xp b{color:#7fdcef}
+.tag.range,.ftag.range{--c:var(--plate)}
 .tag.cp b{color:#a99bff}.tag.rep b{color:#62d6a8}.tag.gold b{color:var(--c-ac)}
 .tag.sdka,.tag.ioda,.tag.ac,.tag.legion,.tag.heromart,.tag.kickstarter{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .ftag.sdka,.ftag.ioda,.ftag.ac,.ftag.legion{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
@@ -210,42 +212,42 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
                { kind: "dmg", pct: "50%", text: "Chaos" }, { kind: "dmg", pct: "50%", text: "Dragon" }, { kind: "dmg", pct: "50%", text: "Elemental" }, { kind: "dmg", pct: "50%", text: "Human" }, { kind: "dmg", pct: "50%", text: "Undead" }] }
     ]},
     { id: "weapons", title: "Weapons", items: [
-      { id: "bsod", name: "Burning Sword of Doom", wiki: "burning-sword-of-doom", match: ["Burning Sword of Doom"], tags: [SEAS, ALL51] },
-      { id: "dexap", name: "Dual Exalted Apotheosis", wiki: "dual-exalted-apotheosis", match: ["Dual Exalted Apotheosis"], tags: [ALL51] },
-      { id: "dnsod", name: "Dual Necrotic Swords of Doom", wiki: "dual-necrotic-swords-of-doom", match: ["Dual Necrotic Swords of Doom"], tags: [ALL51] },
-      { id: "ebmk", name: "Empowered BladeMaster's Katana", wiki: "empowered-blademaster-s-katana", match: ["Empowered BladeMaster's Katana"], tags: [LEGION, PSEUDO, ALL51] },
-      { id: "ebl", name: "Empowered Bloodletter", wiki: "empowered-bloodletter", match: ["Empowered Bloodletter"], tags: [PSEUDO, ALL51] },
-      { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", match: ["Empowered Caladbolg"], tags: [LEGION, AC, ALL51] },
-      { id: "ecob", name: "Empowered Charged Oblivion Blade", wiki: "empowered-charged-oblivion-blade", match: ["Empowered Charged Oblivion Blade"], tags: [L, AC, PSEUDO, ALL51] },
-      { id: "edcal", name: "Empowered Dual Caladbolgs", wiki: "empowered-dual-caladbolgs", match: ["Empowered Dual Caladbolgs"], tags: [LEGION, AC, ALL51] },
-      { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [LEGION, AC, ALL51] },
-      { id: "edk", name: "Empowered Dual Katanas", wiki: "empowered-dual-katanas", match: ["Empowered Dual Katanas"], tags: [LEGION, PSEUDO, ALL51] },
-      { id: "ehig", name: "Empowered Higure", wiki: "empowered-higure", match: ["Empowered Higure"], tags: [SEAS, ALL51] },
-      { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", match: ["Empowered Hollowborn Caladbolg"], tags: [LEGION, AC, ALL51] },
-      { id: "ehob", name: "Empowered Hollowborn Overfiend Blade", wiki: "empowered-hollowborn-overfiend-blade", match: ["Empowered Hollowborn Overfiend Blade"], tags: [ALL51] },
-      { id: "eob", name: "Empowered Oblivion Blade", wiki: "empowered-oblivion-blade", match: ["Empowered Oblivion Blade"], tags: [AC, PSEUDO, ALL51] },
-      { id: "eofb", name: "Empowered Overfiend Blade", wiki: "empowered-overfiend-blade", match: ["Empowered Overfiend Blade"], tags: [ALL51] },
-      { id: "epm", name: "Empowered Prismatic Manslayer", wiki: "empowered-prismatic-manslayer", match: ["Empowered Prismatic Manslayer"], tags: [L, ALL51] },
-      { id: "epms", name: "Empowered Prismatic Manslayers", wiki: "empowered-prismatic-manslayers", match: ["Empowered Prismatic Manslayers"], tags: [L, ALL51] },
-      { id: "ess", name: "Empowered Shadow Spear", wiki: "empowered-shadow-spear", match: ["Empowered Shadow Spear"], tags: [PSEUDO, ALL51] },
-      { id: "esbl", name: "Empowered Sole Bloodletter", wiki: "empowered-sole-bloodletter", match: ["Empowered Sole Bloodletter"], tags: [PSEUDO, ALL51] },
-      { id: "eur", name: "Empowered Ungodly Reavers", wiki: "empowered-ungodly-reavers", match: ["Empowered Ungodly Reavers"], tags: [ALL51] },
-      { id: "exap", name: "Exalted Apotheosis", wiki: "exalted-apotheosis", match: ["Exalted Apotheosis"], tags: [ALL51] },
-      { id: "gde", name: "Gramiel's Divine Enoch", wiki: "gramiel-s-divine-enoch", match: ["Gramiel's Divine Enoch"], tags: [ALL51] },
-      { id: "gee", name: "Greatblade of the Entwined Eclipse", wiki: "greatblade-of-the-entwined-eclipse", match: ["Greatblade of the Entwined Eclipse"], tags: [ALL51] },
-      { id: "hbsod-ioda", name: "Hollowborn Sword of Doom (IoDA)", wiki: "hollowborn-sword-of-doom-ioda", match: ["Hollowborn Sword of Doom (IoDA)"], tags: [IODA, ALL51, GOLD25] },
-      { id: "hbsod", name: "Hollowborn Sword of Doom", wiki: "hollowborn-sword-of-doom-sword", match: ["Hollowborn Sword of Doom"], tags: [L, SDKA, ALL51, GOLD25] },
-      { id: "msfb", name: "Malgor's ShadowFlame Blade", wiki: "malgor-s-shadowflame-blade", match: ["Malgor's ShadowFlame Blade"], tags: [ALL51] },
-      { id: "nbod", name: "Necrotic Blade of Doom", wiki: "necrotic-blade-of-doom", match: ["Necrotic Blade of Doom"], tags: [ALL51] },
-      { id: "nbou", name: "Necrotic Blade of the Underworld", wiki: "necrotic-blade-of-the-underworld", match: ["Necrotic Blade of the Underworld"], tags: [LEGION, ALL51, GOLD25] },
-      { id: "nsod-ioda", name: "Necrotic Sword of Doom (IoDA)", wiki: "necrotic-sword-of-doom-ioda", match: ["Necrotic Sword of Doom (IoDA)"], tags: [IODA, ALL51] },
-      { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword", match: ["Necrotic Sword of Doom"], tags: [ALL51] },
-      { id: "nsoa", name: "Necrotic Sword of the Abyss", wiki: "necrotic-sword-of-the-abyss", match: ["Necrotic Sword of the Abyss"], tags: [ALL51] },
-      { id: "prov", name: "Providence", wiki: "providence", match: ["Providence"], tags: [ALL51] },
-      { id: "sota", name: "Sin of the Abyss", wiki: "sin-of-the-abyss", match: ["Sin of the Abyss"], tags: [ALL51, GOLD25] },
-      { id: "sotu", name: "Sin of the Underworld", wiki: "sin-of-the-underworld", match: ["Sin of the Underworld"], tags: [LEGION, ALL51] },
-      { id: "sle", name: "Star Light of the Empyrean", wiki: "star-light-of-the-empyrean", match: ["Star Light of the Empyrean"], tags: [ALL51] },
-      { id: "slse", name: "Star Lights of the Empyrean", wiki: "star-lights-of-the-empyrean", match: ["Star Lights of the Empyrean"], tags: [ALL51] }
+      { id: "bsod", name: "Burning Sword of Doom", wiki: "burning-sword-of-doom", base: "30-30", match: ["Burning Sword of Doom"], tags: [SEAS, ALL51] },
+      { id: "dexap", name: "Dual Exalted Apotheosis", wiki: "dual-exalted-apotheosis", base: "30-30", match: ["Dual Exalted Apotheosis"], tags: [ALL51] },
+      { id: "dnsod", name: "Dual Necrotic Swords of Doom", wiki: "dual-necrotic-swords-of-doom", base: "30-30", match: ["Dual Necrotic Swords of Doom"], tags: [ALL51] },
+      { id: "ebmk", name: "Empowered BladeMaster's Katana", wiki: "empowered-blademaster-s-katana", base: "30-30", match: ["Empowered BladeMaster's Katana"], tags: [LEGION, PSEUDO, ALL51] },
+      { id: "ebl", name: "Empowered Bloodletter", wiki: "empowered-bloodletter", base: "0-60", match: ["Empowered Bloodletter"], tags: [PSEUDO, ALL51] },
+      { id: "ecal", name: "Empowered Caladbolg", wiki: "empowered-caladbolg", base: "15-45", match: ["Empowered Caladbolg"], tags: [LEGION, AC, ALL51] },
+      { id: "ecob", name: "Empowered Charged Oblivion Blade", wiki: "empowered-charged-oblivion-blade", base: "3-57", match: ["Empowered Charged Oblivion Blade"], tags: [L, AC, PSEUDO, ALL51] },
+      { id: "edcal", name: "Empowered Dual Caladbolgs", wiki: "empowered-dual-caladbolgs", base: "15-45", match: ["Empowered Dual Caladbolgs"], tags: [LEGION, AC, ALL51] },
+      { id: "edhcal", name: "Empowered Dual Hollowborn Caladbolgs", wiki: "empowered-dual-hollowborn-caladbolgs", base: "30-30", match: ["Empowered Dual Hollowborn Caladbolgs"], tags: [LEGION, AC, ALL51] },
+      { id: "edk", name: "Empowered Dual Katanas", wiki: "empowered-dual-katanas", base: "30-30", match: ["Empowered Dual Katanas"], tags: [LEGION, PSEUDO, ALL51] },
+      { id: "ehig", name: "Empowered Higure", wiki: "empowered-higure", base: "30-30", match: ["Empowered Higure"], tags: [SEAS, ALL51, { kind: "cp", pct: "35%", text: "Class Points" }, { kind: "xp", pct: "35%", text: "XP" }, { kind: "gold", pct: "30%", text: "Gold" }, { kind: "rep", pct: "30%", text: "Rep" }] },
+      { id: "ehcal", name: "Empowered Hollowborn Caladbolg", wiki: "empowered-hollowborn-caladbolg", base: "30-30", match: ["Empowered Hollowborn Caladbolg"], tags: [LEGION, AC, ALL51] },
+      { id: "ehob", name: "Empowered Hollowborn Overfiend Blade", wiki: "empowered-hollowborn-overfiend-blade", base: "0-60", match: ["Empowered Hollowborn Overfiend Blade"], tags: [ALL51] },
+      { id: "eob", name: "Empowered Oblivion Blade", wiki: "empowered-oblivion-blade", base: "30-30", match: ["Empowered Oblivion Blade"], tags: [AC, PSEUDO, ALL51] },
+      { id: "eofb", name: "Empowered Overfiend Blade", wiki: "empowered-overfiend-blade", base: "0-60", match: ["Empowered Overfiend Blade"], tags: [ALL51] },
+      { id: "epm", name: "Empowered Prismatic Manslayer", wiki: "empowered-prismatic-manslayer", base: "6-54", match: ["Empowered Prismatic Manslayer"], tags: [L, ALL51] },
+      { id: "epms", name: "Empowered Prismatic Manslayers", wiki: "empowered-prismatic-manslayers", base: "30-30", match: ["Empowered Prismatic Manslayers"], tags: [L, ALL51] },
+      { id: "ess", name: "Empowered Shadow Spear", wiki: "empowered-shadow-spear", base: "0-60", match: ["Empowered Shadow Spear"], tags: [PSEUDO, ALL51] },
+      { id: "esbl", name: "Empowered Sole Bloodletter", wiki: "empowered-sole-bloodletter", base: "0-60", match: ["Empowered Sole Bloodletter"], tags: [PSEUDO, ALL51] },
+      { id: "eur", name: "Empowered Ungodly Reavers", wiki: "empowered-ungodly-reavers", base: "0-60", match: ["Empowered Ungodly Reavers"], tags: [ALL51] },
+      { id: "exap", name: "Exalted Apotheosis", wiki: "exalted-apotheosis", base: "30-30", match: ["Exalted Apotheosis"], tags: [ALL51] },
+      { id: "gde", name: "Gramiel's Divine Enoch", wiki: "gramiel-s-divine-enoch", base: "30-30", match: ["Gramiel's Divine Enoch"], tags: [ALL51] },
+      { id: "gee", name: "Greatblade of the Entwined Eclipse", wiki: "greatblade-of-the-entwined-eclipse", base: "30-30", match: ["Greatblade of the Entwined Eclipse"], tags: [ALL51] },
+      { id: "hbsod-ioda", name: "Hollowborn Sword of Doom (IoDA)", wiki: "hollowborn-sword-of-doom-ioda", base: "30-30", match: ["Hollowborn Sword of Doom (IoDA)"], tags: [IODA, ALL51, GOLD25] },
+      { id: "hbsod", name: "Hollowborn Sword of Doom", wiki: "hollowborn-sword-of-doom-sword", base: "30-30", match: ["Hollowborn Sword of Doom"], tags: [L, SDKA, ALL51, GOLD25] },
+      { id: "msfb", name: "Malgor's ShadowFlame Blade", wiki: "malgor-s-shadowflame-blade", base: "30-30", match: ["Malgor's ShadowFlame Blade"], tags: [ALL51] },
+      { id: "nbod", name: "Necrotic Blade of Doom", wiki: "necrotic-blade-of-doom", base: "30-30", match: ["Necrotic Blade of Doom"], tags: [ALL51] },
+      { id: "nbou", name: "Necrotic Blade of the Underworld", wiki: "necrotic-blade-of-the-underworld", base: "30-30", match: ["Necrotic Blade of the Underworld"], tags: [LEGION, ALL51, GOLD25] },
+      { id: "nsod-ioda", name: "Necrotic Sword of Doom (IoDA)", wiki: "necrotic-sword-of-doom-ioda", base: "27-33", match: ["Necrotic Sword of Doom (IoDA)"], tags: [IODA, ALL51] },
+      { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword", base: "27-33", match: ["Necrotic Sword of Doom"], tags: [ALL51] },
+      { id: "nsoa", name: "Necrotic Sword of the Abyss", wiki: "necrotic-sword-of-the-abyss", base: "29-31", match: ["Necrotic Sword of the Abyss"], tags: [ALL51] },
+      { id: "prov", name: "Providence", wiki: "providence", base: "30-30", match: ["Providence"], tags: [ALL51] },
+      { id: "sota", name: "Sin of the Abyss", wiki: "sin-of-the-abyss", base: "30-30", match: ["Sin of the Abyss"], tags: [ALL51, GOLD25] },
+      { id: "sotu", name: "Sin of the Underworld", wiki: "sin-of-the-underworld", base: "30-30", match: ["Sin of the Underworld"], tags: [LEGION, ALL51, { kind: "cp", pct: "30%", text: "Class Points" }, { kind: "xp", pct: "30%", text: "XP" }, { kind: "gold", pct: "30%", text: "Gold" }, { kind: "rep", pct: "30%", text: "Rep" }] },
+      { id: "sle", name: "Star Light of the Empyrean", wiki: "star-light-of-the-empyrean", base: "30-30", match: ["Star Light of the Empyrean"], tags: [ALL51] },
+      { id: "slse", name: "Star Lights of the Empyrean", wiki: "star-lights-of-the-empyrean", base: "30-30", match: ["Star Lights of the Empyrean"], tags: [ALL51] }
     ]}
   ];
 
@@ -272,10 +274,18 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     return out;
   }
 
+  /* Weapon range from the wiki's base damage (min-max): 30-30 Fixed, 27-33 / 29-31 Stable, 15-45 Medium, 0-60 / 3-57 / 6-54 High. */
+  function rangeOf(base) {
+    var m = /(\d+)\s*-\s*(\d+)/.exec(base); if (!m) return "Fixed";
+    var lo = +m[1], hi = +m[2], spread = (hi - lo) / (hi + lo);
+    return spread === 0 ? "Fixed" : spread <= 0.2 ? "Stable" : spread <= 0.6 ? "Medium" : "High";
+  }
+
   var ALL = [];
   var PAYWALL = ["legend", "sdka", "ac", "ioda", "legion", "heromart", "kickstarter"];
   GROUPS.forEach(function (g) { g.items.forEach(function (it) {
     it.tags = collapseTagged(it.tags);
+    if (it.base) it.tags.push({ kind: "range", text: rangeOf(it.base), title: "Base damage " + it.base });
     // Free-player: nothing on the item needs Legend, SDKA, AC, IoDA, Legion Tokens, Heromart or Kickstarter.
     if (!it.tags.some(function (t) { return PAYWALL.indexOf(t.kind) >= 0; })) it.tags = [{ kind: "f2p", text: "F2P" }].concat(it.tags);
     ALL.push(it);
@@ -294,8 +304,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     if (P2W.indexOf(k) >= 0) return [0, P2W.indexOf(k)];
     if (AVAIL.indexOf(k) >= 0) return [0, 10 + AVAIL.indexOf(k)];
     if (k === "dmg") return [1, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
-    if (BOOSTS.indexOf(k) >= 0) return [2, BOOSTS.indexOf(k)];
-    return [3, 0];
+    if (k === "range") return [2, ["Fixed", "Stable", "Medium", "High"].indexOf(TEXT[l])];
+    if (BOOSTS.indexOf(k) >= 0) return [3, BOOSTS.indexOf(k)];
+    return [4, 0];
   }
   TAGS.sort(function (a, b) {
     var ra = rank(a), rb = rank(b);
@@ -310,9 +321,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     }
     return true;
   }
-  var ROWS = ["Access & rarity", "Damage", "Boosts", "Other"];
+  var ROWS = ["Access & rarity", "Damage", "Range", "Boosts", "Other"];
   function renderFilters() {
-    var n = Object.keys(filters).length, rows = [[], [], [], []];
+    var n = Object.keys(filters).length, rows = [[], [], [], [], []];
     TAGS.forEach(function (l) {
       var st = filters[l] || "off";
       var lab = st === "inc" ? "Only items with " : st === "exc" ? "Hiding items with " : "Filter by ";
