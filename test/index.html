@@ -61,6 +61,20 @@ section{margin-bottom:34px}
 .tag.legend{border-color:color-mix(in srgb,var(--legend) 60%,transparent);color:var(--legend);font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .tag.dmg b{color:var(--ice-hi);font-weight:600}
 .tag.cp b{color:#a99bff}.tag.rep b{color:#62d6a8}.tag.gold b{color:var(--legend)}
+.tag.is-inc{border-color:var(--ice);box-shadow:0 0 0 1px color-mix(in srgb,var(--ice) 35%,transparent)}
+.filterbar{margin-bottom:26px}
+.ftags{display:flex;flex-wrap:wrap;gap:6px}
+.ftag{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;line-height:1;padding:6px 10px;border-radius:999px;border:1px solid var(--edge);background:rgba(13,21,32,.45);color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s,background .15s,opacity .15s}
+.ftag:hover{color:var(--frost);border-color:color-mix(in srgb,var(--ice) 60%,transparent)}
+.ftag:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
+.ftag i{font-style:normal;font-family:"Silkscreen",monospace;font-size:11px;width:0;overflow:hidden;transition:width .15s}
+.ftag.legend{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
+.ftag.is-inc{color:var(--abyss);background:var(--ice);border-color:var(--ice);font-weight:600}
+.ftag.is-inc i,.ftag.is-exc i{width:9px}
+.ftag.is-exc{color:#f0a3a3;border-color:rgba(240,163,163,.55);background:rgba(240,163,163,.08);text-decoration:line-through;text-decoration-thickness:1px}
+.fclear{font:inherit;font-size:12.5px;padding:6px 10px;border:0;background:none;color:var(--plate);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.fstate{margin-top:10px;font-size:12.5px;color:var(--muted)}
+.empty{padding:16px 18px;color:var(--muted);font-size:14px}
 
 .tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
 .card{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px}
@@ -105,6 +119,12 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     <p class="sub">Tick what you own. Your progress is saved in this browser, only for you.</p>
     <div class="progress" aria-live="polite"><div class="bar"><i id="bar"></i></div><span class="count" id="count">0 / 0</span></div>
   </header>
+
+  <section class="filterbar" aria-labelledby="f-h">
+    <h2 id="f-h">Filter by tag</h2>
+    <div class="ftags" id="filters" role="group" aria-label="Tag filters"></div>
+    <p class="fstate" id="fstate"></p>
+  </section>
 
   <div id="lists"></div>
 
@@ -160,16 +180,16 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     { id: "armours", title: "Armours", items: [
       { id: "sdka", name: "Sepulchure's DoomKnight Armor", wiki: "sepulchure-s-doomknight-armor",
         match: ["Sepulchure's DoomKnight Armor"],
-        tags: [{ legend: "Legend-only" }, { dmg: "+51%", text: "Human damage" }] },
+        tags: [{ kind: "legend", text: "Legend-only" }, { kind: "dmg", pct: "51%", text: "Human" }] },
       { id: "rgow", name: "Radiant Goddess of War", wiki: "radiant-goddess-of-war",
         match: ["Radiant Goddess of War"],
-        tags: [{ cls: "cp", pct: "+50%", text: "Class Points" }, { cls: "rep", pct: "+50%", text: "Reputation" }, { cls: "gold", pct: "+30%", text: "Gold" },
-               { dmg: "+50%", text: "Chaos" }, { dmg: "+50%", text: "Dragon" }, { dmg: "+50%", text: "Elemental" }, { dmg: "+50%", text: "Human" }, { dmg: "+50%", text: "Undead" }] }
+        tags: [{ kind: "cp", pct: "50%", text: "Class Points" }, { kind: "rep", pct: "50%", text: "Rep" }, { kind: "gold", pct: "30%", text: "Gold" },
+               { kind: "dmg", pct: "50%", text: "Chaos" }, { kind: "dmg", pct: "50%", text: "Dragon" }, { kind: "dmg", pct: "50%", text: "Elemental" }, { kind: "dmg", pct: "50%", text: "Human" }, { kind: "dmg", pct: "50%", text: "Undead" }] }
     ]},
     { id: "weapons", title: "Weapons", items: [
       { id: "nsod", name: "Necrotic Sword of Doom", wiki: "necrotic-sword-of-doom-sword",
         match: ["Necrotic Sword of Doom"],
-        tags: [{ dmg: "+51%", text: "All damage" }] }
+        tags: [{ kind: "dmg", pct: "51%", text: "All" }] }
     ]}
   ];
 
@@ -182,13 +202,38 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   var ALL = [];
   GROUPS.forEach(function (g) { g.items.forEach(function (it) { ALL.push(it); }); });
 
+  /* ---------- Tag filter: each tag cycles off -> include -> exclude -> off ---------- */
+  var FKEY = "icefritz-checklist-filters-v1";
+  var filters = {};
+  try { filters = JSON.parse(localStorage.getItem(FKEY) || "{}") || {}; } catch (e) {}
+  var TAGS = [], KIND = {};
+  ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TAGS.push(l); } }); });
+  Object.keys(filters).forEach(function (k) { if (!(k in KIND) || (filters[k] !== "inc" && filters[k] !== "exc")) delete filters[k]; });
+  function visible(it) {
+    var labels = it.tags.map(tagLabel);
+    for (var k in filters) {
+      if (filters[k] === "inc" && labels.indexOf(k) < 0) return false;
+      if (filters[k] === "exc" && labels.indexOf(k) >= 0) return false;
+    }
+    return true;
+  }
+  function renderFilters() {
+    var n = Object.keys(filters).length;
+    document.getElementById("filters").innerHTML = TAGS.map(function (l) {
+      var st = filters[l] || "off";
+      var lab = st === "inc" ? "Only items with " : st === "exc" ? "Hiding items with " : "Filter by ";
+      return '<button type="button" class="ftag ' + KIND[l] + " is-" + st + '" data-tag="' + esc(l) + '" aria-label="' + esc(lab + l) + '" title="' + (st === "off" ? "Click to show only items with this tag" : st === "inc" ? "Click to hide items with this tag" : "Click to clear") + '">' +
+        '<i aria-hidden="true">' + (st === "inc" ? "+" : st === "exc" ? "\u2212" : "") + "</i>" + esc(l) + "</button>";
+    }).join("") + (n ? '<button type="button" class="fclear" id="fclear">Clear filters</button>' : "");
+  }
+
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   var TICK = '<svg viewBox="0 0 12 10" aria-hidden="true"><path d="M1 5.2 4.4 8.6 11 1.6" fill="none" stroke="#b6f0fb" stroke-width="2.2" stroke-linecap="square"/></svg>';
 
+  function tagLabel(t) { return (t.pct ? t.pct + " " : "") + t.text; }
   function tagHtml(t) {
-    if (t.legend) return '<span class="tag legend">' + esc(t.legend) + "</span>";
-    if (t.dmg) return '<span class="tag dmg"><b>' + esc(t.dmg) + "</b> " + esc(t.text) + "</span>";
-    return '<span class="tag ' + t.cls + '"><b>' + esc(t.pct) + "</b> " + esc(t.text) + "</span>";
+    var on = filters[tagLabel(t)];
+    return '<span class="tag ' + t.kind + (on ? " is-" + on : "") + '">' + (t.pct ? "<b>" + esc(t.pct) + "</b> " : "") + esc(t.text) + "</span>";
   }
   function statusText(p) {
     if (!p || !p.done) return "";
@@ -201,7 +246,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     GROUPS.forEach(function (g) {
       var have = g.items.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
       html += '<section aria-labelledby="h-' + g.id + '"><h2 id="h-' + g.id + '">' + esc(g.title) + "<small>" + have + " / " + g.items.length + "</small></h2><ul class=\"list\">";
-      g.items.forEach(function (it) {
+      var shown = g.items.filter(visible);
+      if (!shown.length) html += '<li class="empty">No items match your filters.</li>';
+      shown.forEach(function (it) {
         var p = state.progress[it.id], done = !!(p && p.done);
         html += '<li class="item' + (done ? " done" : "") + '">' +
           '<label class="check"><input type="checkbox" data-id="' + it.id + '"' + (done ? " checked" : "") + ' aria-label="I own ' + esc(it.name) + '"><span>' + TICK + "</span></label>" +
@@ -212,6 +259,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       html += "</ul></section>";
     });
     document.getElementById("lists").innerHTML = html;
+    renderFilters();
+    var vis = ALL.filter(visible).length, fn = Object.keys(filters).length;
+    document.getElementById("fstate").textContent = fn ? "Showing " + vis + " of " + ALL.length + " items" : "Click a tag to show only items with it, again to hide them, again to clear.";
     var n = ALL.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
     document.getElementById("count").textContent = n + " / " + ALL.length;
     document.getElementById("bar").style.width = (ALL.length ? n / ALL.length * 100 : 0) + "%";
@@ -223,6 +273,14 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     var id = e.target && e.target.dataset.id; if (!id) return;
     state.progress[id] = e.target.checked ? { done: true, at: Date.now(), src: "manual" } : { done: false, at: Date.now(), src: "manual" };
     save(); render();
+  });
+
+  document.getElementById("filters").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.id === "fclear") filters = {};
+    else { var t = b.dataset.tag, st = filters[t]; if (!st) filters[t] = "inc"; else if (st === "inc") filters[t] = "exc"; else delete filters[t]; }
+    try { localStorage.setItem(FKEY, JSON.stringify(filters)); } catch (x) {}
+    render();
   });
 
   /* ---------- Toast ---------- */
