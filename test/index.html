@@ -385,7 +385,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   function toast(msg, err) {
     var el = document.getElementById("toast");
     el.textContent = msg; el.classList.toggle("err", !!err); el.classList.add("show");
-    clearTimeout(tt); tt = setTimeout(function () { el.classList.remove("show"); }, 4200);
+    clearTimeout(tt); tt = setTimeout(function () { el.classList.remove("show"); }, msg.length > 90 ? 9000 : 4200);
   }
 
   /* ---------- Inventory matching ---------- */
@@ -435,7 +435,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   var TARGET = location.origin + location.pathname;
   var BM = "(async()=>{const T=" + JSON.stringify(TARGET) + ",O=new URL(T).origin;" +
     "if(!/(^|\\.)aq\\.com$/.test(location.hostname)){if(confirm('AQW sync runs on account.aq.com. Open it now? Log in, then click AQW sync again.'))location.href='https://account.aq.com/AQW/Inventory';return}" +
-    "const w=window.open(T+'?sync=1','icefritz-sync');" +
+    "const w=window.open(T+'?sync=1','icefritz-sync');if(!w){alert('Your browser blocked the checklist window. Allow pop-ups for account.aq.com, then click AQW sync again.');return}" +
     "const API='https://account.aq.com/myapi/inventory/InventoryData?take=500&sort='+encodeURIComponent('[{\"selector\":\"ID\",\"desc\":false}]');" +
     "const get=async q=>{const r=await fetch(API+q+'&_='+Date.now(),{credentials:'include',headers:{accept:'application/json, text/javascript, */*; q=0.01','x-requested-with':'XMLHttpRequest'}});const j=await r.json();if(!j||!Array.isArray(j.data))throw 0;return j};" +
     "const run=async()=>{const seen=new Map();const add=d=>{for(const r of d)seen.set(r.ID??(r.Name+'|'+seen.size),[r.Name,r.Bank===1||r.Bank===true?1:0])};" +
@@ -444,7 +444,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     "if(seen.size<total){let skip=0;g=0;while(skip<total&&g++<200){const p=await get('&skip='+skip);if(!p.data.length)break;add(p.data);skip+=p.data.length}}" +
     "return{rows:[...seen.values()],total}};" +
     "let res;try{res=await run()}catch(e){try{await fetch('https://account.aq.com/AQW/Inventory',{credentials:'include'});res=await run()}catch(e2){if(w)w.close();alert('Could not read your inventory. Make sure you are logged in at account.aq.com, then try again.');return}}" +
-    "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',items:res.rows,total:res.total},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
+    "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',v:2,items:res.rows,total:res.total},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
     "addEventListener('message',e=>{if(e.origin===O&&e.data==='aqw-inventory-ok')clearInterval(t)})})()";
   var bm = document.getElementById("bookmarklet");
   bm.href = "javascript:" + encodeURIComponent(BM);
@@ -458,6 +458,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     if (window.__synced) return; window.__synced = true;
     var rows = rowsFromJson(d.items);
     if (rows) applyInventory(rows, "bookmark");
+    if (d.v !== 2) setTimeout(function () {
+      toast("Your AQW sync bookmark is out of date and can miss items. Drag the new AQW sync button to your bookmarks bar to replace it.", true);
+    }, 4400);
     setTimeout(function () { window.__synced = false; }, 3000);
   });
   if (/[?&]sync=1/.test(location.search)) { toast("Waiting for your AQW inventory…"); history.replaceState(null, "", location.pathname); }
