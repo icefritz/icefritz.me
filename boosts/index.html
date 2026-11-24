@@ -49,7 +49,7 @@ section{margin-bottom:38px}
 .badge.sm img{width:24px}
 
 .filters{display:flex;gap:6px;margin:-2px 0 14px;flex-wrap:wrap}
-.filters button{font:inherit;font-size:13px;color:var(--muted);background:transparent;border:1px solid var(--edge);border-radius:999px;padding:6px 14px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.filters button{font:inherit;font-size:12.5px;color:var(--muted);background:rgba(13,21,32,.45);border:1px solid var(--edge);border-radius:4px;padding:6px 10px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
 .filters button:hover{color:var(--frost)}
 .filters button[aria-pressed="true"]{color:var(--ice-hi);background:color-mix(in srgb,var(--ice) 14%,transparent);border-color:color-mix(in srgb,var(--ice) 70%,transparent)}
 
@@ -59,7 +59,7 @@ section{margin-bottom:38px}
 .week{margin:0;font-weight:400;padding:0 0 9px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--edge)}
 .item{display:grid;grid-template-columns:52px 1fr auto;align-items:start;gap:14px;padding:10px 0 10px 16px;border-left:2px solid var(--k);border-top:1px solid rgba(81,197,217,.08)}
 .date{text-align:center;line-height:1}
-.date .dow{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.date .dow{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--frost);opacity:.8}
 .date .day{display:block;margin-top:4px;font-family:"Silkscreen",monospace;font-size:20px;color:#fff}
 .item .what{min-width:0}
 .item .what b{display:block;font-weight:600;color:#fff;overflow-wrap:anywhere;line-height:24px}
@@ -99,7 +99,7 @@ section{margin-bottom:38px}
 <div class="wrap">
   <aside class="side">
   <header>
-    <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Go back</a>
+    <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Home</a>
     <h1>Server <span class="glow">boosts</span></h1>
     <p class="sub" id="sub">Loading the boost calendar&hellip;</p>
   </header>
@@ -200,7 +200,6 @@ section{margin-bottom:38px}
     var thisMon = new Date(t); thisMon.setDate(thisMon.getDate() - ((thisMon.getDay() + 6) % 7));
     var w = days(thisMon, mon) / 7;
     if (w === 0) return "This week";
-    if (w === 1) return "Next week";
     return "Week of " + fmt(mon, { day: "numeric", month: "short" });
   }
 
@@ -221,13 +220,17 @@ section{margin-bottom:38px}
       html += '<li class="item" style="--k:var(--k-' + b.kind + ')">' +
         '<span class="date"><span class="dow">' + fmt(s, { weekday: "short" }) + '</span><span class="day">' + s.getDate() + "</span></span>" +
         '<span class="what"><b>' + esc(title(b)) + "</b>" +
-        "<span>" + (b.group === "core" ? "Server boost" : "Resource boost") + " · " + fmt(s, { day: "numeric", month: "short" }) + "</span></span>" +
+        (filter === "all" ? "<span>" + (b.group === "core" ? "Server boost" : "Resource boost") + "</span>" : "") + "</span>" +
         '<span class="len">' + len + (len === 1 ? " day" : " days") + "</span></li>";
     });
     if (html) html += "</ol></li>";
-    document.getElementById("list").innerHTML = html || '<li class="wk"><p class="empty">Nothing on the calendar yet.</p></li>';
+    var kindWord = filter === "core" ? "server " : filter === "resource" ? "resource " : "";
+    document.getElementById("list").innerHTML = html || '<li class="wk"><p class="empty">No ' + kindWord + 'boosts scheduled. <button type="button" class="showall" data-f="all">Show all</button></p></li>';
   }
 
+  document.getElementById("list").addEventListener("click", function (e) {
+    if (e.target.closest(".showall")) document.querySelector('.filters button[data-f="all"]').click();
+  });
   document.querySelectorAll(".filters button").forEach(function (btn) {
     btn.addEventListener("click", function () {
       filter = btn.dataset.f;
@@ -241,8 +244,8 @@ section{margin-bottom:38px}
     .then(function (j) {
       data = j.boosts.slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
       var up = new Date(j.updated);
-      document.getElementById("sub").innerHTML = "Server time <b id='clock'></b>" +
-        "<br>Schedule last changed <time datetime='" + j.updated + "'>" + serverClock(up) + " ET</time>";
+      document.getElementById("sub").innerHTML = "Server time (ET) <b id='clock'></b>" +
+        "<br>Schedule updated <time datetime='" + j.updated + "'>" + serverClock(up) + " ET</time>";
       render();
       
       // keep the clock, countdowns and server-day rollover live
