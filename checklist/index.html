@@ -365,10 +365,11 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   try { filters = JSON.parse(localStorage.getItem(FKEY) || "{}") || {}; } catch (e) {}
   var TAGS = [], KIND = {}, TEXT = {}, PCT = {};
   ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TEXT[l] = t.text; PCT[l] = parseFloat(t.pct) || 0; TAGS.push(l); } }); });
-  // Filter order: pay-to-win (Legend > Heromart > Kickstarter > AC > IoDA > SDKA), availability (Rare > Pseudo-rare > Seasonal), range (Fixed > Stable > Medium > High), damage (All > Tagged > types), boosts (Gold > Rep > Class > XP).
-  var P2W = ["legend", "heromart", "kickstarter", "ac", "ioda", "sdka", "legion"], AVAIL = ["rare", "pseudo", "seasonal", "f2p"], BOOSTS = ["gold", "rep", "cp", "xp"];
+  // Filter order: F2P, then pay-to-win (Legion > Legend > AC > IoDA > SDKA > Heromart > Kickstarter), then availability (Rare > Pseudo-rare > Seasonal), range (Fixed > Stable > Medium > High), damage (All > Tagged > types), boosts (Gold > Rep > Class > XP).
+  var P2W = ["legion", "legend", "ac", "ioda", "sdka", "heromart", "kickstarter"], AVAIL = ["rare", "pseudo", "seasonal"], BOOSTS = ["gold", "rep", "cp", "xp"];
   function rank(l) {
     var k = KIND[l];
+    if (k === "f2p") return [0, -1];
     if (P2W.indexOf(k) >= 0) return [0, P2W.indexOf(k)];
     if (AVAIL.indexOf(k) >= 0) return [0, 10 + AVAIL.indexOf(k)];
     if (k === "range") return [1, ["Fixed", "Stable", "Medium", "High"].indexOf(TEXT[l])];
