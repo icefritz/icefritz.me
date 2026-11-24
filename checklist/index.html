@@ -168,6 +168,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .tag.dmg b,.tag.xp b,.tag.cp b,.tag.rep b,.tag.gold b{color:var(--frost)}
 /* Desktop: one column, name on the left in a fixed column, tags flowing right (4.1) */
 @media (min-width:1100px){
+  .wrap{grid-template-areas:"side main";grid-template-rows:auto}
   .list{display:grid;grid-template-columns:1fr;column-gap:0}
   .item:not(.goal)>div{display:grid;grid-template-columns:280px minmax(0,1fr);align-items:center;column-gap:16px}
   .item:not(.goal) .tags{margin-top:0}
@@ -198,12 +199,6 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     <div class="ftags" id="filters" role="group" aria-label="Tag filters"></div>
     <p class="fstate" id="fstate"></p>
   </section>
-  </aside>
-
-  <main class="main" id="lists"></main>
-
-  <aside class="side2">
-
   <section aria-labelledby="sync-h">
     <h2 id="sync-h">Your progress</h2>
     <div class="tools">
@@ -243,6 +238,8 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 
   <p class="note">Item details from the <a href="https://aqwwiki.wikidot.com/" target="_blank" rel="noopener" style="color:var(--plate)">AQW Wiki</a>. The sync reads the same inventory data <a href="https://github.com/60GHz/aqw-wiki-enhanced" target="_blank" rel="noopener" style="color:var(--plate)">AQW Wiki Enhanced</a> uses, from your own logged-in session; this site never sees your password.</p>
   </aside>
+
+  <main class="main" id="lists"></main>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
