@@ -26,3 +26,4 @@
 - All five checks passed in the code and in the browser at 360, 390 and 1440px.
 - Fixed after verify: the menu label colour now fades on hover (`.site-nav a b` transition, assets/crystal.css).
 - Note: the rune ring is wider than the viewport on phones; body overflow is hidden, so nothing scrolls. Left as is.
+- Fixed after the second verify: the connector line above the menu is a solid 1px line (no gradient).
