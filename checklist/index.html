@@ -153,16 +153,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .amt .mbar i{display:block;height:100%;background:var(--ice);transition:width .3s ease}
 @media (min-width:1100px){.goalform{grid-template-columns:minmax(0,1fr) 130px auto}}
 @media (prefers-reduced-motion:reduce){.bar i,.check span svg,.toast{transition:none}}
-/* Filter by tag: a toggle on every width. Phones start closed; wide screens start open (1.1, 2) */
+/* Filter by tag: a toggle on every width, closed by default (1.1) */
 .filterbar h2{display:none}
 .ftoggle{display:flex;align-items:center;justify-content:space-between;width:100%;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:6px;padding:10px 12px;cursor:pointer;text-align:left}
 .ftoggle:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
 .ftoggle::after{content:"";flex:none;width:0;height:0;border:5px solid transparent;border-top:6px solid currentColor;border-bottom:0;transition:transform .2s}
 .ftoggle[aria-expanded="true"]::after{transform:rotate(180deg)}
-.filterbar.collapsed #filters,.filterbar.collapsed #fstate{display:none}
-@media (max-width:560px){
-  .filterbar:not(.open) #filters,.filterbar:not(.open) #fstate{display:none}
-}
+.filterbar:not(.open) #filters,.filterbar:not(.open) #fstate{display:none}
 /* Narrow screens: Your progress and its note sit below the list (2) */
 @media (max-width:1099px){
   .wrap{display:flex;flex-direction:column}
@@ -572,8 +569,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   });
 
   document.getElementById("ftoggle").addEventListener("click", function () {
-    var sec = this.closest(".filterbar"), phone = window.matchMedia("(max-width:560px)").matches;
-    var open = phone ? sec.classList.toggle("open") : !sec.classList.toggle("collapsed");
+    var open = this.closest(".filterbar").classList.toggle("open");
     this.setAttribute("aria-expanded", String(open));
   });
   document.getElementById("filters").addEventListener("click", function (e) {

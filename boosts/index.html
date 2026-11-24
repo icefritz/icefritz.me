@@ -82,12 +82,11 @@ section{margin-bottom:38px}
   .item{grid-template-columns:44px 1fr auto;gap:12px;padding-left:14px}
   .item .len{grid-column:auto;margin-top:0}
 }
-/* Narrow screens: the note sits below everything else; wide screens keep it in the sidebar */
+/* Narrow screens: the list comes first in the page order */
 @media (max-width:1099px){
   .wrap{display:flex;flex-direction:column}
   .side{display:contents}
   .main{order:1}
-  .note{order:2;margin-top:28px}
 }
 </style>
 </head>
@@ -112,7 +111,6 @@ section{margin-bottom:38px}
     <h2 id="now-h">Live now</h2>
     <div class="now" id="now"></div>
   </section>
-  <p class="note">Dates come from the <a href="https://www.artix.com/calendar/" target="_blank" rel="noopener">Artix calendar</a> and refresh every few hours. Days roll over at midnight server time (US Eastern). The calendar only lists start days, so end days are estimates: server doubles run 2 days (3 from a Friday) and resource boosts run a week, until the next one starts.</p>
   </aside>
 
   <main class="main">
