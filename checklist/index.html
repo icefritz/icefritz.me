@@ -197,6 +197,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .fr-body{font-size:14px;line-height:1.55;color:var(--muted);max-width:60ch;margin:0 0 14px}
 .firstrun .row{margin-top:0}
 .firstrun .fclear{margin-top:10px;padding-left:0}
+.fr-steps{margin:0 0 14px}
 </style>
 </head>
 <body class="page">
@@ -250,8 +251,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   <section class="firstrun" id="firstRun" aria-labelledby="fr-h" hidden>
     <h2 id="fr-h">Start here</h2>
     <p class="fr-title">Sync what you own from AQW</p>
-    <p class="fr-body">Log in to AQW's inventory page and run the AQW sync bookmark. Your items tick themselves in about 30 seconds. On a phone, paste your inventory instead. Nothing leaves this browser.</p>
-    <div class="row"><a class="btn primary" href="https://account.aq.com/AQW/Inventory" target="_blank" rel="noopener">Open AQW inventory</a><button class="btn" type="button" id="frPaste">Paste instead</button></div>
+    <ol class="steps fr-steps">
+      <li>Drag <a class="btn step-btn bm" href="#" title="Drag me to your bookmarks bar"><b>AQW sync</b></a> to your bookmarks bar.</li>
+      <li>Log in at <a class="btn step-btn" href="https://account.aq.com/AQW/Inventory" target="_blank" rel="noopener">account.aq.com</a></li>
+      <li>On that page, click the <b>AQW sync</b> bookmark. Your items tick themselves in about 30 seconds.</li>
+    </ol>
+    <p class="fr-body">On a phone, paste your inventory instead. Nothing leaves this browser.</p>
+    <div class="row"><button class="btn primary" type="button" id="frPaste">Paste instead</button></div>
     <button class="fclear" type="button" id="frSkip">Skip, I'll tick by hand</button>
   </section>
   <div id="lists"></div>
@@ -611,10 +617,10 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     render();
   });
   document.getElementById("frPaste").addEventListener("click", function () {
-    var p = document.getElementById("paste");
-    p.closest("details").open = true;
-    p.scrollIntoView({ block: "center", behavior: "smooth" });
-    p.focus();
+    var p = document.getElementById("paste"), d = p.closest("details");
+    d.open = true;
+    d.scrollIntoView({ block: "start", behavior: "smooth" });
+    p.focus({ preventScroll: true });
   });
   document.getElementById("filters").addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
@@ -701,9 +707,10 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     "let res;try{res=await run()}catch(e){try{await fetch('https://account.aq.com/AQW/Inventory',{credentials:'include'});res=await run()}catch(e2){if(w)w.close();alert('Could not read your inventory. Make sure you are logged in at account.aq.com, then try again.');return}}" +
     "let n=0;const send=()=>{try{w.postMessage({type:'aqw-inventory',v:4,items:res.rows,total:res.total},O)}catch(e){}};const t=setInterval(()=>{send();if(++n>40)clearInterval(t)},400);" +
     "addEventListener('message',e=>{if(e.origin===O&&e.data==='aqw-inventory-ok')clearInterval(t)})})()";
-  var bm = document.getElementById("bookmarklet");
-  bm.href = "javascript:" + encodeURIComponent(BM);
-  bm.addEventListener("click", function (e) { e.preventDefault(); toast("Drag this button to your bookmarks bar, then click it on account.aq.com."); });
+  document.querySelectorAll(".bm").forEach(function (bm) {
+    bm.href = "javascript:" + encodeURIComponent(BM);
+    bm.addEventListener("click", function (e) { e.preventDefault(); toast("Drag this button to your bookmarks bar, then click it on account.aq.com."); });
+  });
 
   window.addEventListener("message", function (e) {
     if (e.origin !== "https://account.aq.com") return;
