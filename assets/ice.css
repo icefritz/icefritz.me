@@ -30,7 +30,6 @@ body{
 .plate{display:block;text-decoration:none;transition:color .15s,filter .15s;font-family:"Silkscreen",monospace;color:var(--plate);letter-spacing:.12em;text-transform:uppercase;
   text-shadow:-2px 0 #000,2px 0 #000,0 -2px #000,0 2px #000,-2px -2px #000,2px 2px #000,-2px 2px #000,2px -2px #000}
 .plate.tag{color:#fff}
-a.plate{text-decoration:underline;text-decoration-color:var(--edge);text-decoration-thickness:1px;text-underline-offset:4px}
 a.plate:hover,a.plate:focus-visible{color:var(--ice-hi);outline:none}
 .glow{font-weight:600;color:var(--ice-hi)}
 @media (prefers-reduced-motion:reduce){.rune{animation:none}}

@@ -2,8 +2,8 @@
    Click or tap the crystal to open; click outside or press Esc to close. No hover. */
 (function () {
   var PAGES = [
-    { href: "/boosts/", title: "Server boosts", sub: "Server & resource boosts" },
-    { href: "/checklist/", title: "Item checklist", sub: "Track the gear you own" }
+    { href: "/boosts/", title: "Boosts", sub: "Server & resource boosts" },
+    { href: "/checklist/", title: "Checklist", sub: "Track the gear you own" }
   ];
   var GEM = '<svg class="crystal" viewBox="0 0 40 80" aria-hidden="true">' +
     '<path d="M20 0 34 34 20 80 6 34Z" fill="#51c5d9"/><path d="M20 0 34 34H20Z" fill="#b6f0fb"/>' +

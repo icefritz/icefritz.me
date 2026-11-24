@@ -35,3 +35,5 @@
 - Checked at 1440 and 360 on home: name is the page heading with the slogan as a paragraph; name underlined; crystal 64px on wide screens; rune dims to 12% with the menu open; menu titles match the headings; no overflow.
 - The menu is only on home now, so the title check for 3.1 was done on home. Boosts and checklist have no crystal menu.
 - 7.1 is partly done: the background change on boosts and checklist was not screenshot-checked yet.
+- Changed on request: the underline on the name links (task 2.1) is removed; the hidden new-tab text stays.
+- Changed on request: the menu titles are back to "Boosts" and "Checklist" (the longer titles wrapped onto two lines); task 3.1 is superseded.
