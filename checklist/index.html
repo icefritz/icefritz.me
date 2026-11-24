@@ -180,6 +180,16 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   .item:not(.goal)>div{display:grid;grid-template-columns:280px minmax(0,1fr);align-items:center;column-gap:16px}
   .item:not(.goal) .tags{margin-top:0}
 }
+/* ui-refine-checklist-2: step links in the text line; paywall tags in sans caps; phone filter rows scroll; save card collapsed */
+.step-btn{display:inline-block;padding:1px 7px;line-height:1.4;font-size:13px;vertical-align:baseline}
+.tag.legend,.tag.ac,.tag.ioda,.tag.sdka,.tag.legion,.tag.heromart,.tag.kickstarter,.ftag.legend,.ftag.ac,.ftag.ioda,.ftag.sdka,.ftag.legion,.ftag.heromart,.ftag.kickstarter{font-family:"Outfit",sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+@media (max-width:560px){
+  .fchips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .ftag{flex:none}
+}
+.save-tools{margin:28px 0 0;border-top:1px solid var(--edge);padding-top:14px}
+.save-tools>summary{font-family:"Silkscreen",monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);cursor:pointer}
+.save-tools[open]>summary{margin-bottom:12px}
 </style>
 </head>
 <body class="page">
@@ -196,7 +206,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   <header>
     <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Go back</a>
     <h1>Item <span class="glow">checklist</span></h1>
-    <p class="sub">Sync your inventory or tick manually to get started.</p>
+    <p class="sub" id="sub">Sync your inventory or tick manually to get started.</p>
     <div class="progress" aria-live="polite"><div class="bar"><i id="bar"></i></div><span class="count" id="count">0 / 0</span></div>
   </header>
 
@@ -213,8 +223,8 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
         <h3>Auto-complete from AQW</h3>
         <p>Checks your real AQW inventory and bank for these items, using AQW's own inventory page. Nothing is sent anywhere but this page.</p>
         <ol class="steps">
-          <li>Drag <a class="btn bm" id="bookmarklet" href="#" title="Drag me to your bookmarks bar"><b>AQW sync</b></a> to your bookmarks bar.</li>
-          <li>Log in at <a class="btn" href="https://account.aq.com/AQW/Inventory" target="_blank" rel="noopener">account.aq.com</a></li>
+          <li>Drag <a class="btn step-btn bm" id="bookmarklet" href="#" title="Drag me to your bookmarks bar"><b>AQW sync</b></a> to your bookmarks bar.</li>
+          <li>Log in at <a class="btn step-btn" href="https://account.aq.com/AQW/Inventory" target="_blank" rel="noopener">account.aq.com</a></li>
           <li>On that page, click the <b>AQW sync</b> bookmark. This page opens, ticks what you own and fills in how many you have for your goals.</li>
         </ol>
         <details>
@@ -224,28 +234,30 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
           <div class="row"><button class="btn primary" type="button" id="pasteGo">Check my items</button></div>
         </details>
       </div>
-      <div class="card">
-        <h3>Save, move or restore</h3>
-        <p>Progress lives in <b>this browser only</b>. Export it to keep a backup or to carry it to another device, then import it there.</p>
-        <div class="row">
-          <button class="btn" type="button" id="exportFile">Export file</button>
-          <button class="btn" type="button" id="exportCode">Copy code</button>
-          <button class="btn" type="button" id="importFileBtn">Import file</button>
-          <input type="file" id="importFile" accept=".json,application/json" hidden>
-        </div>
-        <details>
-          <summary>Import from a code</summary>
-          <textarea id="code" placeholder="Paste a progress code" spellcheck="false"></textarea>
-          <div class="row"><button class="btn primary" type="button" id="importCode">Import code</button><button class="btn" type="button" id="reset">Clear all ticks</button></div>
-        </details>
-        <p class="small" id="lastSync"></p>
-      </div>
     </div>
   </section>
 
   </aside>
 
-  <main class="main" id="lists"></main>
+  <main class="main">
+  <div id="lists"></div>
+  <details class="save-tools">
+    <summary>Save, move or restore</summary>
+    <p>Progress lives in <b>this browser only</b>. Export it to keep a backup or to carry it to another device, then import it there.</p>
+    <div class="row">
+      <button class="btn" type="button" id="exportFile">Export file</button>
+      <button class="btn" type="button" id="exportCode">Copy code</button>
+      <button class="btn" type="button" id="importFileBtn">Import file</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+    <details>
+      <summary>Import from a code</summary>
+      <textarea id="code" placeholder="Paste a progress code" spellcheck="false"></textarea>
+      <div class="row"><button class="btn primary" type="button" id="importCode">Import code</button><button class="btn" type="button" id="reset">Clear all ticks</button></div>
+    </details>
+    <p class="small" id="lastSync"></p>
+  </details>
+  </main>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -488,7 +500,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       var have = g.items.filter(isDone).length;
       var shown = g.items.filter(visible), open = shown.filter(function (it) { return !isDone(it); }), fin = shown.filter(isDone);
       var body = open.map(itemHtml).join("") ||
-        '<li class="empty">' + (!shown.length ? "No items match your filters." : have === g.items.length && g.allDone ? g.allDone : "Everything here is completed. Nice.") + "</li>";
+        '<li class="empty">' + (!shown.length ? 'No items match your filters. <button type="button" class="fclear" data-clear="1">Clear filters</button>' : have === g.items.length && g.allDone ? g.allDone : "Everything here is completed. Nice.") + "</li>";
       html += sectionHtml(g.id, g.title, have + " / " + g.items.length, body, false);
       if (fin.length) doneHtml += sectionHtml(g.id + "-done", g.title + " \u00b7 Completed", fin.length + (fin.length === 1 ? " item" : " items"), fin.map(itemHtml).join(""), true, "completed");
     });
@@ -502,6 +514,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     document.getElementById("fstate").textContent = fn ? "Showing " + vis + " of " + BUILTIN.length + " items (your goals always show)" : "Click a tag to show only items with it, again to hide them, again to clear.";
     var n = ALL.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
     document.getElementById("count").textContent = n + " / " + ALL.length;
+    document.getElementById("sub").textContent = n ? n + " of " + ALL.length + " owned." : "Sync your inventory or tick manually to get started.";
     document.getElementById("bar").style.width = (ALL.length ? n / ALL.length * 100 : 0) + "%";
     var ls = document.getElementById("lastSync");
     ls.textContent = state.sync ? "Last AQW sync: " + new Date(state.sync.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " · " + state.sync.count.toLocaleString("en-GB") + " items checked" : "";
@@ -534,6 +547,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     editing = null; save(); render(); focusForm();
   });
   document.getElementById("lists").addEventListener("click", function (e) {
+    if (e.target.closest("[data-clear]")) { filters = {}; render(); return; }
     var a = e.target.closest("[data-act]");
     if (a) {
       var act = a.dataset.act, g = goalById(a.dataset.id);
