@@ -41,3 +41,9 @@
 - Fixed after verify: checkbox corners 7px to 6px; unused tokens --c-legend and --c-ioda and their rules removed.
 - Decided: goal progress bar keeps 4px corners (a bar, not a control); sticky sidebar left as is.
 - Not checked at runtime: goal form and goal amount row (no goals in the data, not added).
+
+## Verify result (latest, checklist)
+
+- All seven checks passed at 360, 390, 1099 and 1440px: collapsed filter, goals collapsed, sticky sidebar with Your progress, narrow order, colours, solid bars, corners, no overflow.
+- Paywall gold colour: seven kinds (Legion, Legend, AC, IoDA, SDKA, Heromart, Kickstarter). Heromart and Kickstarter are paywall-linked, so the change text is updated to match the code.
+- Not checked: the goal form and amounts (no goals in the data).
