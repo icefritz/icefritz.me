@@ -45,3 +45,9 @@
 - Row height 64–65px at 390px: accepted as is.
 - Home nameplate outline (text-shadow, not a glow): kept as is.
 - Not checked: the idle card state (no live boost), the Resource filter, and the empty state; the current data always has live boosts.
+
+## Verify result (after the note change)
+
+- All checks passed at 360, 390 and 1440px for All and Server: one-row Live now, left rules, day count alignment, column order, no glow, solid rules, clock on one line, no crystal menu, no overflow.
+- Phone order: Live now stays above the list; the date note has been removed. The narrow-screen comment is corrected to match.
+- Cleanup: removed the unused .note and .side2 rules from boosts, and the Artix mention from the meta description. The shared grid areas in assets/ice.css still name side2; left as is because changing the grid would affect the layout.

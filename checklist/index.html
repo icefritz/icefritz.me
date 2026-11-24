@@ -387,12 +387,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   Object.keys(filters).forEach(function (k) { if (!(k in KIND) || (filters[k] !== "inc" && filters[k] !== "exc")) delete filters[k]; });
   function visible(it) {
     if (it.goal) return true;
-    var labels = it.tags.map(tagLabel);
-    for (var k in filters) {
-      if (filters[k] === "inc" && labels.indexOf(k) < 0) return false;
-      if (filters[k] === "exc" && labels.indexOf(k) >= 0) return false;
+    var labels = it.tags.map(tagLabel), inc = [], k;
+    for (k in filters) {
+      if (filters[k] === "inc") inc.push(k);
+      else if (filters[k] === "exc" && labels.indexOf(k) >= 0) return false;
     }
-    return true;
+    // included tags combine as OR: an item shows if it has any of them
+    return !inc.length || inc.some(function (l) { return labels.indexOf(l) >= 0; });
   }
   var ROWS = ["Access & rarity", "Range", "Damage", "Boosts", "Other"];
   function renderFilters() {

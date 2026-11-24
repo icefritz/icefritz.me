@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="darkreader-lock">
 <title>Boosts · IceFritz</title>
-<meta name="description" content="Ongoing and upcoming AQW server and resource boosts, from the Artix calendar.">
+<meta name="description" content="Ongoing and upcoming AQW server and resource boosts.">
 <meta name="theme-color" content="#36393f">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2336393f'/%3E%3Cpath d='M32 6 42 30 32 58 22 30Z' fill='%2351c5d9'/%3E%3Cpath d='M32 6 42 30H22Z' fill='%23b6f0fb'/%3E%3Cpath d='M32 58 42 30H32Z' fill='%23284e68'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
@@ -67,13 +67,10 @@ section{margin-bottom:38px}
 .item .len{font-size:13px;line-height:24px;color:var(--muted);white-space:nowrap}
 .empty{padding:12px 0;color:var(--muted)}
 
-.note{color:var(--muted);font-size:13px;line-height:1.55;max-width:60ch}
-.note a{color:var(--plate)}
 .err{color:#f0a3a3}
 
 @media (min-width:1100px){
   /* Desktop: the sidebar grid is shared in assets/ice.css */
-  .side2{margin-top:4px}
   .side .now{grid-template-columns:1fr}
   .list{display:block;columns:2;column-gap:44px}
   .wk{break-inside:avoid;margin-bottom:30px}
@@ -82,7 +79,7 @@ section{margin-bottom:38px}
   .item{grid-template-columns:44px 1fr auto;gap:12px;padding-left:14px}
   .item .len{grid-column:auto;margin-top:0}
 }
-/* Narrow screens: the list comes first in the page order */
+/* Narrow screens: Live now stays above the list in page order */
 @media (max-width:1099px){
   .wrap{display:flex;flex-direction:column}
   .side{display:contents}
