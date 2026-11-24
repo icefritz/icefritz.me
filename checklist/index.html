@@ -190,6 +190,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .save-tools{margin:28px 0 0;border-top:1px solid var(--edge);padding-top:14px}
 .save-tools>summary{font-family:"Silkscreen",monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plate);cursor:pointer}
 .save-tools[open]>summary{margin-bottom:12px}
+.firstrun{margin:0 0 22px;padding:0 0 20px;border-bottom:1px solid var(--edge)}
+.firstrun[hidden]{display:none}
+.firstrun h2{margin:0 0 12px}
+.fr-title{font-size:18px;font-weight:600;color:#fff;line-height:1.2;margin:0 0 6px}
+.fr-body{font-size:14px;line-height:1.55;color:var(--muted);max-width:60ch;margin:0 0 14px}
+.firstrun .row{margin-top:0}
+.firstrun .fclear{margin-top:10px;padding-left:0}
 </style>
 </head>
 <body class="page">
@@ -240,6 +247,13 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   </aside>
 
   <main class="main">
+  <section class="firstrun" id="firstRun" aria-labelledby="fr-h" hidden>
+    <h2 id="fr-h">Start here</h2>
+    <p class="fr-title">Sync what you own from AQW</p>
+    <p class="fr-body">Log in to AQW's inventory page and run the AQW sync bookmark. Your items tick themselves in about 30 seconds. On a phone, paste your inventory instead. Nothing leaves this browser.</p>
+    <div class="row"><a class="btn primary" href="https://account.aq.com/AQW/Inventory" target="_blank" rel="noopener">Open AQW inventory</a><button class="btn" type="button" id="frPaste">Paste instead</button></div>
+    <button class="fclear" type="button" id="frSkip">Skip, I'll tick by hand</button>
+  </section>
   <div id="lists"></div>
   <details class="save-tools">
     <summary>Save, move or restore</summary>
@@ -443,6 +457,11 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   var CKEY = "icefritz-checklist-collapsed-v1", collapsed = {};
   try { collapsed = JSON.parse(localStorage.getItem(CKEY) || "{}") || {}; } catch (e) {}
   function isCollapsed(id, def) { return id in collapsed ? !!collapsed[id] : def; }
+  var FRKEY = "icefritz-checklist-intro-v1";
+  function firstRunVisible() {
+    var dismissed = false; try { dismissed = localStorage.getItem(FRKEY) === "1"; } catch (x) {}
+    return !dismissed && !state.sync && !ALL.some(isDone);
+  }
   function isDone(it) { return !!(state.progress[it.id] && state.progress[it.id].done); }
   function itemHtml(it) {
     var p = state.progress[it.id], done = !!(p && p.done);
@@ -507,6 +526,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     html += doneHtml;
     document.getElementById("lists").innerHTML = html;
     renderFilters();
+    document.getElementById("firstRun").hidden = !firstRunVisible();
     var vis = BUILTIN.filter(visible).length, fn = Object.keys(filters).length;
     var ft = document.getElementById("ftoggle");
     ft.textContent = "Filter by tag" + (fn ? " · " + fn + " on" : "");
@@ -585,6 +605,16 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   document.getElementById("ftoggle").addEventListener("click", function () {
     var open = this.closest(".filterbar").classList.toggle("open");
     this.setAttribute("aria-expanded", String(open));
+  });
+  document.getElementById("frSkip").addEventListener("click", function () {
+    try { localStorage.setItem(FRKEY, "1"); } catch (x) {}
+    render();
+  });
+  document.getElementById("frPaste").addEventListener("click", function () {
+    var p = document.getElementById("paste");
+    p.closest("details").open = true;
+    p.scrollIntoView({ block: "center", behavior: "smooth" });
+    p.focus();
   });
   document.getElementById("filters").addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
