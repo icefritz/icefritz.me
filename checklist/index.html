@@ -365,14 +365,14 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   try { filters = JSON.parse(localStorage.getItem(FKEY) || "{}") || {}; } catch (e) {}
   var TAGS = [], KIND = {}, TEXT = {}, PCT = {};
   ALL.forEach(function (it) { it.tags.forEach(function (t) { var l = tagLabel(t); if (!(l in KIND)) { KIND[l] = t.kind; TEXT[l] = t.text; PCT[l] = parseFloat(t.pct) || 0; TAGS.push(l); } }); });
-  // Filter order: pay-to-win (Legend > Heromart > Kickstarter > AC > IoDA > SDKA), availability (Rare > Pseudo-rare > Seasonal), damage (All > Tagged > types), boosts (Gold > Rep > Class > XP).
+  // Filter order: pay-to-win (Legend > Heromart > Kickstarter > AC > IoDA > SDKA), availability (Rare > Pseudo-rare > Seasonal), range (Fixed > Stable > Medium > High), damage (All > Tagged > types), boosts (Gold > Rep > Class > XP).
   var P2W = ["legend", "heromart", "kickstarter", "ac", "ioda", "sdka", "legion"], AVAIL = ["rare", "pseudo", "seasonal", "f2p"], BOOSTS = ["gold", "rep", "cp", "xp"];
   function rank(l) {
     var k = KIND[l];
     if (P2W.indexOf(k) >= 0) return [0, P2W.indexOf(k)];
     if (AVAIL.indexOf(k) >= 0) return [0, 10 + AVAIL.indexOf(k)];
-    if (k === "dmg") return [1, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
-    if (k === "range") return [2, ["Fixed", "Stable", "Medium", "High"].indexOf(TEXT[l])];
+    if (k === "range") return [1, ["Fixed", "Stable", "Medium", "High"].indexOf(TEXT[l])];
+    if (k === "dmg") return [2, TEXT[l] === "All" ? 0 : TEXT[l] === "Tagged" ? 1 : 2];
     if (BOOSTS.indexOf(k) >= 0) return [3, BOOSTS.indexOf(k)];
     return [4, 0];
   }
@@ -390,7 +390,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     }
     return true;
   }
-  var ROWS = ["Access & rarity", "Damage", "Range", "Boosts", "Other"];
+  var ROWS = ["Access & rarity", "Range", "Damage", "Boosts", "Other"];
   function renderFilters() {
     var n = Object.keys(filters).length, rows = [[], [], [], [], []];
     TAGS.forEach(function (l) {
