@@ -1,6 +1,6 @@
 {
  "source": "https://www.artix.com/calendar/",
- "updated": "2026-11-23T07:41:16Z",
+ "updated": "2026-11-24T09:55:41Z",
  "boosts": [
   {
    "name": "Dark Spirit Orbs Boost",
@@ -8,13 +8,6 @@
    "kind": "resource",
    "start": "2026-11-12",
    "end": "2026-11-19"
-  },
-  {
-   "name": "Double Rep Boost",
-   "group": "core",
-   "kind": "rep",
-   "start": "2026-11-13",
-   "end": "2026-11-16"
   },
   {
    "name": "Double Class Points Boost",
