@@ -15,7 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/ice.css">
 <style>
-:root{--side-w:330px;--legend:#e8c45a;--good:#62d6a8;
+:root{--side-w:330px;--good:#62d6a8;
   /* tag colours */
   --c-ac:#e8c45a; --c-sdka:#f06a6a; --c-seasonal:#e58ce0; --c-f2p:#f4f6f8; --c-pseudo:#9ce89c; --c-rare:#ff9a7a; --c-dmg:#ff6f6f; --c-legion:#5d7bff}
 .tag.legion,.ftag.legion{--c:var(--c-legion)}
@@ -121,7 +121,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .small{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
 .small a{color:var(--plate)}
 
-.toast{position:fixed;left:50%;bottom:22px;translate:-50% 20px;z-index:50;max-width:calc(100% - 32px);padding:11px 16px;border-radius:12px;background:var(--navy);border:1px solid var(--ice);box-shadow:0 10px 30px -10px #000;font-size:14px;color:#fff;opacity:0;pointer-events:none;transition:opacity .25s,translate .25s}
+.toast{position:fixed;left:50%;bottom:22px;translate:-50% 20px;z-index:50;max-width:calc(100% - 32px);padding:11px 16px;border-radius:6px;background:var(--navy);border:1px solid var(--ice);box-shadow:0 10px 30px -10px #000;font-size:14px;color:#fff;opacity:0;pointer-events:none;transition:opacity .25s,translate .25s}
 .toast.show{opacity:1;translate:-50% 0}
 .toast.err{border-color:#f0a3a3}
 .note{color:var(--muted);font-size:13px;line-height:1.55;max-width:62ch;margin-top:8px}
@@ -159,6 +159,8 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   .filterbar h2{display:none}
   .ftoggle{display:flex;align-items:center;justify-content:space-between;width:100%;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:6px;padding:10px 12px;cursor:pointer;text-align:left}
   .ftoggle:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
+  .ftoggle::after{content:"";flex:none;width:0;height:0;border:5px solid transparent;border-top:6px solid currentColor;border-bottom:0;transition:transform .2s}
+  .filterbar.open .ftoggle::after{transform:rotate(180deg)}
   #filters,#fstate{display:none}
   .filterbar.open #filters,.filterbar.open #fstate{display:block}
 }
@@ -459,7 +461,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   function goalsSectionHtml(items) {
     var shut = isCollapsed("goals", items.length === 0), open = items.filter(function (it) { return !isDone(it); });
     var have = items.length - open.length;
-    var body = open.map(goalHtml).join("") || '<li class="empty">' + (items.length ? "All your goals are done. Nice." : "Add something you want to farm, with an amount if it stacks. Goals stay in this browser and go with your exports.") + "</li>";
+    var body = open.map(goalHtml).join("") || (items.length ? '<li class="empty">All your goals are done. Nice.</li>' : "");
     return '<section class="grp' + (shut ? " is-shut" : "") + '">' +
       '<h2><button type="button" class="gtoggle" data-sec="goals" aria-expanded="' + !shut + '" aria-controls="sec-goals"><i class="chev" aria-hidden="true"></i>My goals</button><small>' + (items.length ? have + " / " + items.length : "") + "</small></h2>" +
       '<div class="goalwrap" id="sec-goals"' + (shut ? " hidden" : "") + ">" + goalFormHtml() + '<ul class="list">' + body + "</ul></div></section>";
