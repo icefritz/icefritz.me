@@ -34,3 +34,10 @@
 
 - 3.1: the paywall tags share one warm hue (`--c-ac`), as chosen in the review; their labels still tell them apart.
 - 1.2: My goals is collapsed by default only when there are no goals; once the visitor toggles it, their choice is kept.
+
+## Verify result (2026-11-24)
+
+- Passed: phone filter button (closed by default, count shown), goals collapsed when empty, sticky sidebar, one-column items with tags on the right, paywall-only tag colour, solid bars, 6px/4px corners on the checked elements, no overflow at 360/390/1440, boosts and home unaffected.
+- Fixed after verify: checkbox corners 7px to 6px; unused tokens --c-legend and --c-ioda and their rules removed.
+- Decided: goal progress bar keeps 4px corners (a bar, not a control); sticky sidebar left as is.
+- Not checked at runtime: goal form and goal amount row (no goals in the data, not added).
