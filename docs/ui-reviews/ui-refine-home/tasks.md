@@ -2,7 +2,7 @@
 
 ## 1. Crystal menu: flat list with rules
 
-- [x] 1.1 In `assets/crystal.css`, remove `background`, `border`, `border-radius` and `backdrop-filter` from `.site-nav a` (line 17). Separate items with a 1px `var(--edge)` rule. On hover and focus, change only the rule colour to `var(--ice)`; remove the `box-shadow` glow on line 21. This also changes the corner menu on boosts and checklist: open the menu there too. Check at 390×844 and 1440×900.
+- [x] 1.1 In `assets/crystal.css`, remove `background`, `border`, `border-radius` and `backdrop-filter` from `.site-nav a` (line 17). Separate items with a 1px `var(--edge)` rule. On hover and focus, change only the rule colour to `var(--ice)`; remove the `box-shadow` glow on line 21. (The corner menu was removed from boosts and checklist, so this no longer applies there.) Check at 390×844 and 1440×900.
 
 ## 2. Heading: glow only on the crystal
 
@@ -20,3 +20,9 @@
 - [x] 4.3 （検証で追加）ブースト・チェックリスト用のコーナーメニューの未使用 CSS を削除する（`assets/crystal.css`）
 - [x] 4.4 （検証で追加）メニュー項目の hover で文字色も明るくする。タスク 1.1 の「罫線の色だけ変える」を、この方針に合わせて読み替える
 - [ ] 4.5 (User runs) `/ui-review --verify ui-refine-home` for Before/After. The implementer does not check this task.
+
+## Verify result (2026-11-24, home)
+
+- All five checks passed in the code and in the browser at 360, 390 and 1440px.
+- Fixed after verify: the menu label colour now fades on hover (`.site-nav a b` transition, assets/crystal.css).
+- Note: the rune ring is wider than the viewport on phones; body overflow is hidden, so nothing scrolls. Left as is.
