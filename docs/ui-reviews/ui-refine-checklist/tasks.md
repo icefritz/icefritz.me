@@ -47,3 +47,9 @@
 - All seven checks passed at 360, 390, 1099 and 1440px: collapsed filter, goals collapsed, sticky sidebar with Your progress, narrow order, colours, solid bars, corners, no overflow.
 - Paywall gold colour: seven kinds (Legion, Legend, AC, IoDA, SDKA, Heromart, Kickstarter). Heromart and Kickstarter are paywall-linked, so the change text is updated to match the code.
 - Not checked: the goal form and amounts (no goals in the data).
+
+## Verify result (OR filters)
+
+- All seven checks passed at 360, 390, 1099 and 1440px: collapsed filter, goals collapsed, sticky sidebar, narrow order, colours and order, solid bars, corners, no overflow.
+- Filter logic: F2P alone shows 22 of 38; F2P plus Legion shows 30 of 38; an excluded tag hides its items.
+- Not checked: the goal form and amounts (no goals in the data).
