@@ -153,16 +153,24 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .amt .mbar i{display:block;height:100%;background:var(--ice);transition:width .3s ease}
 @media (min-width:1100px){.goalform{grid-template-columns:minmax(0,1fr) 130px auto}}
 @media (prefers-reduced-motion:reduce){.bar i,.check span svg,.toast{transition:none}}
-/* Phones: filters behind one button, closed by default (1.1) */
-.ftoggle{display:none}
+/* Filter by tag: a toggle on every width. Phones start closed; wide screens start open (1.1, 2) */
+.filterbar h2{display:none}
+.ftoggle{display:flex;align-items:center;justify-content:space-between;width:100%;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:6px;padding:10px 12px;cursor:pointer;text-align:left}
+.ftoggle:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
+.ftoggle::after{content:"";flex:none;width:0;height:0;border:5px solid transparent;border-top:6px solid currentColor;border-bottom:0;transition:transform .2s}
+.ftoggle[aria-expanded="true"]::after{transform:rotate(180deg)}
+.filterbar.collapsed #filters,.filterbar.collapsed #fstate{display:none}
 @media (max-width:560px){
-  .filterbar h2{display:none}
-  .ftoggle{display:flex;align-items:center;justify-content:space-between;width:100%;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:6px;padding:10px 12px;cursor:pointer;text-align:left}
-  .ftoggle:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
-  .ftoggle::after{content:"";flex:none;width:0;height:0;border:5px solid transparent;border-top:6px solid currentColor;border-bottom:0;transition:transform .2s}
-  .filterbar.open .ftoggle::after{transform:rotate(180deg)}
-  #filters,#fstate{display:none}
-  .filterbar.open #filters,.filterbar.open #fstate{display:block}
+  .filterbar:not(.open) #filters,.filterbar:not(.open) #fstate{display:none}
+}
+/* Narrow screens: Your progress and its note sit below the list (2) */
+@media (max-width:1099px){
+  .wrap{display:flex;flex-direction:column}
+  .side{display:contents}
+  .filterbar{order:1}
+  .main{order:2}
+  section[aria-labelledby="sync-h"]{order:3}
+  .note{order:4}
 }
 /* Paywall tags share one warm hue; every other tag is neutral (3.1) */
 .tag.legend,.ftag.legend,.tag.ac,.ftag.ac,.tag.ioda,.ftag.ioda,.tag.sdka,.ftag.sdka,.tag.legion,.ftag.legion,.tag.heromart,.ftag.heromart,.tag.kickstarter,.ftag.kickstarter{--c:var(--c-ac)}
@@ -191,7 +199,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   <header>
     <a class="back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="chev" d="M11.5 4.5 4 12l7.5 7.5" fill="none" stroke-width="3" stroke-linecap="square"/><rect class="dash" x="10" y="10.3" width="11" height="3.4"/></svg>Go back</a>
     <h1>Item <span class="glow">checklist</span></h1>
-    <p class="sub">Sync your inventory or tick manually to get started. Add your own farming goals too</p>
+    <p class="sub">Sync your inventory or tick manually to get started.</p>
     <div class="progress" aria-live="polite"><div class="bar"><i id="bar"></i></div><span class="count" id="count">0 / 0</span></div>
   </header>
 
@@ -491,7 +499,9 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     document.getElementById("lists").innerHTML = html;
     renderFilters();
     var vis = BUILTIN.filter(visible).length, fn = Object.keys(filters).length;
-    document.getElementById("ftoggle").textContent = "Filter by tag" + (fn ? " · " + fn + " on" : "");
+    var ft = document.getElementById("ftoggle");
+    ft.textContent = "Filter by tag" + (fn ? " · " + fn + " on" : "");
+    ft.setAttribute("aria-expanded", String(getComputedStyle(document.getElementById("filters")).display !== "none"));
     document.getElementById("fstate").textContent = fn ? "Showing " + vis + " of " + BUILTIN.length + " items (your goals always show)" : "Click a tag to show only items with it, again to hide them, again to clear.";
     var n = ALL.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
     document.getElementById("count").textContent = n + " / " + ALL.length;
@@ -562,7 +572,8 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
   });
 
   document.getElementById("ftoggle").addEventListener("click", function () {
-    var open = this.closest(".filterbar").classList.toggle("open");
+    var sec = this.closest(".filterbar"), phone = window.matchMedia("(max-width:560px)").matches;
+    var open = phone ? sec.classList.toggle("open") : !sec.classList.toggle("collapsed");
     this.setAttribute("aria-expanded", String(open));
   });
   document.getElementById("filters").addEventListener("click", function (e) {
