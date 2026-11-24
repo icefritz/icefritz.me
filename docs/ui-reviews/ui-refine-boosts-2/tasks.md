@@ -35,3 +35,9 @@
 - Checked at 390: filters 4px; the Server filter leaves the row's second line empty; week headings are dates with This week for the current week; the header shows ET; the back link says Home; no overflow.
 - 3.1 (empty state) is implemented from the code path; the live data always has upcoming boosts, so the empty text was not seen on screen.
 - 7.1 for 360 and 1440 and 7.2 (your verify) remain.
+
+## Verify result
+
+- 6 of 7 checks passed as specified at 360, 390 and 1440px: filter chips, row lines, copy, weekday labels, week headings, no overflow.
+- Fixed after verify: the Show all button had no styles (browser-default grey). It now matches the filter chips, with hover and focus.
+- Not checked on screen: the empty state with live data (the data always has upcoming boosts); the Server filter at 360px; the Resource filter with real data.
