@@ -157,6 +157,10 @@ section{margin-bottom:38px}
     return days(t, endDate) * DAY - ((n.hour * 60 + n.minute) * 60 + n.second) * 1000;
   }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function tzAbbr(at) {
+    var parts = new Intl.DateTimeFormat("en-US", { timeZone: TZ, timeZoneName: "short" }).formatToParts(at || new Date());
+    return parts.filter(function (p) { return p.type === "timeZoneName"; })[0].value;
+  }
   function serverClock(at) {
     var n = server(at), dt = new Date(n.year, n.month - 1, n.day);
     return fmt(dt) + ", " + pad(n.hour) + ":" + pad(n.minute);
@@ -211,6 +215,8 @@ section{margin-bottom:38px}
     var t = today();
     var clock = document.getElementById("clock");
     if (clock) clock.textContent = serverClock();
+    var tz = document.getElementById("tz");
+    if (tz) tz.textContent = tzAbbr();
     document.getElementById("now").innerHTML = card("core", "Server boost", t) + card("resource", "Resource boost", t);
     var rows = data.filter(function (b) {
       return d(b.start) > t && (filter === "all" || b.group === filter);
@@ -248,8 +254,8 @@ section{margin-bottom:38px}
     .then(function (j) {
       data = j.boosts.slice().sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : 0; });
       var up = new Date(j.updated);
-      document.getElementById("sub").innerHTML = "Server time (ET) <b id='clock'></b>" +
-        "<br>Schedule updated <time datetime='" + j.updated + "'>" + serverClock(up) + " ET</time>";
+      document.getElementById("sub").innerHTML = "Server time (<span id='tz'></span>) <b id='clock'></b>" +
+        "<br>Schedule updated <time datetime='" + j.updated + "'>" + serverClock(up) + " " + tzAbbr(up) + "</time>";
       render();
       
       // keep the clock, countdowns and server-day rollover live
