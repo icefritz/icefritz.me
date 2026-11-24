@@ -38,3 +38,10 @@
 - [x] 8.3 （検証で追加）`a.plate` の hover の drop-shadow を外す（`assets/ice.css`）。ホーム・ブースト・チェックリストに効く
 - [x] 8.4 （検証で追加）ヘッダーの「All times are AQW server time (ET)」を削除する
 - [ ] 8.5 (User runs) `/ui-review --verify ui-refine-boosts` for Before/After. The implementer does not check this task.
+
+## Verify result (2026-11-24)
+
+- All checks passed on the rendered page at 360, 390 and 1440px (Live rows, left rules, day count, column order, glow removed, header line, no crystal on boosts).
+- Row height 64–65px at 390px: accepted as is.
+- Home nameplate outline (text-shadow, not a glow): kept as is.
+- Not checked: the idle card state (no live boost), the Resource filter, and the empty state; the current data always has live boosts.

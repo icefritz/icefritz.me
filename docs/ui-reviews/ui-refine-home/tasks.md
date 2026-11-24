@@ -16,4 +16,7 @@
 ## 4. Check
 
 - [x] 4.1 Check the home page at 360×740, 390×844 and 1440×900, closed and with the menu open.
-- [ ] 4.2 (User runs) `/ui-review --verify ui-refine-home` for Before/After. The implementer does not check this task.
+- [x] 4.2 （検証で追加）メニューの接続線（`.site-nav::before`）の box-shadow を外す（`assets/crystal.css`）
+- [x] 4.3 （検証で追加）ブースト・チェックリスト用のコーナーメニューの未使用 CSS を削除する（`assets/crystal.css`）
+- [x] 4.4 （検証で追加）メニュー項目の hover で文字色も明るくする。タスク 1.1 の「罫線の色だけ変える」を、この方針に合わせて読み替える
+- [ ] 4.5 (User runs) `/ui-review --verify ui-refine-home` for Before/After. The implementer does not check this task.

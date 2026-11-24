@@ -13,7 +13,7 @@
 @keyframes bob{50%{transform:translateY(-6px)}}
 
 .site-nav{position:absolute;top:100%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:16px;pointer-events:none}
-.site-nav::before{content:"";width:1px;height:0;margin-bottom:-4px;background:linear-gradient(var(--ice),transparent);box-shadow:0 0 8px var(--ice);transition:height .3s ease}
+.site-nav::before{content:"";width:1px;height:0;margin-bottom:-4px;background:linear-gradient(var(--ice),transparent);transition:height .3s ease}
 .site-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:170px;padding:11px 20px;text-decoration:none;border-bottom:1px solid var(--edge);
   opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .25s ease,transform .3s ease,border-color .15s}
 .site-nav a b{font-family:"Silkscreen",monospace;font-weight:400;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--plate)}
@@ -27,12 +27,6 @@
 .is-open .site-nav a:nth-of-type(3){transition-delay:.1s}
 .is-open .site-nav a:nth-of-type(4){transition-delay:.15s}
 
-/* corner variant (sub-pages): small crystal pinned top right, menu drops down on the right */
-.crystal-nav.corner{position:fixed;top:max(10px, env(safe-area-inset-top, 0px));right:max(6px, env(safe-area-inset-right, 0px))}
-.corner .crystal{width:26px;filter:drop-shadow(0 0 10px rgba(81,197,217,.75))}
-.corner .crystal-btn{padding:8px 14px}
-.corner .site-nav{left:auto;right:0;transform:none;align-items:flex-end;padding-top:10px}
-.corner .site-nav::before{margin-right:27px}
 
 /* cracking ice, on click */
 .cracks path{stroke-dasharray:1;stroke-dashoffset:1;opacity:.95;filter:drop-shadow(0 0 1.5px #fff);transition:stroke-dashoffset .35s cubic-bezier(.3,.7,.2,1)}
@@ -49,9 +43,6 @@
 .shards i:nth-child(4){--x:38px;--y:12px;--r:210deg;width:5px;height:7px}
 .shards i:nth-child(5){--x:-18px;--y:34px;--r:-90deg;width:4px;height:6px}
 .shards i:nth-child(6){--x:20px;--y:36px;--r:120deg}
-.corner .shards i{--s:.6}
-.corner .shards i:nth-child(odd){--x:-22px}
-.corner .shards i:nth-child(even){--x:20px}
 @keyframes shard{0%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(.6)}}
 
 @media (prefers-reduced-motion:reduce){.crystal,.crystal-btn.shake .crystal{animation:none}.burst .shards i{animation:none}.cracks path,.site-nav a,.site-nav::before{transition:none}}

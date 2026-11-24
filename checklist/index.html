@@ -26,8 +26,8 @@
 header{margin-bottom:28px}
 
 .progress{display:flex;align-items:center;gap:14px;margin-top:18px;width:100%}
-.bar{flex:1;height:8px;border-radius:999px;background:rgba(13,21,32,.6);border:1px solid var(--edge);overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--steel),var(--ice));transition:width .4s ease}
+.bar{flex:1;height:8px;border-radius:4px;background:rgba(13,21,32,.6);border:1px solid var(--edge);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ice);transition:width .4s ease}
 .count{font-family:"Silkscreen",monospace;font-size:13px;letter-spacing:.08em;color:var(--plate);white-space:nowrap}
 
 .gtoggle{display:inline-flex;align-items:center;gap:10px;padding:4px 0;margin:-4px 0;background:none;border:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:pointer}
@@ -59,7 +59,7 @@ section{margin-bottom:34px}
 .done .name a{color:var(--ice-hi)}
 .status{font-size:12px;color:var(--good)}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.tag{font-size:12px;line-height:1;padding:5px 8px;border-radius:6px;border:1px solid var(--edge);background:rgba(13,21,32,.5);color:var(--frost);white-space:nowrap}
+.tag{font-size:12px;line-height:1;padding:5px 8px;border-radius:4px;border:1px solid var(--edge);background:rgba(13,21,32,.5);color:var(--frost);white-space:nowrap}
 .tag.legend{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .tag.dmg b{color:var(--c-dmg);font-weight:600}
 .tag.xp b{color:#7fdcef}
@@ -79,7 +79,7 @@ section{margin-bottom:34px}
 @media (max-width:560px){.frow{grid-template-columns:1fr;gap:6px}.flabel{padding-top:0}.flabel:empty{display:none}}
 .tag.f2p{font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.06em;padding:6px 8px}
 .ftag.f2p{font-family:"Silkscreen",monospace;font-size:10.5px;letter-spacing:.05em}
-.ftag{display:inline-flex;align-items:center;gap:0;font:inherit;font-size:12.5px;line-height:1;padding:6px 10px;border-radius:999px;border:1px solid var(--edge);background:rgba(13,21,32,.45);color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s,background .15s,opacity .15s}
+.ftag{display:inline-flex;align-items:center;gap:0;font:inherit;font-size:12.5px;line-height:1;padding:6px 10px;border-radius:4px;border:1px solid var(--edge);background:rgba(13,21,32,.45);color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s,background .15s,opacity .15s}
 .ftag:hover{color:var(--frost);border-color:color-mix(in srgb,var(--ice) 60%,transparent)}
 .ftag:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
 .ftag i{font-style:normal;font-family:"Silkscreen",monospace;font-size:11px;width:0;margin-right:0;overflow:hidden;transition:width .15s,margin .15s}
@@ -106,7 +106,7 @@ section{margin-bottom:34px}
 .card p{font-size:13.5px;line-height:1.55;color:var(--muted)}
 .card p b{color:var(--frost);font-weight:400}
 .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:10px;padding:8px 14px;cursor:pointer;text-decoration:none;transition:border-color .15s,color .15s,background .15s}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:6px;padding:8px 14px;cursor:pointer;text-decoration:none;transition:border-color .15s,color .15s,background .15s}
 .btn:hover,.btn:focus-visible{border-color:var(--ice);color:#fff;outline:none}
 .btn.primary{background:var(--ice);border-color:var(--ice);color:var(--abyss);font-weight:600}
 .btn.primary:hover,.btn.primary:focus-visible{background:var(--ice-hi);border-color:var(--ice-hi);color:var(--abyss)}
@@ -114,7 +114,7 @@ section{margin-bottom:34px}
 .bm b{font-family:"Silkscreen",monospace;font-weight:400;font-size:12px;letter-spacing:.06em;color:var(--plate)}
 ol.steps{margin:10px 0 0 18px;padding:0;font-size:13.5px;line-height:1.6;color:var(--muted)}
 ol.steps b{color:var(--frost);font-weight:400}
-textarea{width:100%;min-height:84px;margin-top:12px;resize:vertical;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--frost);background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:10px;padding:10px}
+textarea{width:100%;min-height:84px;margin-top:12px;resize:vertical;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--frost);background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:6px;padding:10px}
 textarea:focus{outline:none;border-color:var(--ice)}
 details{margin-top:12px}
 summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
@@ -129,7 +129,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 /* My goals: your own farming goals, added on this page */
 .goalwrap[hidden]{display:none!important}
 .goalform{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:8px;margin-bottom:14px}
-.goalform input{min-width:0;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:10px;padding:9px 12px}
+.goalform input{min-width:0;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:6px;padding:9px 12px}
 .goalform input::placeholder{color:var(--muted)}
 .goalform input:focus{outline:none;border-color:var(--ice)}
 .goalform .gf-note{grid-column:1/-1}
@@ -143,16 +143,35 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 .gact .gdel:hover{color:#f0a3a3;background:rgba(240,163,163,.08)}
 .gtext{margin-top:6px;font-size:13.5px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
 .amt{display:flex;align-items:center;gap:8px;margin-top:10px}
-.amt button{width:28px;height:28px;flex:none;display:grid;place-items:center;font:inherit;font-size:16px;line-height:1;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:8px;cursor:pointer}
+.amt button{width:28px;height:28px;flex:none;display:grid;place-items:center;font:inherit;font-size:16px;line-height:1;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:6px;cursor:pointer}
 .amt button:hover,.amt button:focus-visible{border-color:var(--ice);outline:none}
-.amt input{width:78px;font:inherit;font-size:14px;text-align:right;color:#fff;background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:8px;padding:4px 8px;-moz-appearance:textfield}
+.amt input{width:78px;font:inherit;font-size:14px;text-align:right;color:#fff;background:rgba(13,21,32,.6);border:1px solid var(--edge);border-radius:6px;padding:4px 8px;-moz-appearance:textfield}
 .amt input::-webkit-inner-spin-button,.amt input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .amt input:focus{outline:none;border-color:var(--ice)}
 .amt .of{font-family:"Silkscreen",monospace;font-size:12px;letter-spacing:.06em;color:var(--plate);white-space:nowrap}
-.amt .mbar{flex:1;min-width:40px;height:6px;border-radius:999px;background:rgba(13,21,32,.6);border:1px solid var(--edge);overflow:hidden}
-.amt .mbar i{display:block;height:100%;background:linear-gradient(90deg,var(--steel),var(--ice));transition:width .3s ease}
+.amt .mbar{flex:1;min-width:40px;height:6px;border-radius:4px;background:rgba(13,21,32,.6);border:1px solid var(--edge);overflow:hidden}
+.amt .mbar i{display:block;height:100%;background:var(--ice);transition:width .3s ease}
 @media (min-width:1100px){.goalform{grid-template-columns:minmax(0,1fr) 130px auto}}
 @media (prefers-reduced-motion:reduce){.bar i,.check span svg,.toast{transition:none}}
+/* Phones: filters behind one button, closed by default (1.1) */
+.ftoggle{display:none}
+@media (max-width:560px){
+  .filterbar h2{display:none}
+  .ftoggle{display:flex;align-items:center;justify-content:space-between;width:100%;font:inherit;font-size:14px;color:var(--frost);background:rgba(13,21,32,.55);border:1px solid var(--edge);border-radius:6px;padding:10px 12px;cursor:pointer;text-align:left}
+  .ftoggle:focus-visible{outline:1px dashed var(--ice);outline-offset:2px}
+  #filters,#fstate{display:none}
+  .filterbar.open #filters,.filterbar.open #fstate{display:block}
+}
+/* Paywall tags share one warm hue; every other tag is neutral (3.1) */
+.tag.legend,.ftag.legend,.tag.ac,.ftag.ac,.tag.ioda,.ftag.ioda,.tag.sdka,.ftag.sdka,.tag.legion,.ftag.legion,.tag.heromart,.ftag.heromart,.tag.kickstarter,.ftag.kickstarter{--c:var(--c-ac)}
+.tag.seasonal,.ftag.seasonal,.tag.pseudo,.ftag.pseudo,.tag.rare,.ftag.rare,.tag.range,.ftag.range{--c:var(--frost)}
+.tag.dmg b,.tag.xp b,.tag.cp b,.tag.rep b,.tag.gold b{color:var(--frost)}
+/* Desktop: one column, name on the left in a fixed column, tags flowing right (4.1) */
+@media (min-width:1100px){
+  .list{display:grid;grid-template-columns:1fr;column-gap:0}
+  .item:not(.goal)>div{display:grid;grid-template-columns:280px minmax(0,1fr);align-items:center;column-gap:16px}
+  .item:not(.goal) .tags{margin-top:0}
+}
 </style>
 </head>
 <body class="page">
@@ -175,6 +194,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
 
   <section class="filterbar" aria-labelledby="f-h">
     <h2 id="f-h">Filter by tag</h2>
+    <button type="button" class="ftoggle" id="ftoggle" aria-expanded="false" aria-controls="filters">Filter by tag</button>
     <div class="ftags" id="filters" role="group" aria-label="Tag filters"></div>
     <p class="fstate" id="fstate"></p>
   </section>
@@ -439,7 +459,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
       (g ? '<button type="button" class="gf-cancel" data-act="cancel">Cancel editing</button>' : "") + "</form>";
   }
   function goalsSectionHtml(items) {
-    var shut = isCollapsed("goals", false), open = items.filter(function (it) { return !isDone(it); });
+    var shut = isCollapsed("goals", items.length === 0), open = items.filter(function (it) { return !isDone(it); });
     var have = items.length - open.length;
     var body = open.map(goalHtml).join("") || '<li class="empty">' + (items.length ? "All your goals are done. Nice." : "Add something you want to farm, with an amount if it stacks. Goals stay in this browser and go with your exports.") + "</li>";
     return '<section class="grp' + (shut ? " is-shut" : "") + '">' +
@@ -471,6 +491,7 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     document.getElementById("lists").innerHTML = html;
     renderFilters();
     var vis = BUILTIN.filter(visible).length, fn = Object.keys(filters).length;
+    document.getElementById("ftoggle").textContent = "Filter by tag" + (fn ? " · " + fn + " on" : "");
     document.getElementById("fstate").textContent = fn ? "Showing " + vis + " of " + BUILTIN.length + " items (your goals always show)" : "Click a tag to show only items with it, again to hide them, again to clear.";
     var n = ALL.filter(function (it) { return state.progress[it.id] && state.progress[it.id].done; }).length;
     document.getElementById("count").textContent = n + " / " + ALL.length;
@@ -540,6 +561,10 @@ summary{cursor:pointer;font-size:13.5px;color:var(--plate)}
     save(); render();
   });
 
+  document.getElementById("ftoggle").addEventListener("click", function () {
+    var open = this.closest(".filterbar").classList.toggle("open");
+    this.setAttribute("aria-expanded", String(open));
+  });
   document.getElementById("filters").addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
     if (b.id === "fclear") filters = {};
