@@ -31,13 +31,18 @@ main{position:relative;max-width:100%;text-align:center;width:min(100%,560px,100
 .name{font-size:clamp(20px,6vw,38px);position:relative}
 .tag{font-size:clamp(17px,5.1vw,25px);margin-top:4px;position:relative}
 .crystal-nav{margin:26px 0 18px}
+@media (min-width:700px){.crystal-nav .crystal{width:64px}}
 .tagline{position:relative;display:grid;justify-items:center;width:max-content;min-width:min(78vw,300px);transition:opacity .25s ease,transform .3s ease}
 .menu-open main .tagline{opacity:0;transform:translateY(10px)}
-h1{position:relative;font-weight:300;font-size:clamp(22px,6.4vw,42px);white-space:nowrap;line-height:1.15;letter-spacing:.02em;color:var(--frost)}
-h1 b{font-weight:600;color:var(--ice-hi)}
+.rune{transition:opacity .3s ease}
+.menu-open main .rune{opacity:.12}
+h1{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit}
+.slogan{position:relative;font-weight:300;font-size:clamp(22px,6.4vw,42px);white-space:nowrap;line-height:1.15;letter-spacing:.02em;color:var(--frost)}
+.slogan b{font-weight:600;color:var(--ice-hi)}
 /* hint: one line, never wider than the tagline (width:0 + min-width:100% keeps it from widening the box) */
 .hint{width:0;min-width:100%;margin-top:8px;font-size:12px;font-weight:400;letter-spacing:.03em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center}
-@media (prefers-reduced-motion:reduce){.tagline{transition:none}}
+@media (prefers-reduced-motion:reduce){.tagline{transition:none}.rune{transition:none}}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 </style>
 </head>
@@ -52,11 +57,11 @@ h1 b{font-weight:600;color:var(--ice-hi)}
       <path d="M100 4v8M100 188v8M4 100h8M188 100h8M32 32l6 6M162 162l6 6M32 168l6-6M162 38l6-6"/>
     </g>
   </svg>
-  <a class="plate name" href="https://x.com/IceFritz_AE" target="_blank" rel="noopener" title="IceFritz on X">IceFritz</a>
-  <a class="plate tag" href="https://discord.gg/aqwcruel" target="_blank" rel="noopener" title="Cruel guild Discord">&lsaquo; Cruel &rsaquo;</a>
+  <h1><a class="plate name" href="https://x.com/IceFritz_AE" target="_blank" rel="noopener" title="IceFritz on X">IceFritz<span class="sr-only"> (opens in new tab)</span></a></h1>
+  <a class="plate tag" href="https://discord.gg/aqwcruel" target="_blank" rel="noopener" title="Cruel guild Discord">&lsaquo; Cruel &rsaquo;<span class="sr-only"> (opens in new tab)</span></a>
   <div class="crystal-nav" data-crystal-nav></div>
   <div class="tagline">
-    <h1>Break the <b>ice</b></h1>
+    <p class="slogan">Break the <b>ice</b></p>
     <p class="hint">(no, really. click the crystal)</p>
   </div>
 </main>

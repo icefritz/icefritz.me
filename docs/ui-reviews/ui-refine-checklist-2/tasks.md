@@ -34,3 +34,10 @@
 - 1.1: the save card is a collapsed section below the list, inside the main column; the sync card stays in the sidebar.
 - Checked at 1440 (sidebar fits, no scroll) and 390 (first item at 631px with the filter open; rows scroll on one line; Clear filters restores all 38).
 - 7.1 is done; 7.2 stays with you.
+
+## Verify result
+
+- All six changes checked at 360, 390 and 1440px: save card collapsed and the sidebar fits; subtitle follows progress; paywall tags in sans caps; phone filter rows scroll on one line; step links sit in the line; empty groups offer Clear filters. No overflow.
+- Regression found and fixed: the empty-group Clear filters link did not save the cleared state, so the filters came back after a reload. It now saves, the same as the filter row's Clear.
+- Fixed after verify: F2P (filter chip and item tag) now uses the same sans caps as the other paywall tags.
+- Not checked: the goal form and amounts (no goals in the data); the subtitle at six ticks.
