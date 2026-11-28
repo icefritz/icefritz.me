@@ -1,14 +1,7 @@
 {
  "source": "https://www.artix.com/calendar/",
- "updated": "2026-11-27T01:44:57Z",
+ "updated": "2026-11-28T07:51:47Z",
  "boosts": [
-  {
-   "name": "Double EXP Boost",
-   "group": "core",
-   "kind": "xp",
-   "start": "2026-11-18",
-   "end": "2026-11-20"
-  },
   {
    "name": "Void Aura Boost",
    "group": "resource",
